@@ -21,7 +21,7 @@
     ></script>
   </head>
   <body>
-    <header class="p-3 bg-dark text-white">
+    <header class="p-3 bg-primary text-white">
       <section class="container">
         <section
           class="d-flex flex-wrap align-items-center justify-content-between"
@@ -32,8 +32,14 @@
             role="button"
             aria-controls="miniProfile"
             class="d-flex align-items-center text-white text-decoration-none"
-            ><i class="fa fa-user-circle display-2" aria-hidden="true"></i
-          ></a>
+          >
+            <img
+              class="fa fa-user-circle display-2"
+              width="100px"
+              src=""
+              alt=""
+            />
+          </a>
           <section
             class="offcanvas offcanvas-start"
             tabindex="-1"
@@ -41,11 +47,15 @@
             aria-labelledby="miniprofileLabel"
           >
             <section
-              class="offcanvas-header bg-dark text-white align-items-start"
+              class="offcanvas-header bg-primary text-white mb-5 align-items-start"
             >
               <section class="d-flex flex-column gap-2">
                 <section class="d-flex gap-3">
-                  <i class="fa fa-user-circle display-2" src=""></i>
+                  <img
+                    class="fa fa-user-circle display-2"
+                    width="100px"
+                    src=""
+                  />
                   <section class="container">
                     <h5 class="">Welkom ${username}</h5>
                     <h6 class="">${email}</h6>
@@ -64,7 +74,7 @@
               ></button>
             </section>
             <section class="offcanvas-body">
-              <form class="mb-4">
+              <form class="mb-5">
                 <fieldset class="d-flex flex-column gap-1">
                   <legend>Geef ons je feedback:</legend>
                   <label for="feedbackType"
@@ -90,7 +100,7 @@
                   </p>
                 </fieldset>
               </form>
-              <button class="btn bg-danger" aria-label="exit">Log uit</button>
+              <button class="btn btn-danger" aria-label="exit">Log uit</button>
             </section>
           </section>
           <ul class="nav">
@@ -111,5 +121,13 @@
         </section>
       </section>
     </header>
+    <main class="p-3"></main>
+    <footer
+      class="p-5 bg-primary d-flex justify-content-sm-end justify-content-center"
+    >
+      <a href="#" class="text-dark text-decoration-none"
+        >&copy; Codecaster Wizards</a
+      >
+    </footer>
   </body>
 </html>

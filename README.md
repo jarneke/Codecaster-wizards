@@ -12,7 +12,6 @@
   - [Decktest](#decktest)
 - [Extra functies](#extra-functies)
 - [Richtlijnen voor bijdragen](#richtlijnen-voor-bijdragen)
-- [Licentie](#licentie)
 
 ## Project Beschrijving
 
@@ -81,11 +80,3 @@ BONUS: Je kunt de naam van een kaart opgeven om de kans te controleren om die ka
 ## Extra functies
 
 Op dit moment zijn er nog geen extra functies.
-
-## Licentie
-
-Dit project is gelicentieerd onder de [Your License] - zie het [LICENSE.md](LICENSE.md)-bestand voor details.
-
-## Contactinformatie (Optioneel)
-
-Voor ondersteuning of vragen, neem contact met ons op via [jouw.email@example.com](mailto:jouw.email@example.com).

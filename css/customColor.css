@@ -88,3 +88,7 @@
 .cbg-white {
     background-color: var(--white-color);
 }
+
+.w-33 {
+    width: 26rem;
+}

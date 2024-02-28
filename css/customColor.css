@@ -1,145 +1,291 @@
 /* Root colors */
 :root {
   --primary-color: #6f42c1;
+  --primary-color-l: #c094e1;
+  --primary-color-d: #3a1e7a;
+
   --secondary-color: #9b5097;
+  --secondary-color-l: #e4a1d4;
+  --secondary-color-d: #4e274e;
+
   --info-color: #9b5097;
-  --succes-color: #02975a;
+  --info-color-l: #e4a1d4;
+  --info-color-d: #4e274e;
+
+  --success-color: #02975a;
+  --success-color-l: #4be9a8;
+  --success-color-d: #016536;
+
   --warning-color: #dcc802;
+  --warning-color-l: #e9e66a;
+  --warning-color-d: #967c00;
+
   --danger-color: #e82301;
+  --danger-color-l: #ff6760;
+  --danger-color-d: #a41f1a;
+
   --light-color: #d5cae9;
+  --light-color-l: #f1eff9;
+  --light-color-d: #a69cd6;
+
   --white-color: #ffffff;
+  --white-color-l: #ffffff;
+  --white-color-d: #e5e5e5;
+
   --dark-color: #04060c;
+  --dark-color-l: #0e0f17;
+  --dark-color-d: #020306;
+
   --muted-color: #808080;
+  --muted-color-l: #d1d1d1;
+  --muted-color-d: #595959;
 }
-/* text colors*/
-.ctext-primary {
-  color: var(--primary-color);
-}
+
+/* Text colors */
+.ctext-primary,
 .ctext-primary:hover {
   color: var(--primary-color);
 }
-.ctext-secondary {
-  color: var(--secondary-color);
+.ctext-primary-l,
+.ctext-primary-l:hover {
+  color: var(--primary-color-l);
 }
+.ctext-primary-d,
+.ctext-primary-d:hover {
+  color: var(--primary-color-d);
+}
+
+.ctext-secondary,
 .ctext-secondary:hover {
   color: var(--secondary-color);
 }
-
-.ctext-success {
-  color: var(--succes-color);
+.ctext-secondary-l,
+.ctext-secondary-l:hover {
+  color: var(--secondary-color-l);
 }
+.ctext-secondary-d,
+.ctext-secondary-d:hover {
+  color: var(--secondary-color-d);
+}
+
+.ctext-success,
 .ctext-success:hover {
-  color: var(--succes-color);
+  color: var(--success-color);
+}
+.ctext-success-l,
+.ctext-success-l:hover {
+  color: var(--success-color-l);
+}
+.ctext-success-d,
+.ctext-success-d:hover {
+  color: var(--success-color-d);
 }
 
-.ctext-danger {
-  color: var(--danger-color);
-}
+.ctext-danger,
 .ctext-danger:hover {
   color: var(--danger-color);
 }
-
-.ctext-warning {
-  color: var(--warning-color);
+.ctext-danger-l,
+.ctext-danger-l:hover {
+  color: var(--danger-color-l);
 }
+.ctext-danger-d,
+.ctext-danger-d:hover {
+  color: var(--danger-color-d);
+}
+
+.ctext-warning,
 .ctext-warning:hover {
   color: var(--warning-color);
 }
-
-.ctext-info {
-  color: var(--info-color);
+.ctext-warning-l,
+.ctext-warning-l:hover {
+  color: var(--warning-color-l);
 }
+.ctext-warning-d,
+.ctext-warning-d:hover {
+  color: var(--warning-color-d);
+}
+
+.ctext-info,
 .ctext-info:hover {
   color: var(--info-color);
 }
-
-.ctext-light {
-  color: var(--light-color);
+.ctext-info-l,
+.ctext-info-l:hover {
+  color: var(--info-color-l);
 }
+.ctext-info-d,
+.ctext-info-d:hover {
+  color: var(--info-color-d);
+}
+
+.ctext-light,
 .ctext-light:hover {
   color: var(--light-color);
 }
-
-.ctext-dark {
-  color: var(--dark-color);
+.ctext-light-l,
+.ctext-light-l:hover {
+  color: var(--light-color-l);
 }
+.ctext-light-d,
+.ctext-light-d:hover {
+  color: var(--light-color-d);
+}
+
+.ctext-dark,
 .ctext-dark:hover {
   color: var(--dark-color);
 }
-
-.ctext-muted {
-  color: var(--muted-color);
+.ctext-dark-l,
+.ctext-dark-l:hover {
+  color: var(--dark-color-l);
 }
+.ctext-dark-d,
+.ctext-dark-d:hover {
+  color: var(--dark-color-d);
+}
+
+.ctext-muted,
 .ctext-muted:hover {
   color: var(--muted-color);
 }
-
-.ctext-white {
-  color: var(--white-color);
+.ctext-muted-l,
+.ctext-muted-l:hover {
+  color: var(--muted-color-l);
 }
+.ctext-muted-d,
+.ctext-muted-d:hover {
+  color: var(--muted-color-d);
+}
+
+.ctext-white,
 .ctext-white:hover {
   color: var(--white-color);
 }
-/* Background colors*/
-.cbg-primary {
-  background-color: var(--primary-color);
+.ctext-white-l,
+.ctext-white-l:hover {
+  color: var(--white-color-l);
 }
+.ctext-white-d,
+.ctext-white-d:hover {
+  color: var(--white-color-d);
+}
+
+/* Background colors */
+.cbg-primary,
 .cbg-primary:hover {
   background-color: var(--primary-color);
 }
-
-.cbg-secondary {
-  background-color: var(--secondary-color);
+.cbg-primary-l,
+.cbg-primary-l:hover {
+  background-color: var(--primary-color-l);
 }
+.cbg-primary-d,
+.cbg-primary-d:hover {
+  background-color: var(--primary-color-d);
+}
+
+.cbg-secondary,
 .cbg-secondary:hover {
   background-color: var(--secondary-color);
 }
-
-.cbg-success {
-  background-color: var(--succes-color);
+.cbg-secondary-l,
+.cbg-secondary-l:hover {
+  background-color: var(--secondary-color-l);
 }
+.cbg-secondary-d,
+.cbg-secondary-d:hover {
+  background-color: var(--secondary-color-d);
+}
+
+.cbg-success,
 .cbg-success:hover {
-  background-color: var(--succes-color);
+  background-color: var(--success-color);
+}
+.cbg-success-l,
+.cbg-success-l:hover {
+  background-color: var(--success-color-l);
+}
+.cbg-success-d,
+.cbg-success-d:hover {
+  background-color: var(--success-color-d);
 }
 
-.cbg-danger {
-  background-color: var(--danger-color);
-}
+.cbg-danger,
 .cbg-danger:hover {
   background-color: var(--danger-color);
 }
-
-.cbg-warning {
-  background-color: var(--warning-color);
+.cbg-danger-l,
+.cbg-danger-l:hover {
+  background-color: var(--danger-color-l);
 }
+.cbg-danger-d,
+.cbg-danger-d:hover {
+  background-color: var(--danger-color-d);
+}
+
+.cbg-warning,
 .cbg-warning:hover {
   background-color: var(--warning-color);
 }
-
-.cbg-info {
-  background-color: var(--info-color);
+.cbg-warning-l,
+.cbg-warning-l:hover {
+  background-color: var(--warning-color-l);
 }
+.cbg-warning-d,
+.cbg-warning-d:hover {
+  background-color: var(--warning-color-d);
+}
+
+.cbg-info,
 .cbg-info:hover {
   background-color: var(--info-color);
 }
-
-.cbg-light {
-  background-color: var(--light-color);
+.cbg-info-l,
+.cbg-info-l:hover {
+  background-color: var(--info-color-l);
 }
+.cbg-info-d,
+.cbg-info-d:hover {
+  background-color: var(--info-color-d);
+}
+
+.cbg-light,
 .cbg-light:hover {
   background-color: var(--light-color);
 }
-
-.cbg-dark {
-  background-color: var(--dark-color);
+.cbg-light-l,
+.cbg-light-l:hover {
+  background-color: var(--light-color-l);
 }
+.cbg-light-d,
+.cbg-light-d:hover {
+  background-color: var(--light-color-d);
+}
+
+.cbg-dark,
 .cbg-dark:hover {
   background-color: var(--dark-color);
 }
-
-.cbg-white {
-  background-color: var(--white-color);
+.cbg-dark-l,
+.cbg-dark-l:hover {
+  background-color: var(--dark-color-l);
 }
+.cbg-dark-d,
+.cbg-dark-d:hover {
+  background-color: var(--dark-color-d);
+}
+
+.cbg-white,
 .cbg-white:hover {
   background-color: var(--white-color);
+}
+.cbg-white-l,
+.cbg-white-l:hover {
+  background-color: var(--white-color-l);
+}
+.cbg-white-d,
+.cbg-white-d:hover {
+  background-color: var(--white-color-d);
 }

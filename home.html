@@ -37,25 +37,30 @@
             aria-controls="miniProfile"
             class="d-flex align-items-center text-dark text-decoration-none"
           >
-            <img
-              class="fa fa-user-circle display-5"
-              width="100px"
-              src=""
-              alt=""
-            />
+            <svg
+              class="display-6"
+              height="3rem"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 448 512"
+            >
+              <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+              <path
+                d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"
+              />
+            </svg>
           </a>
 
           <ul class="nav">
             <li>
-              <a href="home.html" class="nav-link px-2 text-light">Home</a>
+              <a href="home.html" class="nav-link px-2 ctext-light">Home</a>
             </li>
             <li>
-              <a href="decks.html" class="nav-link px-2 text-dark"
+              <a href="decks.html" class="nav-link px-2 ctext-dark"
                 >Decks nakijken</a
               >
             </li>
             <li>
-              <a href="drawtest.html" class="nav-link px-2 text-dark"
+              <a href="drawtest.html" class="nav-link px-2 ctext-dark"
                 >Deck simuleren</a
               >
             </li>
@@ -69,10 +74,19 @@
         id="miniProfile"
         aria-labelledby="miniprofileLabel"
       >
-        <section class="offcanvas-header bg-primary align-items-start">
+        <section class="offcanvas-header cbg-primary align-items-start">
           <section class="d-flex flex-column gap-2">
             <section class="d-flex gap-3">
-              <img class="fa fa-user-circle display-2" width="100px" src="" />
+              <svg
+                height="4rem"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 448 512"
+              >
+                <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                <path
+                  d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"
+                />
+              </svg>
               <section class="container">
                 <h5 class="">Welkom ${username}</h5>
                 <h6 class="">${email}</h6>
@@ -147,39 +161,142 @@
         </form>
       </section>
       <section class="container d-flex justify-content-between">
-        <section><button><<</button> <button><</button></section>
+        <section>
+          <button><i class="fas fa-angle-double-left"></i></button>
+          <button><i class="fas fa-angle-left"></i></button>
+        </section>
         <section class="d-flex gap-2">
           <p>1.</p>
           <p>2.</p>
           <p>3.</p>
           <p>...</p>
         </section>
-        <section><button>></button> <button>>></button></section>
+        <section>
+          <button><i class="fas fa-angle-right"></i></button>
+          <button><i class="fas fa-angle-double-right"></i></button>
+        </section>
       </section>
-      <section
-        class="container d-flex flex-wrap justify-content-evenly gap-3 mb-3"
-      >
-        <!-- Cards will need to be loaded from the api with the following format
+      <section class="container mb-3">
+        <section class="row">
+          section.
+          <!-- Cards will need to be loaded from the api with the following format
         <img
           src="link to card"
           alt=""
           class="rounded hover-overlay"
         />
         -->
+          <img
+            src="assets/images/demoCards/card1.jpg"
+            alt=""
+            class="rounded hover-overlay"
+          />
+          <img
+            src="assets/images/demoCards/card2.jpg"
+            alt=""
+            class="rounded hover-overlay"
+          />
+          <img
+            src="assets/images/demoCards/card3.jpg"
+            alt=""
+            class="rounded hover-overlay"
+          />
+          <img
+            src="assets/images/demoCards/card4.jpg"
+            alt=""
+            class="rounded hover-overlay"
+          />
+          <img
+            src="assets/images/demoCards/card5.jpg"
+            alt=""
+            class="rounded hover-overlay"
+          />
+          <img
+            src="assets/images/demoCards/card6.jpg"
+            alt=""
+            class="rounded hover-overlay"
+          />
+          <img
+            src="assets/images/demoCards/card7.jpg"
+            alt=""
+            class="rounded hover-overlay"
+          />
+          <img
+            src="assets/images/demoCards/card8.jpg"
+            alt=""
+            class="rounded hover-overlay"
+          />
+          <img
+            src="assets/images/demoCards/card9.jpg"
+            alt=""
+            class="rounded hover-overlay"
+          />
+          <img
+            src="assets/images/demoCards/card1.jpg"
+            alt=""
+            class="rounded hover-overlay"
+          />
+          <img
+            src="assets/images/demoCards/card2.jpg"
+            alt=""
+            class="rounded hover-overlay"
+          />
+          <img
+            src="assets/images/demoCards/card3.jpg"
+            alt=""
+            class="rounded hover-overlay"
+          />
+          <img
+            src="assets/images/demoCards/card4.jpg"
+            alt=""
+            class="rounded hover-overlay"
+          />
+          <img
+            src="assets/images/demoCards/card5.jpg"
+            alt=""
+            class="rounded hover-overlay"
+          />
+          <img
+            src="assets/images/demoCards/card6.jpg"
+            alt=""
+            class="rounded hover-overlay"
+          />
+          <img
+            src="assets/images/demoCards/card7.jpg"
+            alt=""
+            class="rounded hover-overlay"
+          />
+          <img
+            src="assets/images/demoCards/card8.jpg"
+            alt=""
+            class="rounded hover-overlay"
+          />
+          <img
+            src="assets/images/demoCards/card9.jpg"
+            alt=""
+            class="rounded hover-overlay"
+          />
+        </section>
       </section>
       <section class="container d-flex justify-content-between">
-        <section><button><<</button> <button><</button></section>
+        <section>
+          <button><i class="fas fa-angle-double-left"></i></button>
+          <button><i class="fas fa-angle-left"></i></button>
+        </section>
         <section class="d-flex gap-2">
           <p>1.</p>
           <p>2.</p>
           <p>3.</p>
           <p>...</p>
         </section>
-        <section><button>></button> <button>>></button></section>
+        <section>
+          <button><i class="fas fa-angle-right"></i></button>
+          <button><i class="fas fa-angle-double-right"></i></button>
+        </section>
       </section>
     </main>
     <footer
-      class="p-5 bg-primary d-flex justify-content-sm-end justify-content-center"
+      class="p-5 cbg-primary d-flex justify-content-md-end justify-content-center"
     >
       <a href="#" class="text-dark text-decoration-none"
         >&copy; Codecaster Wizards</a

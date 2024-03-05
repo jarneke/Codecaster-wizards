@@ -39,6 +39,8 @@
   --muted-color: #808080;
   --muted-color-l: #d1d1d1;
   --muted-color-d: #595959;
+
+  --transfparent-color: #00000000;
 }
 
 /* Text colors */
@@ -289,7 +291,10 @@
 .cbg-white-d:hover {
   background-color: var(--white-color-d);
 }
-
+.cbg-transparent,
+.cbg-transparent:hover{
+  background-color: var(--transfparent-color);
+}
 #cards_animation .card-flyer:hover .image-box img{
   opacity: 0.7;
   -webkit-transform:scale(1.15);

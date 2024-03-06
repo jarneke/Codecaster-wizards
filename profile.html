@@ -20,7 +20,7 @@
 <body class="bg-secondary">
     <header class="p-3 cbg-primary text-dark">
         <section class="container">
-            <section class="d-flex flex-wrap align-items-center justify-content-between">
+            <article class="d-flex flex-wrap align-items-center justify-content-between">
                 <a data-bs-toggle="offcanvas" href="#miniProfile" role="button" aria-controls="miniProfile"
                     class="d-flex align-items-center text-dark text-decoration-none">
                     <svg class="display-6" height="3rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -41,29 +41,30 @@
                         <a href="drawtest.html" class="nav-link px-2 ctext-dark">Deck simuleren</a>
                     </li>
                 </ul>
-            </section>
+            </article>
         </section>
         <!-- - mini profile offcanvas-->
         <section class="offcanvas offcanvas-start bg-secondary" tabindex="-1" id="miniProfile"
             aria-labelledby="miniprofileLabel">
             <section class="offcanvas-header cbg-primary align-items-start">
                 <section class="d-flex flex-column gap-2">
-                    <section class="d-flex gap-3">
+                    <article class="d-flex gap-3">
                         <svg height="4rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                             <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                             <path
                                 d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
                         </svg>
                         <section class="container">
-                            <h5 class=""> ${username}</h5>
+                            <h5 class="">Welkom ${username}</h5>
                             <h6 class="">${email}</h6>
                         </section>
-                    </section>
+                    </article>
                     <a class="btn btn-dark" type="button" href="profile.html">Bekijk profiel</a>
                 </section>
 
                 <button class="btn-close text-reset bg-danger" type="button" data-bs-toggle="offcanvas"
-                    aria-label="close"></button>
+                    aria-label="close">
+                </button>
             </section>
             <section class="offcanvas-body">
                 <form class="mb-5">
@@ -90,3 +91,54 @@
             </section>
         </section>
     </header>
+    <main></main>
+    <footer class="p-5 cbg-primary d-flex justify-content-md-end justify-content-center">
+        <a href="#" class="text-dark text-decoration-none">&copy; Codecaster Wizards</a>
+    </footer>
+    <!-- bootstrap offcanvases-->
+
+    <!-- - mini profile offcanvas-->
+    <section class="offcanvas offcanvas-start bg-secondary" tabindex="-1" id="miniProfile"
+        aria-labelledby="miniprofileLabel">
+        <section class="offcanvas-header bg-primary align-items-start">
+            <section class="d-flex flex-column gap-2">
+                <section class="d-flex gap-3">
+                    <img class="fa fa-user-circle display-2" width="100px" src="" />
+                    <section class="container">
+                        <h5 class="">Welkom ${username}</h5>
+                        <h6 class="">${email}</h6>
+                    </section>
+                </section>
+                <a class="btn btn-dark" type="button" href="profile.html">Bekijk profiel</a>
+            </section>
+
+            <button class="btn-close text-reset bg-danger" type="button" data-bs-toggle="offcanvas"
+                aria-label="close"></button>
+        </section>
+        <section class="offcanvas-body">
+            <form class="mb-5">
+                <fieldset class="d-flex flex-column gap-1">
+                    <legend>Geef ons je feedback:</legend>
+                    <label for="feedbackType">Welke soort feedback wil je geven?</label>
+                    <select name="feedbackType" id="feedbackType">
+                        <option value="bug">Meld een bug</option>
+                        <option value="suggestion">Suggestie indienen</option>
+                        <option value="compliment">Geef een compliment</option>
+                        <option value="general">Algemene feedback</option>
+                    </select>
+                    <label for="feedback">Feedback:</label>
+                    <textarea class="form-control form-control-dark" name="feedback" id="feedback" cols="30"
+                        rows="10"></textarea>
+                    <input class="btn btn-dark" type="submit" value="Stuur feedback in*" />
+                    <p class="h6 text-dark">
+                        * Door op "Stuur feedback in" te klikken, accepteer je onze
+                        algemene voorwaarden
+                    </p>
+                </fieldset>
+            </form>
+            <button class="btn btn-danger" aria-label="exit">Log uit</button>
+        </section>
+    </section>
+</body>
+
+</html>

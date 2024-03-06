@@ -20,7 +20,7 @@
 <body class="bg-secondary">
   <header class="p-3 cbg-primary text-dark">
     <section class="container">
-      <section class="d-flex flex-wrap align-items-center justify-content-between">
+      <article class="d-flex flex-wrap align-items-center justify-content-between">
         <a data-bs-toggle="offcanvas" href="#miniProfile" role="button" aria-controls="miniProfile"
           class="d-flex align-items-center text-dark text-decoration-none">
           <svg class="display-6" height="3rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -41,14 +41,14 @@
             <a href="drawtest.html" class="nav-link px-2 ctext-dark">Deck simuleren</a>
           </li>
         </ul>
-      </section>
+      </article>
     </section>
     <!-- - mini profile offcanvas-->
     <section class="offcanvas offcanvas-start bg-secondary" tabindex="-1" id="miniProfile"
       aria-labelledby="miniprofileLabel">
       <section class="offcanvas-header cbg-primary align-items-start">
         <section class="d-flex flex-column gap-2">
-          <section class="d-flex gap-3">
+          <article class="d-flex gap-3">
             <svg height="4rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
               <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
               <path
@@ -58,12 +58,12 @@
               <h5 class="">Welkom ${username}</h5>
               <h6 class="">${email}</h6>
             </section>
-          </section>
+          </article>
           <a class="btn btn-dark" type="button" href="profile.html">Bekijk profiel</a>
         </section>
 
-        <button class="btn-close text-reset bg-danger" type="button" data-bs-toggle="offcanvas"
-          aria-label="close"></button>
+        <button class="btn-close text-reset bg-danger" type="button" data-bs-toggle="offcanvas" aria-label="close">
+        </button>
       </section>
       <section class="offcanvas-body">
         <form class="mb-5">
@@ -93,15 +93,15 @@
   <main class="p-3 container">
     <section class="row d-flex justify-content-center mb-3">
       <form class="col-12 col-md-6 col-lg-5 col-xl-4">
-        <section class="form-control d-flex align-items-center">
+        <article class="form-control d-flex align-items-center">
           <button class="fa fa-search bg-white text-secondary p-1 border-0" type="submit" id="search"></button>
           <input aria-label="Search" placeholder="Search..." type="search" name="cardLookup" id="cardLookup"
             class="form-control border-0" />
-        </section>
+        </article>
       </form>
     </section>
     <section class="container d-flex justify-content-between">
-      <section>
+      <article>
         <button>
           <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
@@ -116,14 +116,14 @@
               d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
           </svg>
         </button>
-      </section>
+      </article>
       <section class="d-flex gap-2">
         <p>1.</p>
         <p>2.</p>
         <p>3.</p>
         <p>...</p>
       </section>
-      <section>
+      <article>
         <button>
           <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
             <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
@@ -138,52 +138,50 @@
               d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
           </svg>
         </button>
-      </section>
+      </article>
     </section>
-
-    section.card.p-2.col-sm-12.col-md-6.col-lg-4.col-xl-3
     <section class="container">
       <section class="row justify-content-evenly">
         <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
           <img src="assets/images/demoCards/card1.jpg" alt="">
         </article>
         <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-          <img src="assets/images/demoCards/card1.jpg" alt="">
+          <img src="assets/images/demoCards/card2.jpg" alt="">
+        </article>
+        <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+          <img src="assets/images/demoCards/card3.jpg" alt="">
+        </article>
+        <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+          <img src="assets/images/demoCards/card4.jpg" alt="">
+        </article>
+        <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+          <img src="assets/images/demoCards/card5.jpg" alt="">
+        </article>
+        <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+          <img src="assets/images/demoCards/card6.jpeg" alt="">
+        </article>
+        <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+          <img src="assets/images/demoCards/card7.jpg" alt="">
+        </article>
+        <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+          <img src="assets/images/demoCards/card8.jpeg" alt="">
+        </article>
+        <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+          <img src="assets/images/demoCards/card9.jpeg" alt="">
         </article>
         <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
           <img src="assets/images/demoCards/card1.jpg" alt="">
         </article>
         <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-          <img src="assets/images/demoCards/card1.jpg" alt="">
+          <img src="assets/images/demoCards/card2.jpg" alt="">
         </article>
         <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-          <img src="assets/images/demoCards/card1.jpg" alt="">
-        </article>
-        <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-          <img src="assets/images/demoCards/card1.jpg" alt="">
-        </article>
-        <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-          <img src="assets/images/demoCards/card1.jpg" alt="">
-        </article>
-        <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-          <img src="assets/images/demoCards/card1.jpg" alt="">
-        </article>
-        <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-          <img src="assets/images/demoCards/card1.jpg" alt="">
-        </article>
-        <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-          <img src="assets/images/demoCards/card1.jpg" alt="">
-        </article>
-        <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-          <img src="assets/images/demoCards/card1.jpg" alt="">
-        </article>
-        <article class="card cbg-transparent border-0 rounded p-2 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-          <img src="assets/images/demoCards/card1.jpg" alt="">
+          <img src="assets/images/demoCards/card3.jpg" alt="">
         </article>
       </section>
     </section>
     <section class="container d-flex justify-content-between">
-      <section>
+      <article>
         <button>
           <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
@@ -198,14 +196,14 @@
               d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
           </svg>
         </button>
-      </section>
+      </article>
       <section class="d-flex gap-2">
         <p>1.</p>
         <p>2.</p>
         <p>3.</p>
         <p>...</p>
       </section>
-      <section>
+      <article>
         <button>
           <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
             <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
@@ -220,7 +218,7 @@
               d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
           </svg>
         </button>
-      </section>
+      </article>
     </section>
   </main>
   <footer class="p-5 cbg-primary d-flex justify-content-md-end justify-content-center">

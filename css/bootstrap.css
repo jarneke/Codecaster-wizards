@@ -43,6 +43,19 @@
   --transfparent-color: #00000000;
 }
 
+/* FONTS */
+
+@font-face {
+  font-family: mtg-bold;
+  src: url(/assets/Fonts/typeface-beleren-bold-master/Beleren2016SmallCaps-Bold.ttf);
+}
+
+.ch1{
+  font-family: mtg-bold, Arial, Helvetica, sans-serif;
+  color: var(--light-color-d);
+}
+
+
 /* Text colors */
 .ctext-primary,
 .ctext-primary:hover {
@@ -177,7 +190,7 @@
 /* Background colors */
 .cbg-primary,
 .cbg-primary:hover {
-  background-color: var(--primary-color);
+  background-color: var(--secondary-color-d);
 }
 .cbg-primary-l,
 .cbg-primary-l:hover {
@@ -316,9 +329,15 @@
   margin-top: -10px;
 }
 
+/* Background Images */
+
 body, main {
   background-image: url("/assets/images/background/blackGrayBckg.avif");
   background-repeat: repeat;
   background-size: contain;
   background-color: #cccccc;
+ }
+
+ header {
+  background-image: url(/assets/images/background/magicBanner.webp);
  }

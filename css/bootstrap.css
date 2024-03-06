@@ -315,3 +315,10 @@
   transition: all 0.2s ease-in;
   margin-top: -10px;
 }
+
+body, main {
+  background-image: url("/assets/images/background/blackGrayBckg.avif");
+  background-repeat: repeat;
+  background-size: contain;
+  background-color: #cccccc;
+ }

@@ -15,7 +15,7 @@
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="css/bootstrap.css" />
-  <script src="js/home.js" defer></script>
+  <script src="js/home.js"></script>
 </head>
 
 <body class="bg-secondary">
@@ -61,6 +61,7 @@
             </section>
           </article>
           <a class="btn btn-dark" type="button" href="profile.html">Bekijk profiel</a>
+
         </section>
 
         <button class="btn-close text-reset bg-danger" type="button" data-bs-toggle="offcanvas" aria-label="close">
@@ -333,19 +334,41 @@
     </section>
   </section>
   <!-- Modals -->
-  <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <div class="modal-header cbg-primary-d">
+          <h1 class="modal-title ctext-white fs-5" id="infoModalLabel">Info</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          ...
+          <p>
+            Welkom bij de Magic the Gathering webapp! Hier kun je alles leren over het spel en je decks beheren. Hier
+            zijn enkele functies die je kunt gebruiken:
+          </p>
+          <h3>Speluitleg:</h3>
+          <p>
+            Magic the Gathering is een strategisch kaartspel waarbij spelers elkaar proberen te verslaan door spreuken
+            te casten, wezens op te roepen en hun tegenstanders levenspunten te verminderen.
+          </p>
+          <h3>Kaarten zoeken:</h3>
+          <p>
+            Gebruik de zoekfunctie om kaarten te vinden op basis van naam, kleur, type, of andere kenmerken. Zoek naar
+            specifieke kaarten om je deck te verbeteren.
+          </p>
+          <h3>Deck beheren:</h3>
+          <p>
+            Voeg kaarten toe aan je deck, bekijk de kaarten in je deck en pas je decks aan om de perfecte strategie te
+            creëren. Je kunt ook de decksimulator gebruiken om te zien hoe je deck presteert in verschillende situaties.
+          </p>
+          <h3>Deck simuleren:</h3>
+          <p>
+            Gebruik de decksimulator om willekeurige kaarten te trekken en je kansen te beoordelen. Dit helpt je om de
+            consistentie van je deck te optimaliseren en te zien hoe het presteert in verschillende scenario's.
+          </p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-dark cbg-primary" data-bs-dismiss="modal">Ik begrijp het</button>
         </div>
       </div>
     </div>

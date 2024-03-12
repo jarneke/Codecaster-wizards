@@ -92,7 +92,44 @@
         </section>
     </header>
     <main>
-        <a data-bs-toggle="offcanvas" href="#pulledCards" role="button" aria-controls="pulledCards">pulled Cards</a>
+        <section class="d-flex flex-wrap">
+            <form action="" class="col-12 col-sm-4 p-2">
+                <select name="decks" id="decks" class="form-control">
+                    <option value=" deck1">Deck 1</option>
+                    <option value="deck2">Deck 2</option>
+                    <option value="deck3">Deck 3</option>
+                    <option value="deck4">Deck 4</option>
+                    <option value="deck5">Deck 5</option>
+                    <option value="deck6">Deck 6</option>
+                </select>
+            </form>
+            <form action="" class="col-12 col-sm-4 p-2">
+                <div class="form-control d-flex">
+                    <button class="bg-white text-secondary p-1 border-0" type="submit" id="search">
+                        <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                            <path
+                                d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                        </svg>
+                    </button>
+                    <input aria-label="Search" placeholder="Zoeken..." type="search" name="cardLookup" id="cardLookup"
+                        class="form-control border-0" />
+                </div>
+            </form>
+            <div class="col-12 col-sm-4 p-2">
+                <a class="btn cbg-primary col-12" data-bs-toggle="offcanvas" href="#pulledCards" role="button"
+                    aria-controls="pulledCards">
+                    pulled Cards
+                </a>
+            </div>
+
+
+        </section>
+        <section></section>
+        <section></section>
+        <section></section>
+
+        <!-- Pulled Cards Offcanvas -->
         <section class="offcanvas offcanvas-end bg-secondary" tabindex="-1" id="pulledCards"
             aria-labelledby="pulledCardsLabel">
             <section class="offcanvas-header cbg-primary">
@@ -106,8 +143,13 @@
                     <form class="col-12 container d-flex justify-content-between flex-wrap">
                         <fieldset class="col-12">
                             <div class="form-control d-flex">
-                                <button class="fa fa-search bg-white text-secondary p-1 border-0" type="submit"
-                                    id="search"></button>
+                                <button class="bg-white text-secondary p-1 border-0" type="submit" id="search">
+                                    <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                        <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                        <path
+                                            d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                                    </svg>
+                                </button>
                                 <input aria-label="Search" placeholder="Zoeken..." type="search" name="cardLookup"
                                     id="cardLookup" class="form-control border-0" />
                             </div>
@@ -175,19 +217,18 @@
                             </div>
                         </fieldset>
                     </form>
-
                     <section class="container d-flex flex-wrap mt-3">
                         <a href="cardetail.html" class="col-6 p-1 border-1">
                             <img src="assets/images/demoCards/card1.jpg" class="col-12">
                         </a>
                         <a href="cardetail.html" class="col-6 p-1">
-                            <img src="assets/images/demoCards/card1.jpg" class="col-12">
+                            <img src="assets/images/demoCards/card2.jpg" class="col-12">
                         </a>
                         <a href="cardetail.html" class="col-6 p-1 border-1">
-                            <img src="assets/images/demoCards/card1.jpg" class="col-12">
+                            <img src="assets/images/demoCards/card3.jpg" class="col-12">
                         </a>
                         <a href="cardetail.html" class="col-6 p-1">
-                            <img src="assets/images/demoCards/card1.jpg" class="col-12">
+                            <img src="assets/images/demoCards/card4.jpg" class="col-12">
                         </a>
                     </section>
                 </section>

@@ -96,15 +96,86 @@
         <section class="offcanvas offcanvas-end bg-secondary" tabindex="-1" id="pulledCards"
             aria-labelledby="pulledCardsLabel">
             <section class="offcanvas-header cbg-primary">
-                <h1 class="display-3">Getrokken kaarten</h1>
+                <h1 class="display-6">Getrokken kaarten</h1>
                 <button class="btn-close text-reset bg-danger" type="button" data-bs-toggle="offcanvas"
                     aria-label="close">
                 </button>
             </section>
             <section class="offcanvas-body">
-                <article>
-
-                </article>
+                <section>
+                    <form class="col-12 container d-flex justify-content-between flex-wrap">
+                        <fieldset class="col-12">
+                            <div class="form-control d-flex">
+                                <button class="fa fa-search bg-white text-secondary p-1 border-0" type="submit"
+                                    id="search"></button>
+                                <input aria-label="Search" placeholder="Zoeken..." type="search" name="cardLookup"
+                                    id="cardLookup" class="form-control border-0" />
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-12 d-flex flex-wrap">
+                            <legend class="text-center col-12">Filter</legend>
+                            <div class="form-group col-12 mb-2">
+                                <select class="form-control" name="type" id="type">
+                                    <option value="blank"></option>
+                                    <option value="artifact">Artifact</option>
+                                    <option value="basic">Basic</option>
+                                    <option value="battle">Battle</option>
+                                    <option value="conspiracy">Conspiracy</option>
+                                    <option value="creature">Creatue</option>
+                                    <option value="dungeon">Dungeon</option>
+                                    <option value="eaturecray">Eaturecray</option>
+                                    <option value="enchantment">Enchantment</option>
+                                    <option value="ever">Ever</option>
+                                    <option value="host">Host</option>
+                                    <option value="instant">Instant</option>
+                                    <option value="land">Land</option>
+                                </select>
+                            </div>
+                            <div class="d-flex flex-column align-items-center col-2">
+                                <input class="form-check-input" type="radio" name="W" id="W">
+                                <label class="form-check-label" for="W">
+                                    <img src="assets/images/mana_symbols/W.svg" height="20px" alt="">
+                                </label>
+                            </div>
+                            <div class="d-flex flex-column align-items-center col-2">
+                                <input class="form-check-input" type="radio" name="U" id="U">
+                                <label class="form-check-label" for="U">
+                                    <img src="assets/images/mana_symbols/U.svg" height="20px" alt=""></label>
+                            </div>
+                            <div class="d-flex flex-column align-items-center col-2">
+                                <input class="form-check-input" type="radio" name="B" id="B">
+                                <label class="form-check-label" for="B">
+                                    <img src="assets/images/mana_symbols/B.svg" height="20px" alt=""></label>
+                            </div>
+                            <div class="d-flex flex-column align-items-center col-2">
+                                <input class="form-check-input" type="radio" name="R" id="R">
+                                <label class="form-check-label" for="R">
+                                    <img src="assets/images/mana_symbols/R.svg" height="20px" alt=""></label>
+                            </div>
+                            <div class="d-flex flex-column align-items-center col-2">
+                                <input class="form-check-input" type="radio" name="G" id="G">
+                                <label class="form-check-label" for="G">
+                                    <img src="assets/images/mana_symbols/G.svg" height="20px" alt=""></label>
+                            </div>
+                            <div class="d-flex flex-column align-items-center col-2">
+                                <input class=" form-check-input" type="radio" name="C" id="C">
+                                <label class="form-check-label" for="C">
+                                    <img src="assets/images/mana_symbols/C.svg" height="20px" alt=""></label>
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-12">
+                            <legend class="text-center">Sorteer</legend>
+                            <div class="form-group">
+                                <select class="form-control" name="sort" id="sort">
+                                    <option value="blank"></option>
+                                    <option value="color">Color</option>
+                                    <option value="colorWeight">Color Weight</option>
+                                    <option value="...">...</option>
+                                </select>
+                            </div>
+                        </fieldset>
+                    </form>
+                </section>
             </section>
         </section>
     </main>

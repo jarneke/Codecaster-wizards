@@ -71,7 +71,7 @@
                     <fieldset class="d-flex flex-column gap-1">
                         <legend>Geef ons je feedback:</legend>
                         <label for="feedbackType">Welke soort feedback wil je geven?</label>
-                        <select name="feedbackType" id="feedbackType">
+                        <select name="feedbackType" id="feedbackType" class="form-select p-2">
                             <option value="bug">Meld een bug</option>
                             <option value="suggestion">Suggestie indienen</option>
                             <option value="compliment">Geef een compliment</option>
@@ -91,10 +91,10 @@
             </section>
         </section>
     </header>
-    <main>
-        <section class="d-flex flex-wrap">
-            <form action="" class="col-12 col-sm-4 p-2">
-                <select name="decks" id="decks" class="form-control">
+    <main class="d-flex justify-content-center">
+        <section class="d-flex flex-wrap col-12 col-md-10 col-lg-8">
+            <form action="" class="col-12 col-sm-4 pt-2 p-2">
+                <select name="decks" id="decks" class="form-select p-2">
                     <option value=" deck1">Deck 1</option>
                     <option value="deck2">Deck 2</option>
                     <option value="deck3">Deck 3</option>
@@ -104,7 +104,7 @@
                 </select>
             </form>
             <form action="" class="col-12 col-sm-4 p-2">
-                <div class="form-control d-flex">
+                <div class="form-control d-flex p-1">
                     <button class="bg-white text-secondary p-1 border-0" type="submit" id="search">
                         <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                             <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
@@ -113,13 +113,13 @@
                         </svg>
                     </button>
                     <input aria-label="Search" placeholder="Zoeken..." type="search" name="cardLookup" id="cardLookup"
-                        class="form-control border-0" />
+                        class="form-control border-0 p-0" />
                 </div>
             </form>
             <div class="col-12 col-sm-4 p-2">
-                <a class="btn cbg-primary col-12" data-bs-toggle="offcanvas" href="#pulledCards" role="button"
+                <a class="btn cbg-primary col-12 p-2" data-bs-toggle="offcanvas" href="#pulledCards" role="button"
                     aria-controls="pulledCards">
-                    pulled Cards
+                    Getrokken kaarten
                 </a>
             </div>
 

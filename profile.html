@@ -91,8 +91,8 @@
             </section>
         </section>
     </header>
-    <main class="d-flex">
-        <section class="bg-primary">
+    <main class="d-flex flex-wrap">
+        <section class="bg-primary col-12 col-lg-3">
             <section>
                 <h1>Voornaam Achternaam</h1>
                 <h5>Gebruikersnaam</h5>
@@ -114,10 +114,82 @@
                             d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z" />
                     </svg>E-mail</p>
 
+                <button type="button" class="btn btn-dark cbg-danger-l mb-3" data-bs-toggle="modal"
+                    data-bs-target="#infoModal"><svg height="1rem" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M80 160c0-35.3 28.7-64 64-64h32c35.3 0 64 28.7 64 64v3.6c0 21.8-11.1 42.1-29.4 53.8l-42.2 27.1c-25.2 16.2-40.4 44.1-40.4 74V320c0 17.7 14.3 32 32 32s32-14.3 32-32v-1.4c0-8.2 4.2-15.8 11-20.2l42.2-27.1c36.6-23.6 58.8-64.1 58.8-107.7V160c0-70.7-57.3-128-128-128H144C73.3 32 16 89.3 16 160c0 17.7 14.3 32 32 32s32-14.3 32-32zm80 320a40 40 0 1 0 0-80 40 40 0 1 0 0 80z" />
+                    </svg>
+                    Hoe wordt mijn data gebruikt
+                </button>
+                <p><button type="button" class="btn btn-dark cbg-danger-l" data-bs-toggle="modal"
+                    data-bs-target="ErroModal">Verwijder account</button></p>
+            </section>
+           
+        </section>
+        <section class="bg-danger d-flex flex-wrap justify-content-around col-12 col-lg-9">
+            <Article class="mb-3">
+                <img src="assets/images/decks/MTGDeck.jpg" alt="" height="350rem">
+            </Article>
+            <Article class="mb-3">
+                <img src="assets/images/decks/MTGDeck.jpg" alt="" height="350rem">
+            </Article>
+            <Article class="mb-3">
+                <img src="assets/images/decks/MTGDeck.jpg" alt="" height="350rem">
+            </Article>
+            <Article class="mb-3">
+                <img src="assets/images/decks/MTGDeck.jpg" alt="" height="350rem">
+            </Article>
+            <Article class="mb-3">
+                <img src="assets/images/decks/MTGDeck.jpg" alt="" height="350rem">
+            </Article>
+            <Article class="mb-3">
+                <img src="assets/images/decks/MTGDeck.jpg" alt="" height="350rem">
+            </Article>
+        </section>
+
+        <!-- Modals -->
+        <section class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+            <section class="modal-dialog">
+                <section class="modal-content">
+                    <section class="modal-header cbg-primary">
+                        <h1 class="modal-title ctext-white fs-5" id="infoModalLabel">Hoe word mijn data gebruikt?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </section>
+                    <section class="modal-body">
+                        <p>
+                            Wanneer je onze website bezoekt, verzamelen we beperkte informatie over jou, zoals jouw naam
+                            en e-mailadres, alleen indien vrijwillig verstrekt via formulieren of inschrijvingen. We
+                            gebruiken deze gegevens uitsluitend om je te voorzien van de gevraagde informatie of om
+                            contact met je op te nemen over onze diensten. Jouw privacy is belangrijk voor ons, en we
+                            delen jouw gegevens nooit met derden zonder jouw uitdrukkelijke toestemming.
+                        </p>
+                    </section>
+                    <section class="modal-footer">
+                        <button type="button" class="btn btn-dark cbg-primary" data-bs-dismiss="modal">Ik begrijp
+                            het</button>
+                    </section>
+                </section>
             </section>
         </section>
-        <section class="bg-danger">blaval</section>
 
+        <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger">
+                        <h5 class="modal-title text-white" id="exampleModalLabel">Error!</h5>
+                        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>U heeft geen toegang tot deze pagina!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Sluit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
     <footer class="p-5 cbg-primary d-flex justify-content-md-end justify-content-center">
         <a href="#" class="text-dark text-decoration-none">&copy; Codecaster Wizards</a>

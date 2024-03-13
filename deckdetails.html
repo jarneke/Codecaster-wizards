@@ -25,143 +25,139 @@
         <link rel="stylesheet" href="css/bootstrap.css" />
       </head>
 <body>
-    <header class="p-3 cbg-primary text-dark">
-        <div class="container">
-          <div
-            class="d-flex flex-wrap align-items-center justify-content-between"
-          >
-            <a
-              data-bs-toggle="offcanvas"
-              href="#miniProfile"
-              role="button"
-              aria-controls="miniProfile"
-              class="d-flex align-items-center text-dark text-decoration-none"
-            >
-              <svg
-                class="display-6"
-                height="3rem"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 448 512"
-              >
-                <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                <path
-                  d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"
-                />
-              </svg>
-            </a>
-    
-            <ul class="nav">
-              <li>
-                <a href="home.html" class="nav-link px-2 ctext-dark">Home</a>
-              </li>
-              <li>
-                <a href="decks.html" class="nav-link px-2 ctext-light"
-                  >Decks nakijken</a
-                >
-              </li>
-              <li>
-                <a href="drawtest.html" class="nav-link px-2 ctext-dark"
-                  >Deck simuleren</a
-                >
-              </li>
-            </ul>
-          </div>
-        </div>
-        <!-- - mini profile offcanvas-->
-        <div
-          class="offcanvas offcanvas-start bg-secondary"
-          tabindex="-1"
-          id="miniProfile"
-          aria-labelledby="miniprofileLabel"
-        >
-          <div class="offcanvas-header cbg-primary align-items-start">
-            <div class="d-flex flex-column gap-2">
-              <div class="d-flex gap-3">
-                <svg
-                  height="4rem"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 448 512"
-                >
-                  <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                  <path
-                    d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"
-                  />
-                </svg>
-                <div class="container">
-                  <h5 class="">Welkom ${username}</h5>
-                  <h6 class="">${email}</h6>
-                </div>
-              </div>
-              <a class="btn btn-dark" type="button" href="profile.html"
-                >Bekijk profiel</a
-              >
+  <header class="p-3 cbg-primary text-light">
+    <div class="container">
+      <div
+        class="d-flex flex-wrap align-items-center justify-content-between">
+        <a
+          data-bs-toggle="offcanvas"
+          href="#miniProfile"
+          role="button"
+          aria-controls="miniProfile"
+          class="d-flex align-items-center text-light text-decoration-none">
+          <svg
+            class="display-6"
+            height="3rem"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 448 512">
+            <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/>
+          </svg>
+        </a>
+        <section>
+           <h1 class="ch1">Magic The Gathering</h1>
+        </section>
+        <ul class="nav">
+          <li>
+            <a href="home.html" class="nav-link px-2 ctext-dark">Home</a>
+          </li>
+          <li>
+            <a href="decks.html" class="nav-link px-2 ctext-light">Decks nakijken</a>
+          </li>
+          <li>
+            <a href="drawtest.html" class="nav-link px-2 ctext-dark">Deck simuleren</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- - mini profile offcanvas-->
+    <div
+      class="offcanvas offcanvas-start bg-secondary"
+      tabindex="-1"
+      id="miniProfile"
+      aria-labelledby="miniprofileLabel">
+      <div class="offcanvas-header cbg-primary align-items-start">
+        <div class="d-flex flex-column gap-2">
+          <div class="d-flex gap-3">
+            <svg
+              height="4rem"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 448 512">
+              <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+              <path
+                d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/>
+            </svg>
+            <div class="container">
+              <h5 class="">Welkom ${username}</h5>
+              <h6 class="">${email}</h6>
             </div>
-    
-            <button
-              class="btn-close text-reset bg-danger"
-              type="button"
-              data-bs-toggle="offcanvas"
-              aria-label="close"
-            ></button>
           </div>
-          <div class="offcanvas-body">
-            <form class="mb-5">
-              <fieldset class="d-flex flex-column gap-1">
-                <legend>Geef ons je feedback:</legend>
-                <label for="feedbackType"
-                  >Welke soort feedback wil je geven?</label
-                >
-                <select name="feedbackType" id="feedbackType">
-                  <option value="bug">Meld een bug</option>
-                  <option value="suggestion">Suggestie indienen</option>
-                  <option value="compliment">Geef een compliment</option>
-                  <option value="general">Algemene feedback</option>
-                </select>
-                <label for="feedback">Feedback:</label>
-                <textarea
-                  class="form-control form-control-dark"
-                  name="feedback"
-                  id="feedback"
-                  cols="30"
-                  rows="10"
-                ></textarea>
-                <input
-                  class="btn btn-dark"
-                  type="submit"
-                  value="Stuur feedback in*"
-                />
-                <p class="h6 text-dark">
-                  * Door op "Stuur feedback in" te klikken, accepteer je onze
-                  algemene voorwaarden
-                </p>
-              </fieldset>
-            </form>
-            <button class="btn btn-danger" aria-label="exit">Log uit</button>
-          </div>
+          <a class="btn btn-dark" type="button" href="profile.html"
+            >Bekijk profiel</a>
         </div>
-      </header>
+
+        <button
+          class="btn-close text-reset bg-danger"
+          type="button"
+          data-bs-toggle="offcanvas"
+          aria-label="close"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <form class="mb-5">
+          <fieldset class="d-flex flex-column gap-1">
+            <legend>Geef ons je feedback:</legend>
+            <label for="feedbackType"
+              >Welke soort feedback wil je geven?</label
+            >
+            <select name="feedbackType" id="feedbackType">
+              <option value="bug">Meld een bug</option>
+              <option value="suggestion">Suggestie indienen</option>
+              <option value="compliment">Geef een compliment</option>
+              <option value="general">Algemene feedback</option>
+            </select>
+            <label for="feedback">Feedback:</label>
+            <textarea
+              class="form-control form-control-dark"
+              name="feedback"
+              id="feedback"
+              cols="30"
+              rows="10"
+            ></textarea>
+            <input
+              class="btn btn-dark"
+              type="submit"
+              value="Stuur feedback in*"
+            />
+            <p class="h6 text-light">
+              * Door op "Stuur feedback in" te klikken, accepteer je onze
+              algemene voorwaarden
+            </p>
+          </fieldset>
+        </form>
+        <button class="btn btn-danger" aria-label="exit">Log uit</button>
+      </div>
+    </div>
+  </header>
       <main>
-        <section class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 align-items-center my-5">
-                <div class="col-lg-7">
-                    <img class="img-fluid rounded mb-4 mb-lg-0" src="assets/images/decks/MTGDeck.jpg" alt="">
+        <section class="mainDeck">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 align-items-center py-5">
+                <div class="col-12 d-flex gap-3 flex-wrap">
+                    <img class="img-fluid rounded col-12 col-lg-5 mb-4 mb-lg-7" src="assets/images/decks/MTGDeck.jpg" alt="deck placeholder">
                     <div class="col-lg-5">
-                        <h1 class="font-weight-light">Business Name or Tagline</h1>
-                        <p>This is a template that is great for small businesses. It doesn't have too much fancy flare to it, but it makes a great use of the standard Bootstrap core components.</p>
+                        <h1 class="font-weight-light text-light">Main activated deck</h1>
+                        <p class="text-light">This is a template that is great for small businesses. It doesn't have too much fancy flare to it, but it makes a great use of the standard Bootstrap core components.</p>
                         <a class="btn btn-primary" href="#">Call to Action!</a>
                     </div>
                 </div>
             </div>
-            <div class="card text-white bg-secondary my-5 py-4 text-center">
+        </div>
+
+        </section>
+        <section class="tips">
+            <div class="card text-white bg-secondary my-5 py-4 text-center mx-5">
                 <div class="card-body">
-                    <p class="text-white m-0">This call to action card is a great place to showcase some important information or display a clever tagline!</p>
+                    <p class="text-white m-0">Tip of the day: Read your card descriptions well!</p>
                 </div>
             </div>
-            <div class="row gx-4 gx-lg-5">
-                <div class="col-md-4 mb-5">
+          </section>
+            <section class="otherDecks">
+            <div class="row gx-4 gx-lg-5 mx-5">
+              <div class="col-md-4 mb-5">
                     <div class="card h-100">
                         <div class="card-body">
-                            <h2 class="card-title">Card One</h2>
+                            <h2 class="card-title">Deck One</h2>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
                         </div>
                         <div class="card-footer">
@@ -172,51 +168,76 @@
                 <div class="col-md-4 mb-5">
                     <div class="card h-100">
                         <div class="card-body">
-                            <h2 class="card-title">Card Two!</h2>
+                            <h2 class="card-title">Deck Two!</h2>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                        </div>
+                        <div class="card-footer">
+                          <a class="btn btn-primary btn-sm" href="#">More info</a>
                         </div>
                     </div>
                 </div>
+                <div class="col-md-4 mb-5">
+                  <div class="card h-100">
+                      <div class="card-body">
+                          <h2 class="card-title">Deck Three!</h2>
+                          <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                      </div>
+                      <div class="card-footer">
+                        <a class="btn btn-primary btn-sm" href="#">More info</a>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-4 mb-5">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="card-title">Deck Four!</h2>
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                    </div>
+                    <div class="card-footer">
+                      <a class="btn btn-primary btn-sm" href="#">More info</a>
+                    </div>
+                </div>
             </div>
-        </section>
+            <div class="col-md-4 mb-5">
+              <div class="card h-100">
+                  <div class="card-body">
+                      <h2 class="card-title">Deck Five!</h2>
+                      <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                  </div>
+                  <div class="card-footer">
+                    <a class="btn btn-primary btn-sm" href="#">More info</a>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-4 mb-5">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title">Deck Six!</h2>
+                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                </div>
+                <div class="card-footer">
+                  <a class="btn btn-primary btn-sm" href="#">More info</a>
+                </div>
+            </div>
+        </div>
+            </div>
+            </section>
       </main>
-      <footer class="cbg-primary text-dark">
+      <footer class="cbg-primary text-light">
         <div class="container">
           <footer class="py-5">
             <div class="row">
               <div class="col-6 col-md-2 mb-3">
-                <h5>div1</h5>
+                <h5>Links</h5>
                 <ul class="nav flex-column">
-                  <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Home</a></li>
-                  <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Features</a></li>
-                  <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Pricing</a></li>
-                  <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">FAQs</a></li>
-                  <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">About</a></li>
+                  <li class="nav-item mb-2"><a href="home.html" class="nav-link p-0 text-light">Home</a></li>
+                  <li class="nav-item mb-2"><a href="decks.html" class="nav-link p-0 text-light">Decks</a></li>
+                  <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light">Draw</a></li>
+                  <li class="nav-item mb-2"><a href="landingspage.html  " class="nav-link p-0 text-light">Landingspagina</a></li>
+                  <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light">FAQs</a></li>
                 </ul>
               </div>
-        
-              <div class="col-6 col-md-2 mb-3">
-                <h5>div2</h5>
-                <ul class="nav flex-column">
-                  <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Home</a></li>
-                  <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Features</a></li>
-                  <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Pricing</a></li>
-                  <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">FAQs</a></li>
-                  <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">About</a></li>
-                </ul>
-              </div>
-        
-              <div class="col-6 col-md-2 mb-3">
-                <h5>div3</h5>
-                <ul class="nav flex-column">
-                  <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Home</a></li>
-                  <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Features</a></li>
-                  <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Pricing</a></li>
-                  <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">FAQs</a></li>
-                  <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">About</a></li>
-                </ul>
-              </div>
-        
+              
               <div class="col-md-5 offset-md-1 mb-3">
                 <form>
                   <h5>Subscribe to our newsletter</h5>

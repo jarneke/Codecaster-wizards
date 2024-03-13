@@ -5,8 +5,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Home</title>
-  <!-- link script for font awasome icons -->
-  <script src="https://kit.fontawesome.com/0fbfe9cad5.js" crossorigin="anonymous"></script>
   <!-- Link bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
@@ -15,6 +13,7 @@
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="css/bootstrap.css" />
+  <script src="js/infoPopUp.js"></script>
 </head>
 
 <body class="bg-secondary">
@@ -29,7 +28,6 @@
               d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
           </svg>
         </a>
-
         <ul class="nav">
           <li>
             <a href="home.html" class="nav-link px-2 ctext-light">Home</a>
@@ -61,7 +59,6 @@
           </article>
           <a class="btn btn-dark" type="button" href="profile.html">Bekijk profiel</a>
         </section>
-
         <button class="btn-close text-reset bg-danger" type="button" data-bs-toggle="offcanvas" aria-label="close">
         </button>
       </section>
@@ -70,7 +67,7 @@
           <fieldset class="d-flex flex-column gap-1">
             <legend>Geef ons je feedback:</legend>
             <label for="feedbackType">Welke soort feedback wil je geven?</label>
-            <select name="feedbackType" id="feedbackType">
+            <select name="feedbackType" id="feedbackType" class="form-select p-2">
               <option value="bug">Meld een bug</option>
               <option value="suggestion">Suggestie indienen</option>
               <option value="compliment">Geef een compliment</option>
@@ -92,25 +89,95 @@
   </header>
   <main class="p-3 container">
     <section class="row d-flex justify-content-center mb-3">
-      <form class="col-12 col-md-6 col-lg-5 col-xl-4">
-        <article class="form-control d-flex align-items-center">
-          <button class="fa fa-search bg-white text-secondary p-1 border-0" type="submit" id="search"></button>
-          <input aria-label="Search" placeholder="Search..." type="search" name="cardLookup" id="cardLookup"
-            class="form-control border-0" />
-        </article>
+      <form class="col-12 container d-flex justify-content-between flex-wrap">
+        <fieldset class="col-12">
+          <div class="form-control d-flex">
+            <button class="bg-white text-secondary p-1 border-0" type="submit" id="search">
+              <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                <path
+                  d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+              </svg>
+            </button>
+            <input aria-label="Search" placeholder="Zoeken..." type="search" name="cardLookup" id="cardLookup"
+              class="form-control border-0" />
+          </div>
+        </fieldset>
+        <fieldset class="col-12 col-sm-5 d-flex flex-wrap">
+          <legend class="text-center col-12">Filter</legend>
+          <div class="form-group col-12 mb-2">
+            <select class="form-select" name="type" id="type">
+              <option value="blank"></option>
+              <option value="artifact">Artifact</option>
+              <option value="basic">Basic</option>
+              <option value="battle">Battle</option>
+              <option value="conspiracy">Conspiracy</option>
+              <option value="creature">Creatue</option>
+              <option value="dungeon">Dungeon</option>
+              <option value="eaturecray">Eaturecray</option>
+              <option value="enchantment">Enchantment</option>
+              <option value="ever">Ever</option>
+              <option value="host">Host</option>
+              <option value="instant">Instant</option>
+              <option value="land">Land</option>
+            </select>
+          </div>
+          <div class="d-flex flex-column align-items-center col-2">
+            <input class="form-check-input" type="radio" name="W" id="W">
+            <label class="form-check-label" for="W">
+              <img src="assets/images/mana_symbols/W.svg" height="20px" alt="">
+            </label>
+          </div>
+          <div class="d-flex flex-column align-items-center col-2">
+            <input class="form-check-input" type="radio" name="U" id="U">
+            <label class="form-check-label" for="U">
+              <img src="assets/images/mana_symbols/U.svg" height="20px" alt=""></label>
+          </div>
+          <div class="d-flex flex-column align-items-center col-2">
+            <input class="form-check-input" type="radio" name="B" id="B">
+            <label class="form-check-label" for="B">
+              <img src="assets/images/mana_symbols/B.svg" height="20px" alt=""></label>
+          </div>
+          <div class="d-flex flex-column align-items-center col-2">
+            <input class="form-check-input" type="radio" name="R" id="R">
+            <label class="form-check-label" for="R">
+              <img src="assets/images/mana_symbols/R.svg" height="20px" alt=""></label>
+          </div>
+          <div class="d-flex flex-column align-items-center col-2">
+            <input class="form-check-input" type="radio" name="G" id="G">
+            <label class="form-check-label" for="G">
+              <img src="assets/images/mana_symbols/G.svg" height="20px" alt=""></label>
+          </div>
+          <div class="d-flex flex-column align-items-center col-2">
+            <input class=" form-check-input" type="radio" name="C" id="C">
+            <label class="form-check-label" for="C">
+              <img src="assets/images/mana_symbols/C.svg" height="20px" alt=""></label>
+          </div>
+        </fieldset>
+        <fieldset class="col-12 col-sm-5">
+          <legend class="text-center">Sorteer</legend>
+          <div class="form-group">
+            <select class="form-select" name="sort" id="sort">
+              <option value="blank"></option>
+              <option value="color">Color</option>
+              <option value="colorWeight">Color Weight</option>
+              <option value="...">...</option>
+            </select>
+          </div>
+        </fieldset>
       </form>
     </section>
     <section class="container d-flex justify-content-between">
       <article>
-        <button>
-          <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <button class="btn btn-dark cbg-primary">
+          <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
             <path
               d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
           </svg>
         </button>
-        <button>
-          <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+        <button class="btn btn-dark cbg-primary">
+          <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
             <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
             <path
               d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
@@ -124,15 +191,15 @@
         <p>...</p>
       </section>
       <article>
-        <button>
-          <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+        <button class="btn btn-dark cbg-primary">
+          <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
             <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
             <path
               d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z" />
           </svg>
         </button>
-        <button>
-          <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <button class="btn btn-dark cbg-primary">
+          <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
             <path
               d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
@@ -182,15 +249,15 @@
     </section>
     <section class="container d-flex justify-content-between">
       <article>
-        <button>
-          <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <button class="btn btn-dark cbg-primary">
+          <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
             <path
               d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
           </svg>
         </button>
-        <button>
-          <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+        <button class="btn btn-dark cbg-primary">
+          <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
             <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
             <path
               d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
@@ -204,15 +271,15 @@
         <p>...</p>
       </section>
       <article>
-        <button>
-          <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+        <button class="btn btn-dark cbg-primary">
+          <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
             <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
             <path
               d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z" />
           </svg>
         </button>
-        <button>
-          <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <button class="btn btn-dark cbg-primary">
+          <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
             <path
               d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
@@ -225,14 +292,13 @@
     <a href="#" class="text-dark text-decoration-none">&copy; Codecaster Wizards</a>
   </footer>
   <!-- bootstrap offcanvases-->
-
   <!-- - mini profile offcanvas-->
   <section class="offcanvas offcanvas-start bg-secondary" tabindex="-1" id="miniProfile"
     aria-labelledby="miniprofileLabel">
     <section class="offcanvas-header bg-primary align-items-start">
       <section class="d-flex flex-column gap-2">
         <section class="d-flex gap-3">
-          <img class="fa fa-user-circle display-2" width="100px" src="" />
+          <img class="display-2" width="100px" src="" />
           <section class="container">
             <h5 class="">Welkom ${username}</h5>
             <h6 class="">${email}</h6>
@@ -240,7 +306,6 @@
         </section>
         <a class="btn btn-dark" type="button" href="profile.html">Bekijk profiel</a>
       </section>
-
       <button class="btn-close text-reset bg-danger" type="button" data-bs-toggle="offcanvas"
         aria-label="close"></button>
     </section>
@@ -265,6 +330,46 @@
         </fieldset>
       </form>
       <button class="btn btn-danger" aria-label="exit">Log uit</button>
+    </section>
+  </section>
+  <!-- Modals -->
+  <section class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <section class="modal-dialog">
+      <section class="modal-content">
+        <section class="modal-header cbg-primary-d">
+          <h1 class="modal-title ctext-white fs-5" id="infoModalLabel">Info</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </section>
+        <section class="modal-body">
+          <p>
+            Welkom bij de Magic the Gathering webapp! Hier kun je alles leren over het spel en je decks beheren. Hier
+            zijn enkele functies die je kunt gebruiken:
+          </p>
+          <h3>Speluitleg</h3>
+          <p>
+            Magic the Gathering is een strategisch kaartspel waarbij spelers elkaar proberen te verslaan door spreuken
+            te casten, wezens op te roepen en hun tegenstanders levenspunten te verminderen.
+          </p>
+          <h3>Kaarten zoeken</h3>
+          <p>
+            Gebruik de zoekfunctie om kaarten te vinden op basis van naam, kleur, type, of andere kenmerken. Zoek naar
+            specifieke kaarten om je deck te verbeteren.
+          </p>
+          <h3>Deck beheren</h3>
+          <p>
+            Voeg kaarten toe aan je deck, bekijk de kaarten in je deck en pas je decks aan om de perfecte strategie te
+            creëren. Je kunt ook de decksimulator gebruiken om te zien hoe je deck presteert in verschillende situaties.
+          </p>
+          <h3>Deck simuleren</h3>
+          <p>
+            Gebruik de decksimulator om willekeurige kaarten te trekken en je kansen te beoordelen. Dit helpt je om de
+            consistentie van je deck te optimaliseren en te zien hoe het presteert in verschillende scenario's.
+          </p>
+        </section>
+        <section class="modal-footer">
+          <button type="button" class="btn btn-dark cbg-primary" data-bs-dismiss="modal">Ik begrijp het</button>
+        </section>
+      </section>
     </section>
   </section>
 </body>

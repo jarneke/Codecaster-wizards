@@ -18,74 +18,62 @@
 </head>
 
 <body>
-  <header class="d-flex justify-content-start p-3 bg-primary">
-    <!-- Button trigger modal -->
-    <a class="btn btn-primary" data-bs-toggle="modal" href="#loginModal" role="button"><svg height="3rem"
-        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-        <path
-          d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
-      </svg>
-    </a>
-
-
-
+  <header class="d-flex justify-content-center p-1 ctext-white cbg-primary">
+    <h1>Codecaster Wizards</h1>
   </header>
   <main>
     <section class="container d-flex flex-wrap justify-content-center align-items-center min-vh-100 col-sm-12 gap-5">
-      <article id="cards_animation">
+      <section id="cards_animation">
         <h1 class="text-nowrap text-center">Fifa</h1>
         <article class="card card-flyer">
           <img height="300rem" src="assets/images/landingspage/fifa.webp" alt="foto fifa">
           <a href="#errorModal" class="btn btn-secondary" data-bs-toggle="modal">Aanmelden
           </a>
         </article>
-      </article>
-      <article id="cards_animation">
+      </section>
+      <section id="cards_animation">
         <h1 class="text-nowrap text-center">Fortnite</h1>
-        <figure class="card card-flyer">
-          <a href="#errorModal" data-bs-toggle="modal"><img height="300rem"
-              src="assets/images/landingspage/fornite.webp" alt="foto fortnite"></a>
-          <figcaption class="d-none">Mogelijk gemaakt met DALL·E 3</figcaption>
-        </figure>
-      </article>
-      <article id="cards_animation">
+        <article class="card card-flyer">
+          <img height="300rem" src="assets/images/landingspage/fornite.webp" alt="foto fifa">
+          <a href="#errorModal" class="btn btn-secondary" data-bs-toggle="modal">Aanmelden
+          </a>
+        </article>
+      </section>
+      <section id="cards_animation">
         <h1 class="text-nowrap text-center">LegoMasters</h1>
-        <figure class="card card-flyer">
-          <a href="#errorModal" data-bs-toggle="modal"><img height="300rem" src="assets/images/landingspage/lego.webp"
-              alt="foto legomaters"></a>
-          <figcaption class="d-none">Mogelijk gemaakt met DALL·E 3</figcaption>
-        </figure>
-      </article>
-      <article id="cards_animation">
+        <article class="card card-flyer">
+          <img height="300rem" src="assets/images/landingspage/lego.webp" alt="foto fifa">
+          <a href="#errorModal" class="btn btn-secondary" data-bs-toggle="modal">Aanmelden
+          </a>
+        </article>
+      </section>
+      <section id="cards_animation">
         <h1 class="text-nowrap text-center">LOTR</h1>
-        <figure class="card card-flyer">
-          <a href="#errorModal" data-bs-toggle="modal"><img height="300rem" src="assets/images/landingspage/lotr.webp"
-              alt="foto lord of the rings"></a>
-          <figcaption class="d-none">Mogelijk gemaakt met DALL·E 3</figcaption>
-        </figure>
-      </article>
-      <article id="cards_animation">
+        <article class="card card-flyer">
+          <img height="300rem" src="assets/images/landingspage/lotr.webp" alt="foto fifa">
+          <a href="#errorModal" class="btn btn-secondary" data-bs-toggle="modal">Aanmelden
+          </a>
+        </article>
+      </section>
+      <section id="cards_animation">
         <h1 class="text-nowrap text-center">MTG</h1>
-        <figure class="card card-flyer">
-          <a href=home.html><img height="300rem" src="assets/images/landingspage/mtg.webp"
-              alt="foto magic the gathering"></a>
-          <figcaption class="d-none">Mogelijk gemaakt met DALL·E 3</figcaption>
-        </figure>
-      </article>
-      <article id="cards_animation">
+        <article class="card card-flyer">
+          <img height="300rem" src="assets/images/landingspage/mtg.webp" alt="foto fifa">
+          <a href="#loginModal" class="btn btn-secondary" data-bs-toggle="modal">Aanmelden
+          </a>
+        </article>
+      </section>
+      <section id="cards_animation">
         <h1 class="text-nowrap text-center">Pokemon</h1>
-        <figure class="card card-flyer">
-          <a href="#errorModal" data-bs-toggle="modal"><img height="300rem"
-              src="assets/images/landingspage/pokemon.webp" alt="foto pokemon"></a>
-          <figcaption class="d-none">Mogelijk gemaakt met DALL·E 3</figcaption>
-        </figure>
-      </article>
+        <article class="card card-flyer">
+          <img height="300rem" src="assets/images/landingspage/pokemon.webp" alt="foto fifa">
+          <a href="#errorModal" class="btn btn-secondary" data-bs-toggle="modal">Aanmelden
+          </a>
+        </article>
+      </section>
     </section>
   </main>
-  <aside></aside>
   <footer class="text-wrap text-center">&copyDALL-E 3</footer>
-  <a href="#errorModal" data-bs-toggle="modal"></a>
-
   <!-- Modals -->
   <div class="modal fade" id="loginModal" aria-hidden="true" aria-labelledby="loginModalLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -124,18 +112,17 @@
           </form>
         </div>
         <div class="modal-footer d-flex justify-content-start">
-          <button class="btn btn-link ms-4 col-3" data-bs-target="#exampleModalToggle2"
+          <button class="btn btn-link ms-4 col-3" data-bs-target="#registerModal"
             data-bs-toggle="modal">Registreer</button>
         </div>
       </div>
     </div>
   </div>
-  <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2"
-    tabindex="-1">
+  <div class="modal fade" id="registerModal" aria-hidden="true" aria-labelledby="registerModalLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Registreer</h1>
+          <h1 class="modal-title fs-5" id="registerModalLabel">Registreer</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -174,13 +161,12 @@
         </div>
         </form>
         <div class="modal-footer justify-content-between">
-          <button class="btn btn-link ms-4 col-3 text-nowrap" data-bs-target="#loginModal" data-bs-toggle="modal">Ik heb
+          <button class="btn btn-link ms-4 col-3 text-nowrap" data-bs-target="#errorModal" data-bs-toggle="modal">Ik heb
             al een account</button>
         </div>
       </div>
     </div>
   </div>
-
   <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">

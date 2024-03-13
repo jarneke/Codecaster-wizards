@@ -73,16 +73,50 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Modal 2</h1>
+            <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Registreer</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            Hide this modal and show the first with the button below.
+            <form class="px-4 py-3">
+            <div class="text-center mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="130" height="130" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+              <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+            </svg>
           </div>
-          <div class="modal-footer">
-            <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Back to
-              first</button>
+          <div class="row mb-3">
+            <div class="col">
+              <label for="exampleDropdownFormEmail1" class="form-label">Voornaam</label>
+              <input type="text" class="form-control" placeholder="Voornaam" aria-label="First name">
+            </div>
+            <div class="col">
+              <label for="exampleDropdownFormEmail1" class="form-label">Naam</label>
+              <input type="text" class="form-control" placeholder="Naam" aria-label="Last name">
+            </div>
           </div>
+            <div class="mb-3">
+              <label for="exampleDropdownFormEmail1" class="form-label">Email</label>
+              <input type="email" class="form-control" id="exampleDropdownFormEmail1"
+                placeholder="email@voorbeeld.com">
+            </div>
+            <div class="mb-3">
+              <label for="exampleDropdownFormPassword1" class="form-label">Wachtwoord</label>
+              <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Wachtwoord">
+            </div>
+            <div class="mb-3">
+              <label for="exampleDropdownFormPassword1" class="form-label">Bevestig wachtwoord</label>
+              <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Wachtwoord">
+            </div>
+            <button type="submit" class="btn btn-primary col-3">Registreer</button>
+          </div>
+         
+        </form>
+          <div class="modal-footer justify-content-between">
+            <button class="btn btn-link ms-4 col-3 text-nowrap" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Ik heb al een account</button>
+             
+          </div>
+
+         
         </div>
       </div>
     </div>
@@ -94,28 +128,29 @@
       <article id="cards_animation">
         <h1 class="text-nowrap text-center">Fifa</h1>
         <figure class="card card-flyer">
-          <img height="300rem" src="assets/images/landingspage/fifa.webp" alt="foto fifa">
+          
+          <a href="#exampleModal" data-bs-toggle="modal"><img height="300rem" src="assets/images/landingspage/fifa.webp" alt="foto fifa"></a>
           <figcaption class="d-none">Mogelijk gemaakt met DALL·E 3</figcaption>
         </figure>
       </article>
       <article id="cards_animation">
         <h1 class="text-nowrap text-center">Fortnite</h1>
         <figure class="card card-flyer">
-          <img height="300rem" src="assets/images/landingspage/fornite.webp" alt="foto fortnite">
+          <a href="#exampleModal" data-bs-toggle="modal"><img height="300rem" src="assets/images/landingspage/fornite.webp" alt="foto fortnite"></a>
           <figcaption class="d-none">Mogelijk gemaakt met DALL·E 3</figcaption>
         </figure>
       </article>
       <article id="cards_animation">
         <h1 class="text-nowrap text-center">LegoMasters</h1>
         <figure class="card card-flyer">
-          <img height="300rem" src="assets/images/landingspage/lego.webp" alt="foto legomaters">
+          <a href="#exampleModal" data-bs-toggle="modal"><img height="300rem" src="assets/images/landingspage/lego.webp" alt="foto legomaters"></a>
           <figcaption class="d-none">Mogelijk gemaakt met DALL·E 3</figcaption>
         </figure>
       </article>
       <article id="cards_animation">
         <h1 class="text-nowrap text-center">LOTR</h1>
         <figure class="card card-flyer">
-          <img height="300rem" src="assets/images/landingspage/lotr.webp" alt="foto lord of the rings">
+          <a href="#exampleModal" data-bs-toggle="modal"><img height="300rem" src="assets/images/landingspage/lotr.webp" alt="foto lord of the rings"></a>
           <figcaption class="d-none">Mogelijk gemaakt met DALL·E 3</figcaption>
         </figure>
       </article>
@@ -130,7 +165,7 @@
       <article id="cards_animation">
         <h1 class="text-nowrap text-center">Pokemon</h1>
         <figure class="card card-flyer">
-          <img height="300rem" src="assets/images/landingspage/pokemon.webp" alt="foto pokemon">
+          <a href="#exampleModal" data-bs-toggle="modal"><img height="300rem" src="assets/images/landingspage/pokemon.webp" alt="foto pokemon"></a>
           <figcaption class="d-none">Mogelijk gemaakt met DALL·E 3</figcaption>
         </figure>
       </article>
@@ -138,6 +173,24 @@
   </main>
   <aside></aside>
   <footer class="text-wrap text-center">&copyDALL-E 3</footer>
+  <a href="#exampleModal" data-bs-toggle="modal"></a>
+  
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger">
+          <h5 class="modal-title text-white" id="exampleModalLabel">Error!</h5>
+          <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>U heeft geen toegang tot deze pagina!</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Sluit</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

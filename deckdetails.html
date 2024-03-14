@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="css/bootstrap.css" />
   </head>
   <body>
-    <header class="p-3 cbg-primary text-light">
+    <header class="p-3 cbg-primary ">
       <div class="container">
         <div
           class="d-flex flex-wrap align-items-center justify-content-between"
@@ -50,7 +50,7 @@
             </svg>
           </a>
           <section>
-            <h1 class="ch1">Magic The Gathering</h1>
+            <h1 class="ch1 ctext-secondary">Magic The Gathering</h1>
           </section>
           <ul class="nav">
             <li>
@@ -153,18 +153,24 @@
                 alt="deck placeholder"
               />
               <div class="col-lg-5">
-                <h1 class="font-weight-light text-light">
+                <h1 class="font-weight-light text-light ch1">
                   Main activated deck
                 </h1>
-                <p class="text-light">
-                  This is a template that is great for small businesses. It
-                  doesn't have too much fancy flare to it, but it makes a great
-                  use of the standard Bootstrap core components.
+                <p class="text-light ch1">
+                  Deck naam
                 </p>
+                <ul class="text-light">
+                  <li>Aantal kaarten: 6/60</li>
+                  <br>
+                  <li>Aantal landkaarten: 0</li>
+                  <br>
+                  <li>Gemiddelde manacost: 6</li>
+                </ul>
+                <br>
                 <!-- Button trigger modal -->
                 <button
                   type="button"
-                  class="btn btn-primary"
+                  class="btn btn-primary cbg-secondary border-dark"
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModal"
                 >
@@ -184,88 +190,80 @@
           </div>
         </div>
       </section>
-      <section class="otherDecks">
-        <div class="row gx-4 gx-lg-5 mx-5">
-          <div class="col-md-4 mb-5">
+      <section class="otherDecks d-flex justify-content-center">
+        <div class="container gx-4 gx-lg-5 mx-5 d-flex flex-wrap col-10 justify-content-center">
+          <div class="col-4 mb-5 px-2 px-2">
             <div class="card h-100">
               <div class="card-body">
-                <h2 class="card-title">Deck One</h2>
-                <p class="card-text">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem
-                  magni quas ex numquam, maxime minus quam molestias corporis
-                  quod, ea minima accusamus.
-                </p>
+                <h2 class="card-title text-white">Card One</h2>
+                <img class="col-12" src="assets/images/demoCards/card1.jpg" alt="Demo card">
               </div>
               <div class="card-footer">
-                <a class="btn btn-primary btn-sm" href="#">More Info</a>
+                <a class="btn btn-primary cbg-secondary border-dark" href="#">More Info</a>
               </div>
             </div>
           </div>
-          <div class="col-md-4 mb-5">
+
+          <div class="col-4 mb-5 px-2">
             <div class="card h-100">
               <div class="card-body">
-                <h2 class="card-title">Deck Two!</h2>
-                <p class="card-text">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                </p>
+                <h2 class="card-title text-white">Card Two</h2>
+                <img class="col-12" src="assets/images/demoCards/card2.jpg" alt="Demo card">
               </div>
               <div class="card-footer">
-                <a class="btn btn-primary btn-sm" href="#">More info</a>
+                <a class="btn btn-primary cbg-secondary border-dark" href="#">More Info</a>
               </div>
             </div>
           </div>
-          <div class="col-md-4 mb-5">
+
+          <div class="col-4 mb-5 px-2">
             <div class="card h-100">
               <div class="card-body">
-                <h2 class="card-title">Deck Three!</h2>
-                <p class="card-text">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                </p>
+                <h2 class="card-title text-white">Card Three</h2>
+                <img class="col-12" src="assets/images/demoCards/card3.jpg" alt="Demo card">
               </div>
               <div class="card-footer">
-                <a class="btn btn-primary btn-sm" href="#">More info</a>
+                <a class="btn btn-primary cbg-secondary border-dark" href="#">More Info</a>
               </div>
             </div>
           </div>
-          <div class="col-md-4 mb-5">
+
+          <div class="col-4 mb-5 px-2">
             <div class="card h-100">
               <div class="card-body">
-                <h2 class="card-title">Deck Four!</h2>
-                <p class="card-text">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                </p>
+                <h2 class="card-title text-white">Card Four</h2>
+                <img class="col-12" src="assets/images/demoCards/card4.jpg" alt="Demo card">
               </div>
               <div class="card-footer">
-                <a class="btn btn-primary btn-sm" href="#">More info</a>
+                <a class="btn btn-primary cbg-secondary border-dark" href="#">More Info</a>
               </div>
             </div>
           </div>
-          <div class="col-md-4 mb-5">
+
+          <div class="col-4 mb-5 px-2">
             <div class="card h-100">
               <div class="card-body">
-                <h2 class="card-title">Deck Five!</h2>
-                <p class="card-text">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                </p>
+                <h2 class="card-title text-white">Card Five</h2>
+                <img class="col-12" src="assets/images/demoCards/card5.jpg" alt="Demo card">
               </div>
               <div class="card-footer">
-                <a class="btn btn-primary btn-sm" href="#">More info</a>
+                <a class="btn btn-primary cbg-secondary border-dark" href="#">More Info</a>
               </div>
             </div>
           </div>
-          <div class="col-md-4 mb-5">
+
+          <div class="col-4 mb-5 px-2">
             <div class="card h-100">
               <div class="card-body">
-                <h2 class="card-title">Deck Six!</h2>
-                <p class="card-text">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                </p>
+                <h2 class="card-title text-white">Card Six</h2>
+                <img class="col-12" src="assets/images/demoCards/card8.jpeg" alt="Demo card">
               </div>
               <div class="card-footer">
-                <a class="btn btn-primary btn-sm" href="#">More info</a>
+                <a class="btn btn-primary cbg-secondary border-dark" href="#">More Info</a>
               </div>
             </div>
           </div>
+
         </div>
       </section>
       <section class="Modal">
@@ -280,7 +278,7 @@
           <div class="modal-dialog modal-xl">
             <div class="modal-content">
               <div class="modal-header d-flex">
-                <h5 class="modal-title" id="exampleModalLabel">CARD NAME</h5>
+                <h5 class="modal-title ch1" id="exampleModalLabel">CARD NAME</h5>
                 <button
                   type="button"
                   class="btn-close"
@@ -423,15 +421,7 @@
                 </ul>
               </div>
             </article>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary ctext-danger"
-                  data-bs-dismiss="modal"
-                >
-                  Remove card
-                </button>
-                <button type="button" class="btn btn-primary">Add card</button>
+              <div class="modal-footer">  
                 <button
                   type="button"
                   class="btn btn-secondary ctext-danger"
@@ -439,7 +429,7 @@
                 >
                   Close
                 </button>
-                <button type="button" class="btn btn-primary">
+                <button type="button" class="btn btn-primary cbg-secondary">
                   Save changes
                 </button>
               </div>
@@ -489,7 +479,7 @@
                     class="form-control"
                     placeholder="Email address"
                   />
-                  <button class="btn btn-primary cbg-info-l" type="button">
+                  <button class="btn btn-primary cbg-secondary border-dark" type="button">
                     Subscribe
                   </button>
                 </div>
@@ -500,7 +490,7 @@
           <div
             class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top"
           >
-            <p>&copy; 2024 Codecaster Wizards, Inc. All rights reserved.</p>
+            <p>&copy; 2024 Codecaster Wizards. Alle rechten voorbehouden.</p>
             <ul class="list-unstyled d-flex">
               <li class="ms-3">
                 <a class="link-dark" href="https://twitter.com/" target="_blank"

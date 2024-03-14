@@ -52,7 +52,6 @@
 
 .ch1{
   font-family: mtg-bold, Arial, Helvetica, sans-serif;
-  color: var(--light-color-d);
 }
 
 
@@ -190,7 +189,7 @@
 /* Background colors */
 .cbg-primary,
 .cbg-primary:hover {
-  background-color: var(--secondary-color-d);
+  background-color: var(--primary-color);
 }
 .cbg-primary-l,
 .cbg-primary-l:hover {
@@ -337,6 +336,6 @@ body, main {
   background-color: #cccccc;
  }
 
- header {
-  background-image: url(/assets/images/background/magicBanner.webp);
+.card-body {
+  background-image: url(/assets/images/background/MTGTest.jpg);
  }

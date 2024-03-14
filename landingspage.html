@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Home</title>
+  <title>landingspage</title>
   <!-- link script for font awasome icons -->
   <script src="https://kit.fontawesome.com/0fbfe9cad5.js" crossorigin="anonymous"></script>
   <!-- Link bootstrap CSS -->
@@ -17,180 +17,182 @@
   <link rel="stylesheet" href="css/bootstrap.css" />
 </head>
 
-<body>
-  <header class="d-flex justify-content-start p-3 bg-primary">
-    <!-- Button trigger modal -->
-    <a class="btn btn-primary" data-bs-toggle="modal" href="#exampleModalToggle" role="button"><svg height="3rem"
-        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-        <path
-          d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
-      </svg>
-    </a>
-    <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
-      tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header bg-primary text-white">
-            <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Login</h1>
-            <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form class="px-4 py-3">
-              <div class="text-center mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="130" height="130" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                  <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-                </svg>
-              </div>
-              <div class="mb-3">
-                <label for="exampleDropdownFormEmail1" class="form-label">Email</label>
-                <input type="email" class="form-control" id="exampleDropdownFormEmail1"
-                  placeholder="email@voorbeeld.com">
-              </div>
-              <div class="mb-3">
-                <label for="exampleDropdownFormPassword1" class="form-label">Wachtwoord</label>
-                <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Wachtwoord">
-              </div>
-              <div class="mb-3">
-                <div class="form-check">
-                  <input type="checkbox" class="form-check-input" id="dropdownCheck">
-                  <label class="form-check-label" for="dropdownCheck">
-                    Onthoud mij!
-                  </label>
-                </div>
-              </div>
-                <button type="submit" class="btn btn-primary col-3">Login</button>
-            </form>
-          </div>
-          <div class="modal-footer d-flex justify-content-start">
-            <button class="btn btn-link ms-4 col-3" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Registreer</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2"
-      tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Registreer</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form class="px-4 py-3">
-            <div class="text-center mb-3">
-            <svg xmlns="http://www.w3.org/2000/svg" width="130" height="130" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-              <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-            </svg>
-          </div>
-          <div class="row mb-3">
-            <div class="col">
-              <label for="exampleDropdownFormEmail1" class="form-label">Voornaam</label>
-              <input type="text" class="form-control" placeholder="Voornaam" aria-label="First name">
-            </div>
-            <div class="col">
-              <label for="exampleDropdownFormEmail1" class="form-label">Naam</label>
-              <input type="text" class="form-control" placeholder="Naam" aria-label="Last name">
-            </div>
-          </div>
-            <div class="mb-3">
-              <label for="exampleDropdownFormEmail1" class="form-label">Email</label>
-              <input type="email" class="form-control" id="exampleDropdownFormEmail1"
-                placeholder="email@voorbeeld.com">
-            </div>
-            <div class="mb-3">
-              <label for="exampleDropdownFormPassword1" class="form-label">Wachtwoord</label>
-              <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Wachtwoord">
-            </div>
-            <div class="mb-3">
-              <label for="exampleDropdownFormPassword1" class="form-label">Bevestig wachtwoord</label>
-              <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Wachtwoord">
-            </div>
-            <button type="submit" class="btn btn-primary col-3">Registreer</button>
-          </div>
-         
-        </form>
-          <div class="modal-footer justify-content-between">
-            <button class="btn btn-link ms-4 col-3 text-nowrap" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Ik heb al een account</button>
-             
-          </div>
-
-         
-        </div>
-      </div>
-    </div>
-
-
-  </header>
+<body class="cbg-dark-l" style="background-image: url(assets/images/backgrounds/circle-scatter-haikei.svg);">
   <main>
-    <section class="container d-flex flex-wrap justify-content-center align-items-center min-vh-100 col-sm-12 gap-5">
-      <article id="cards_animation">
-        <h1 class="text-nowrap text-center">Fifa</h1>
-        <figure class="card card-flyer">
-          
-          <a href="#exampleModal" data-bs-toggle="modal"><img height="300rem" src="assets/images/landingspage/fifa.webp" alt="foto fifa"></a>
-          <figcaption class="d-none">Mogelijk gemaakt met DALL·E 3</figcaption>
-        </figure>
-      </article>
-      <article id="cards_animation">
-        <h1 class="text-nowrap text-center">Fortnite</h1>
-        <figure class="card card-flyer">
-          <a href="#exampleModal" data-bs-toggle="modal"><img height="300rem" src="assets/images/landingspage/fornite.webp" alt="foto fortnite"></a>
-          <figcaption class="d-none">Mogelijk gemaakt met DALL·E 3</figcaption>
-        </figure>
-      </article>
-      <article id="cards_animation">
-        <h1 class="text-nowrap text-center">LegoMasters</h1>
-        <figure class="card card-flyer">
-          <a href="#exampleModal" data-bs-toggle="modal"><img height="300rem" src="assets/images/landingspage/lego.webp" alt="foto legomaters"></a>
-          <figcaption class="d-none">Mogelijk gemaakt met DALL·E 3</figcaption>
-        </figure>
-      </article>
-      <article id="cards_animation">
-        <h1 class="text-nowrap text-center">LOTR</h1>
-        <figure class="card card-flyer">
-          <a href="#exampleModal" data-bs-toggle="modal"><img height="300rem" src="assets/images/landingspage/lotr.webp" alt="foto lord of the rings"></a>
-          <figcaption class="d-none">Mogelijk gemaakt met DALL·E 3</figcaption>
-        </figure>
-      </article>
-      <article id="cards_animation">
-        <h1 class="text-nowrap text-center">MTG</h1>
-        <figure class="card card-flyer">
-          <a href=home.html><img height="300rem" src="assets/images/landingspage/mtg.webp"
-              alt="foto magic the gathering"></a>
-          <figcaption class="d-none">Mogelijk gemaakt met DALL·E 3</figcaption>
-        </figure>
-      </article>
-      <article id="cards_animation">
-        <h1 class="text-nowrap text-center">Pokemon</h1>
-        <figure class="card card-flyer">
-          <a href="#exampleModal" data-bs-toggle="modal"><img height="300rem" src="assets/images/landingspage/pokemon.webp" alt="foto pokemon"></a>
-          <figcaption class="d-none">Mogelijk gemaakt met DALL·E 3</figcaption>
-        </figure>
-      </article>
+    <header class="d-flex justify-content-center p-1 ctext-white cbg-dark mb-3">
+      <h1><u>Codecaster Wizards</u></h1>
+    </header>
+    <section class="container d-flex flex-wrap justify-content-center align-items-center min-vh-50 col-sm-12 gap-3">
+      <section id="cards_animation">
+        <h1 class="text-nowrap text-center ctext-white">Fifa</h1>
+        <article class="card card-flyer cbg-secondary p-2">
+          <img height="300rem" src="assets/images/landingspage/fifa.webp" class="rounded mb-2">
+          <a href="#errorModal" class="btn btn-dark cbg-dark" data-bs-toggle="modal">
+            Aanmelden
+          </a>
+        </article>
+      </section>
+      <section id="cards_animation">
+        <h1 class="text-nowrap text-center ctext-white">Fortnite</h1>
+        <article class="card card-flyer cbg-secondary p-2">
+          <img height="300rem" src="assets/images/landingspage/fornite.webp" class="rounded mb-2">
+          <a href="#errorModal" class="btn btn-dark cbg-dark" data-bs-toggle="modal">
+            Aanmelden
+          </a>
+        </article>
+      </section>
+      <section id="cards_animation">
+        <h1 class="text-nowrap text-center ctext-white">LegoMasters</h1>
+        <article class="card card-flyer cbg-secondary p-2">
+          <img height="300rem" src="assets/images/landingspage/lego.webp" class="rounded mb-2">
+          <a href="#errorModal" class="btn btn-dark cbg-dark" data-bs-toggle="modal">
+            Aanmelden
+          </a>
+        </article>
+      </section>
+      <section id="cards_animation">
+        <h1 class="text-nowrap text-center ctext-white">LOTR</h1>
+        <article class="card card-flyer cbg-secondary p-2">
+          <img height="300rem" src="assets/images/landingspage/lotr.webp" class="rounded mb-2">
+          <a href="#errorModal" class="btn btn-dark cbg-dark" data-bs-toggle="modal">
+            Aanmelden
+          </a>
+        </article>
+      </section>
+      <section id="cards_animation">
+        <h1 class="text-nowrap text-center ctext-white">MTG</h1>
+        <article class="card card-flyer cbg-secondary p-2">
+          <img height="300rem" src="assets/images/landingspage/mtg.webp" class="rounded mb-2">
+          <a href="#loginModal" class="btn btn-dark cbg-dark" data-bs-toggle="modal">
+            Aanmelden
+          </a>
+        </article>
+      </section>
+      <section id="cards_animation">
+        <h1 class="text-nowrap text-center ctext-white">Pokémon</h1>
+        <article class="card card-flyer cbg-secondary p-2">
+          <img height="300rem" src="assets/images/landingspage/pokemon.webp" class="rounded mb-2">
+          <a href="#errorModal" class="btn btn-dark cbg-dark" data-bs-toggle="modal">
+            Aanmelden
+          </a>
+        </article>
+      </section>
     </section>
   </main>
-  <aside></aside>
-  <footer class="text-wrap text-center">&copyDALL-E 3</footer>
-  <a href="#exampleModal" data-bs-toggle="modal"></a>
-  
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header bg-danger">
+  <footer class="text-wrap text-center mt-3 cbg-dark ctext-white">
+    FOTOS: &copy
+    <a class="ctext-white" href="https://openai.com/dall-e-3">
+      DALL-E 3
+    </a>
+  </footer>
+  <!-- Modals -->
+  <section class="modal fade" id="loginModal" aria-hidden="true" aria-labelledby="loginModalLabel" tabindex="-1">
+    <section class="modal-dialog modal-dialog-centered">
+      <section class="modal-content">
+        <section class="modal-header cbg-dark text-white border-0">
+          <h1 class="modal-title fs-5" id="loginModalLabel">Login</h1>
+          <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </section>
+        <section class="modal-body cbg-primary">
+          <form class="px-4 py-3">
+            <fieldset class="text-center mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="130" height="130" fill="currentColor"
+                class="bi bi-person-circle" viewBox="0 0 16 16">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                <path fill-rule="evenodd"
+                  d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+              </svg>
+            </fieldset>
+            <fieldset class="mb-3">
+              <label for="exampleDropdownFormEmail1" class="form-label ctext-white">Email</label>
+              <input type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="email@voorbeeld.com">
+            </fieldset>
+            <fieldset class="mb-3">
+              <label for="exampleDropdownFormPassword1" class="form-label ctext-white">Wachtwoord</label>
+              <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Wachtwoord">
+            </fieldset>
+            <fieldset class="mb-3">
+              <section class="form-check">
+                <input type="checkbox" class="form-check-input" id="dropdownCheck">
+                <label class="form-check-label ctext-white" for="dropdownCheck">
+                  Onthoud mij!
+                </label>
+              </section>
+            </fieldset>
+            <button type="submit" class="btn btn-dark cbg-dark col-3">Login</button>
+          </form>
+        </section>
+        <section class="modal-footer d-flex justify-content-start">
+          <button class="btn btn-link ctext-white ms-4 col-3" data-bs-target="#registerModal"
+            data-bs-toggle="modal">Registreer</button>
+        </section>
+      </section>
+    </section>
+  </section>
+  <section class="modal fade" id="registerModal" aria-hidden="true" aria-labelledby="registerModalLabel" tabindex="-1">
+    <section class="modal-dialog modal-dialog-centered">
+      <section class="modal-content">
+        <section class="modal-header">
+          <h1 class="modal-title fs-5" id="registerModalLabel">Registreer</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </section>
+        <section class="modal-body">
+          <form class="px-4 py-3">
+            <fieldset class="text-center mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="130" height="130" fill="currentColor"
+                class="bi bi-person-circle" viewBox="0 0 16 16">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                <path fill-rule="evenodd"
+                  d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+              </svg>
+            </fieldset>
+            <fieldset class="row mb-3">
+              <section class="col">
+                <label for="exampleDropdownFormEmail1" class="form-label">Voornaam</label>
+                <input type="text" class="form-control" placeholder="Voornaam" aria-label="First name">
+              </section>
+              <section class="col">
+                <label for="exampleDropdownFormEmail1" class="form-label">Naam</label>
+                <input type="text" class="form-control" placeholder="Naam" aria-label="Last name">
+              </section>
+            </fieldset>
+            <fieldset class="mb-3">
+              <label for="exampleDropdownFormEmail1" class="form-label">Email</label>
+              <input type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="email@voorbeeld.com">
+            </fieldset>
+            <fieldset class="mb-3">
+              <label for="exampleDropdownFormPassword1" class="form-label">Wachtwoord</label>
+              <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Wachtwoord">
+            </fieldset>
+            <fieldset class="mb-3">
+              <label for="exampleDropdownFormPassword1" class="form-label">Bevestig wachtwoord</label>
+              <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Wachtwoord">
+            </fieldset>
+            <button type="submit" class="btn btn-primary col-3">Registreer</button>
+          </form>
+        </section>
+        <section class="modal-footer justify-content-between">
+          <button class="btn btn-link ms-4 col-3 text-nowrap" data-bs-target="#loginModal" data-bs-toggle="modal">Ik heb
+            al een account</button>
+        </section>
+      </section>
+    </section>
+  </section>
+  <section class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <section class="modal-dialog modal-dialog-centered">
+      <section class="modal-content">
+        <article class="modal-header bg-danger border-0">
           <h5 class="modal-title text-white" id="exampleModalLabel">Error!</h5>
           <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
+        </article>
+        <article class="modal-body cbg-dark-l">
           <p>U heeft geen toegang tot deze pagina!</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Sluit</button>
-        </div>
-      </div>
-    </div>
-  </div>
+        </article>
+        <article class="modal-footer bg-danger border-0">
+        </article>
+      </section>
+    </section>
+  </section>
 </body>
 
 </html>

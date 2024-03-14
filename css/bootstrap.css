@@ -190,7 +190,7 @@
 /* Background colors */
 .cbg-primary,
 .cbg-primary:hover {
-  background-color: var(--secondary-color-d);
+  background-color: var(--primary-color);
 }
 .cbg-primary-l,
 .cbg-primary-l:hover {
@@ -318,7 +318,7 @@
 }
 
 #cards_animation .card-flyer:hover{
-  background: #fff;
+  background: var(--secondary-color-l);
   box-shadow: 0px 15px 26px rgba(0, 0, 0, 0.50);
   /*box-shadow: 0px 15px 26px rgba(0, 0, 0, 0.50);*/
   -webkit-transition: all 0.2s ease-in;
@@ -337,6 +337,6 @@ body, main {
   background-color: #cccccc;
  }
 
- header {
+ /*header {
   background-image: url(/assets/images/background/magicBanner.webp);
- }
+ }*/

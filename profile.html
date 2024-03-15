@@ -102,7 +102,8 @@
                     sed sunt.</p>
             </section>
             <section class="border-top  border-light border-2 pt-4 d-flex flex-column">
-                <p class="ch1 text-light fs-5"><svg class="pe-2" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                <p class="ch1 text-light fs-5"><svg class="pe-2" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 512 512"
                         height="1rem"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z" />
@@ -122,8 +123,7 @@
                     </svg>
                     Hoe wordt mijn data gebruikt
                 </button>
-                <p><button type="button" class="btn btn-dark cbg-danger-l" data-bs-toggle="modal"
-                        data-bs-target="ErroModal">Verwijder account</button></p>
+                <a href="#errorModal" class="btn cbg-danger-l" data-bs-toggle="modal">Verwijder account</a>
             </section>
 
         </section>
@@ -167,11 +167,11 @@
         <section class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
             <section class="modal-dialog">
                 <section class="modal-content">
-                    <section class="modal-header cbg-primary">
+                    <section class="modal-header cbg-dark text-white border-0">
                         <h1 class="modal-title ctext-white fs-5" id="infoModalLabel">Hoe word mijn data gebruikt?</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </section>
-                    <section class="modal-body">
+                    <section class="modal-body cbg-primary text-light">
                         <p>
                             Wanneer je onze website bezoekt, verzamelen we beperkte informatie over jou, zoals jouw naam
                             en e-mailadres, alleen indien vrijwillig verstrekt via formulieren of inschrijvingen. We
@@ -181,30 +181,31 @@
                         </p>
                     </section>
                     <section class="modal-footer">
-                        <button type="button" class="btn btn-dark cbg-primary" data-bs-dismiss="modal">Ik begrijp
+                        <button type="button" class="btn btn-dark ctext-white cbg-primary" data-bs-dismiss="modal">Ik begrijp
                             het</button>
                     </section>
                 </section>
             </section>
         </section>
 
-        <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header bg-danger">
-                        <h5 class="modal-title text-white" id="exampleModalLabel">Error!</h5>
+        <section class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <section class="modal-dialog modal-dialog-centered">
+                <section class="modal-content">
+                    <article class="modal-header bg-danger border-0">
+                        <h5 class="modal-title text-white" id="exampleModalLabel">Waarschuwing!</h5>
                         <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"
                             aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>U heeft geen toegang tot deze pagina!</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Sluit</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+                    </article>
+                    <article class="modal-body cbg-dark-l">
+                        <p class="text-light">Bent u zeker dat u het account wilt verwijderen?</p>
+                    </article>
+                    <article class="modal-footer bg-danger border-0">
+                        <button type="button" class="btn btn-secondary">Verwijder</button>
+                    </article>
+                </section>
+            </section>
+        </section>
     </main>
     <footer class="cbg-primary text-light">
         <div class="container">

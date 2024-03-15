@@ -328,14 +328,6 @@
   margin-top: -10px;
 }
 
-/* Background Images */
-
-body, main {
-  background-image: url("/assets/images/background/MTGBackground.jpg");
-  background-size: cover;
-  background-color: #cccccc;
- }
-
 .purplebg {
   background-image: url(/assets/images/background/MTGTest.jpg);
  }

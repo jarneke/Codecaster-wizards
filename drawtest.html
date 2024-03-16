@@ -94,7 +94,7 @@
             </section>
         </section>
     </header>
-    <main class="d-flex flex-wrap align-items-start justify-content-center ctext-white">
+    <main class="d-flex flex-wrap align-items-center justify-content-center ctext-white">
         <section class="d-flex flex-wrap col-12 col-md-10 col-lg-8 m-3">
             <form action="" class="col-12 col-sm-4 pt-2 p-2">
                 <select name="decks" id="decks" class="form-select p-2">
@@ -130,22 +130,22 @@
             <img src="assets/images/demoCards/MTG-card_back.jpg" class="col-10">
             <p class="col-12 text-center">59/60</p>
         </section>
-        <section class="d-flex flex-column justify-content-evenly p-3 col-12 col-md-4">
-            <article>
+        <section class="d-flex flex-wrap justify-content-center p-3 text-center col-12 col-md-4">
+            <article class="col-12 mb-5">
                 <h3>Kans om kaart te trekken 3.33%</h3>
                 <p>Deze kaart zit 2 keer in het deck</p>
             </article>
-            <button class="btn btn-dark mb-3">Trek een kaart</button>
-            <button class="btn btn-danger">Reset</button>
+            <button class="btn btn-dark mb-3 col-7">Trek een kaart</button>
+            <button class="btn btn-danger col-7">Reset</button>
         </section>
         <section class=" d-flex justify-content-center mt-3 mb-3 col-12 col-sm-8 col-md-4">
             <button class="btn d-flex" data-bs-toggle="offcanvas" href="#pulledCards" role="button"
                 aria-controls="pulledCards">
-                <img src="assets/images/demoCards/card8.jpeg" class="col-10">
+                <img src="assets/images/demoCards/card4.jpg" class="col-10">
             </button>
         </section>
         <!-- Pulled Cards Offcanvas -->
-        <section class=" offcanvas offcanvas-end bg-secondary" tabindex="-1" id="pulledCards"
+        <section class="offcanvas offcanvas-end bg-secondary ctext-white" tabindex="-1" id="pulledCards"
             aria-labelledby="pulledCardsLabel">
             <section class="offcanvas-header cbg-primary">
                 <h1 class="display-6">Getrokken kaarten</h1>
@@ -169,7 +169,7 @@
                                     id="cardLookup" class="form-control border-0" />
                             </div>
                         </fieldset>
-                        <fieldset class="col-12 d-flex flex-wrap">
+                        <fieldset class="col-12 d-flex flex-wrap justify-content-between">
                             <legend class="text-center col-12">Filter</legend>
                             <div class="form-group col-12 mb-2">
                                 <select class="form-control" name="type" id="type">
@@ -188,33 +188,33 @@
                                     <option value="land">Land</option>
                                 </select>
                             </div>
-                            <div class="d-flex flex-column align-items-center col-2">
+                            <div class="d-flex flex-column align-items-center col-1 cbg-primary rounded py-1 px-3">
                                 <input class="form-check-input" type="radio" name="W" id="W">
                                 <label class="form-check-label" for="W">
                                     <img src="assets/images/mana_symbols/W.svg" height="20px" alt="">
                                 </label>
                             </div>
-                            <div class="d-flex flex-column align-items-center col-2">
+                            <div class="d-flex flex-column align-items-center col-1 cbg-primary rounded py-1 px-3">
                                 <input class="form-check-input" type="radio" name="U" id="U">
                                 <label class="form-check-label" for="U">
                                     <img src="assets/images/mana_symbols/U.svg" height="20px" alt=""></label>
                             </div>
-                            <div class="d-flex flex-column align-items-center col-2">
+                            <div class="d-flex flex-column align-items-center col-1 cbg-primary rounded py-1 px-3">
                                 <input class="form-check-input" type="radio" name="B" id="B">
                                 <label class="form-check-label" for="B">
                                     <img src="assets/images/mana_symbols/B.svg" height="20px" alt=""></label>
                             </div>
-                            <div class="d-flex flex-column align-items-center col-2">
+                            <div class="d-flex flex-column align-items-center col-1 cbg-primary rounded py-1 px-3">
                                 <input class="form-check-input" type="radio" name="R" id="R">
                                 <label class="form-check-label" for="R">
                                     <img src="assets/images/mana_symbols/R.svg" height="20px" alt=""></label>
                             </div>
-                            <div class="d-flex flex-column align-items-center col-2">
+                            <div class="d-flex flex-column align-items-center col-1 cbg-primary rounded py-1 px-3">
                                 <input class="form-check-input" type="radio" name="G" id="G">
                                 <label class="form-check-label" for="G">
                                     <img src="assets/images/mana_symbols/G.svg" height="20px" alt=""></label>
                             </div>
-                            <div class="d-flex flex-column align-items-center col-2">
+                            <div class="d-flex flex-column align-items-center col-1 cbg-primary rounded py-1 px-3">
                                 <input class=" form-check-input" type="radio" name="C" id="C">
                                 <label class="form-check-label" for="C">
                                     <img src="assets/images/mana_symbols/C.svg" height="20px" alt=""></label>

@@ -34,10 +34,10 @@
           </section>
           <ul class="nav">
             <li>
-              <a href="home.html" class="nav-link px-2 ctext-secondary">Home</a>
+              <a href="home.html" class="nav-link px-2 ctext-white">Home</a>
             </li>
             <li>
-              <a href="decks.html" class="nav-link px-2 ctext-white">Decks nakijken</a>
+              <a href="decks.html" class="nav-link px-2 ctext-secondary">Decks nakijken</a>
             </li>
             <li>
               <a href="drawtest.html" class="nav-link px-2 ctext-white">Deck simuleren</a>
@@ -111,11 +111,8 @@
               />
               <div class="col-lg-5">
                 <h1 class="font-weight-light text-light ch1">
-                  Main geactiveerd deck
+                   Decknaam
                 </h1>
-                <p class="text-light ch1">
-                  Deck naam
-                </p>
                 <ul class="text-light">
                   <li>Aantal kaarten: 6/60</li>
                   <br>
@@ -127,11 +124,11 @@
                 <!-- Button trigger modal -->
                 <button
                   type="button"
-                  class="btn btn-primary cbg-secondary border-dark"
+                  class="btn btn-primary cbg-secondary-d border-dark"
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModal"
                 >
-                  Modify deck
+                  Wijzig deck
                 </button>
               </div>
             </div>
@@ -139,13 +136,53 @@
         </div>
       </section>
       <section class="tips">
-        <div class="card text-white bg-secondary my-5 py-4 text-center mx-5">
-          <div class="tip-body">
+        <article class="card text-white bg-secondary my-5 py-4 text-center mx-5">
+          <article class="tip-body">
             <p class="text-white m-0 ch1 fs-3">
               Tip van de dag: Lees de kaartbeschrijving zeer grondig!
             </p>
-          </div>
-        </div>
+          </article>
+        </article>
+      </section>
+      <section class="nextPageButtons container d-flex justify-content-between my-5">
+        <article>
+          <button class="btn btn-dark cbg-primary">
+            <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="#ffffff">
+              <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+              <path
+                d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
+            </svg>
+          </button>
+          <button class="btn btn-dark cbg-primary">
+            <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" fill="#ffffff">
+              <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+              <path
+                d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+            </svg>
+          </button>
+        </article>
+        <section class="d-flex gap-2 ctext-white">
+          <p>1.</p>
+          <p>2.</p>
+          <p>3.</p>
+          <p>...</p>
+        </section>
+        <article>
+          <button class="btn btn-dark cbg-primary">
+            <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" fill="#ffffff">
+              <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+              <path
+                d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z" />
+            </svg>
+          </button>
+          <button class="btn btn-dark cbg-primary">
+            <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="#ffffff">
+              <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+              <path
+                d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
+            </svg>
+          </button>
+        </article>
       </section>
       <section class="cardsInDeck d-flex justify-content-center">
         <div class="container gx-4 gx-lg-5 mx-5 d-flex flex-wrap col-10 justify-content-center">
@@ -252,16 +289,14 @@
                       alt="democard"
                     />
                     <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="col-6"
-                      height="20"
-                      viewBox="0 0 448 512"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="col-6"
+                    height="20"
+                    viewBox="0 0 512 512"
                     >
-                      <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                      <path
-                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
-                      />
-                    </svg>
+                    <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                    <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM184 232H328c13.3 0 24 10.7 24 24s-10.7 24-24 24H184c-13.3 0-24-10.7-24-24s10.7-24 24-24z"/>
+                  </svg>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       class="col-6"
@@ -281,16 +316,14 @@
                       alt="democard"
                     />
                     <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="col-6"
-                      height="20"
-                      viewBox="0 0 448 512"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="col-6"
+                    height="20"
+                    viewBox="0 0 512 512"
                     >
-                      <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                      <path
-                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
-                      />
-                    </svg>
+                    <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                    <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM184 232H328c13.3 0 24 10.7 24 24s-10.7 24-24 24H184c-13.3 0-24-10.7-24-24s10.7-24 24-24z"/>
+                  </svg>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       class="col-6"
@@ -310,16 +343,14 @@
                       alt="democard"
                     />
                     <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="col-6"
-                      height="20"
-                      viewBox="0 0 448 512"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="col-6"
+                    height="20"
+                    viewBox="0 0 512 512"
                     >
-                      <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                      <path
-                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
-                      />
-                    </svg>
+                    <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                    <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM184 232H328c13.3 0 24 10.7 24 24s-10.7 24-24 24H184c-13.3 0-24-10.7-24-24s10.7-24 24-24z"/>
+                  </svg>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       class="col-6"
@@ -379,14 +410,14 @@
       <section class="nextPageButtons container d-flex justify-content-between my-5">
         <article>
           <button class="btn btn-dark cbg-primary">
-            <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="#ffffff">
               <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
               <path
                 d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
             </svg>
           </button>
           <button class="btn btn-dark cbg-primary">
-            <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+            <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" fill="#ffffff">
               <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
               <path
                 d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
@@ -401,14 +432,14 @@
         </section>
         <article>
           <button class="btn btn-dark cbg-primary">
-            <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+            <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" fill="#ffffff">
               <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
               <path
                 d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z" />
             </svg>
           </button>
           <button class="btn btn-dark cbg-primary">
-            <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="#ffffff">
               <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
               <path
                 d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
@@ -426,19 +457,20 @@
               <ul class="nav flex-column">
                 <li class="nav-item mb-2"><a href="home.html" class="nav-link p-0 text-light">Home</a></li>
                 <li class="nav-item mb-2"><a href="decks.html" class="nav-link p-0 text-light">Decks</a></li>
-                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light">Draw</a></li>
+                <li class="nav-item mb-2"><a href="drawtest.html" class="nav-link p-0 text-light">Deck simuleren</a></li>
+                <li class="nav-item mb-2"><a href="profile.html" class="nav-link p-0 text-light">Profiel</a></li>
                 <li class="nav-item mb-2"><a href="landingspage.html  " class="nav-link p-0 text-light">Landingspagina</a></li>
               </ul>
             </div>
             
             <div class="col-md-5 offset-md-1 mb-3">
               <form>
-                <h5>Abboneer op onze nieuwsbrief!</h5>
-                <p>Maandelijkse samenvatting van wat er nieuw en spannend is voor ons.</p>
+                <h5>Abonneer op onze nieuwsbrief!</h5>
+                <p>Maandelijkse samenvatting van wat er nieuw en spannend is voor u.</p>
                 <div class="d-flex flex-column flex-sm-row w-100 gap-2">
                   <label for="newsletter1" class="visually-hidden">E-mail address</label>
                   <input id="newsletter1" type="text" class="form-control" placeholder="E-mail address">
-                  <button class="btn btn-primary cbg-secondary border-dark" type="button">Abboneer</button>
+                  <button class="btn btn-primary cbg-secondary border-dark" type="button">Abonneer</button>
                 </div>
               </form>
             </div>
@@ -446,6 +478,7 @@
       
           <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
             <p>&copy; 2024 Codecaster Wizards. Alle rechten voorbehouden.</p>
+            <p> Foto's: &copy; DALL-E 3</p>
             <ul class="list-unstyled d-flex">
               <li class="ms-3"><a class="link-dark" href="https://twitter.com/" target="_blank"><svg fill="#ffffff" height="35" width="35" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->

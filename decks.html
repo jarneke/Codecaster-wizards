@@ -100,14 +100,54 @@
     </section>
   </header>
   <main class="album py-5 bg-light" style="background-image: url(assets/images/background/MTGBackground.jpg); background-size: cover;">
-  <section class="cards">
+    <section class="nextPageButtons container d-flex justify-content-between my-5">
+      <article>
+        <button class="btn btn-dark cbg-primary">
+          <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="#ffffff">
+            <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
+          </svg>
+        </button>
+        <button class="btn btn-dark cbg-primary">
+          <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" fill="#ffffff">
+            <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+          </svg>
+        </button>
+      </article>
+      <section class="d-flex gap-2 ctext-white">
+        <p>1.</p>
+        <p>2.</p>
+        <p>3.</p>
+        <p>...</p>
+      </section>
+      <article>
+        <button class="btn btn-dark cbg-primary">
+          <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" fill="#ffffff">
+            <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z" />
+          </svg>
+        </button>
+        <button class="btn btn-dark cbg-primary">
+          <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="#ffffff">
+            <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
+          </svg>
+        </button>
+      </article>
+    </section>
+    <section class="cards">
       <div class="container" id="cards_animation">
         <div class="row">
           <div class="col-md-6 col-lg-4">
             <div class="card mb-4 box-shadow card-flyer" style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
               <img class="deckImage" src="assets/images/decks/MTGDeck.jpg" alt="image of deck">
               <div class="card-body purplebg">
-                <p class="card-text ctext-white">Deck naam</p>
+                <p class="card-text ctext-white">Decknaam</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
                     <a href="deckdetails.html"><button type="button" class="btn btn-lg btn-outline-secondary ctext-white">Bekijk</button></a>
@@ -120,7 +160,7 @@
             <div class="card mb-4 box-shadow card-flyer" style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
               <img class="card-img-top" src="assets/images/decks/MTGDeck.jpg" alt="Card image cap">
               <div class="card-body purplebg">
-                <p class="card-text ctext-white">Deck naam</p>
+                <p class="card-text ctext-white">Decknaam</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
                     <a href="deckdetails.html"><button type="button" class="btn btn-lg btn-outline-secondary ctext-white">Bekijk</button></a>
@@ -133,47 +173,7 @@
             <div class="card mb-4 box-shadow card-flyer" style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
               <img class="card-img-top" src="assets/images/decks/MTGDeck.jpg" alt="Card image cap">
               <div class="card-body purplebg">
-                <p class="card-text ctext-white">Deck naam</p>
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="btn-group">
-                    <a href="deckdetails.html"><button type="button" class="btn btn-lg btn-outline-secondary ctext-white">Bekijk</button></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6 col-lg-4">
-            <div class="card mb-4 box-shadow card-flyer" style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
-              <img class="card-img-top" src="assets/images/decks/MTGDeck.jpg" alt="Card image cap">
-              <div class="card-body purplebg">
-                <p class="card-text ctext-white">Deck naam</p>
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="btn-group">
-                    <a href="deckdetails.html"><button type="button" class="btn btn-lg btn-outline-secondary ctext-white">Bekijk</button></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4">
-            <div class="card mb-4 box-shadow card-flyer" style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
-              <img class="card-img-top" src="assets/images/decks/MTGDeck.jpg" alt="Card image cap">
-              <div class="card-body purplebg">
-                <p class="card-text ctext-white">Deck naam</p>
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="btn-group">
-                    <a href="deckdetails.html"><button type="button" class="btn btn-lg btn-outline-secondary ctext-white">Bekijk</button></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4">
-            <div class="card mb-4 box-shadow card-flyer" style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
-              <img class="card-img-top" src="assets/images/decks/MTGDeck.jpg" alt="Card image cap">
-              <div class="card-body purplebg">
-                <p class="card-text ctext-white">Deck naam</p>
+                <p class="card-text ctext-white">Decknaam</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
                     <a href="deckdetails.html"><button type="button" class="btn btn-lg btn-outline-secondary ctext-white">Bekijk</button></a>
@@ -187,7 +187,7 @@
             <div class="card mb-4 box-shadow card-flyer" style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
               <img class="card-img-top" src="assets/images/decks/MTGDeck.jpg" alt="Card image cap">
               <div class="card-body purplebg">
-                <p class="card-text ctext-white">Deck naam</p>
+                <p class="card-text ctext-white">Decknaam</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
                     <a href="deckdetails.html"><button type="button" class="btn btn-lg btn-outline-secondary ctext-white">Bekijk</button></a>
@@ -200,7 +200,7 @@
             <div class="card mb-4 box-shadow card-flyer" style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
               <img class="card-img-top" src="assets/images/decks/MTGDeck.jpg" alt="Card image cap">
               <div class="card-body purplebg">
-                <p class="card-text ctext-white">Deck naam</p>
+                <p class="card-text ctext-white">Decknaam</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
                     <a href="deckdetails.html"><button type="button" class="btn btn-lg btn-outline-secondary ctext-white">Bekijk</button></a>
@@ -213,7 +213,47 @@
             <div class="card mb-4 box-shadow card-flyer" style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
               <img class="card-img-top" src="assets/images/decks/MTGDeck.jpg" alt="Card image cap">
               <div class="card-body purplebg">
-                <p class="card-text ctext-white">Deck naam</p>
+                <p class="card-text ctext-white">Decknaam</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <a href="deckdetails.html"><button type="button" class="btn btn-lg btn-outline-secondary ctext-white">Bekijk</button></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-4">
+            <div class="card mb-4 box-shadow card-flyer" style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
+              <img class="card-img-top" src="assets/images/decks/MTGDeck.jpg" alt="Card image cap">
+              <div class="card-body purplebg">
+                <p class="card-text ctext-white">Decknaam</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <a href="deckdetails.html"><button type="button" class="btn btn-lg btn-outline-secondary ctext-white">Bekijk</button></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="card mb-4 box-shadow card-flyer" style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
+              <img class="card-img-top" src="assets/images/decks/MTGDeck.jpg" alt="Card image cap">
+              <div class="card-body purplebg">
+                <p class="card-text ctext-white">Decknaam</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <a href="deckdetails.html"><button type="button" class="btn btn-lg btn-outline-secondary ctext-white">Bekijk</button></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="card mb-4 box-shadow card-flyer" style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
+              <img class="card-img-top" src="assets/images/decks/MTGDeck.jpg" alt="Card image cap">
+              <div class="card-body purplebg">
+                <p class="card-text ctext-white">Decknaam</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
                     <a href="deckdetails.html"><button type="button" class="btn btn-lg btn-outline-secondary ctext-white">Bekijk</button></a>
@@ -224,18 +264,18 @@
           </div>
         </div>
       </div>
-  </section>
-  <section class="nextPageButtons container d-flex justify-content-between">
+    </section>
+    <section class="nextPageButtons container d-flex justify-content-between my-5">
     <article>
       <button class="btn btn-dark cbg-primary">
-        <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="#ffffff">
           <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
           <path
             d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
         </svg>
       </button>
       <button class="btn btn-dark cbg-primary">
-        <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+        <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" fill="#ffffff">
           <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
           <path
             d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
@@ -250,21 +290,21 @@
     </section>
     <article>
       <button class="btn btn-dark cbg-primary">
-        <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+        <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" fill="#ffffff">
           <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
           <path
             d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z" />
         </svg>
       </button>
       <button class="btn btn-dark cbg-primary">
-        <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <svg height="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="#ffffff">
           <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
           <path
             d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
         </svg>
       </button>
     </article>
-  </section>
+    </section>
   </main>
   <footer class="cbg-primary text-light">
     <div class="container">
@@ -275,19 +315,20 @@
             <ul class="nav flex-column">
               <li class="nav-item mb-2"><a href="home.html" class="nav-link p-0 text-light">Home</a></li>
               <li class="nav-item mb-2"><a href="decks.html" class="nav-link p-0 text-light">Decks</a></li>
-              <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light">Draw</a></li>
+              <li class="nav-item mb-2"><a href="drawtest.html" class="nav-link p-0 text-light">Deck simuleren</a></li>
+              <li class="nav-item mb-2"><a href="profile.html" class="nav-link p-0 text-light">Profiel</a></li>
               <li class="nav-item mb-2"><a href="landingspage.html  " class="nav-link p-0 text-light">Landingspagina</a></li>
             </ul>
           </div>
           
           <div class="col-md-5 offset-md-1 mb-3">
             <form>
-              <h5>Abboneer op onze nieuwsbrief!</h5>
-              <p>Maandelijkse samenvatting van wat er nieuw en spannend is voor ons.</p>
+              <h5>Abonneer op onze nieuwsbrief!</h5>
+              <p>Maandelijkse samenvatting van wat er nieuw en spannend is voor u.</p>
               <div class="d-flex flex-column flex-sm-row w-100 gap-2">
                 <label for="newsletter1" class="visually-hidden">E-mail address</label>
                 <input id="newsletter1" type="text" class="form-control" placeholder="E-mail address">
-                <button class="btn btn-primary cbg-secondary border-dark" type="button">Abboneer</button>
+                <button class="btn btn-primary cbg-secondary border-dark" type="button">Abonneer</button>
               </div>
             </form>
           </div>
@@ -295,6 +336,7 @@
     
         <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
           <p>&copy; 2024 Codecaster Wizards. Alle rechten voorbehouden.</p>
+          <p> FOTOS: &copy; DALL-E 3</p>
           <ul class="list-unstyled d-flex">
             <li class="ms-3"><a class="link-dark" href="https://twitter.com/" target="_blank"><svg fill="#ffffff" height="35" width="35" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
               <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->

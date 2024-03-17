@@ -4,9 +4,9 @@
   --primary-color-l: #AAAAAA;
   --primary-color-d: #000000;
 
-  --secondary-color: #ff6200;
+  --secondary-color: #ef4423;
   --secondary-color-l: #ff8b43;
-  --secondary-color-d: #c24a00;
+  --secondary-color-d: #823200;
 
   --info-color: #68bfd4;
   --info-color-l: #a3c7d0;
@@ -30,7 +30,7 @@
 
   --white-color: #ffffff;
   --white-color-l: #ffffff;
-  --white-color-d: #cccccc;
+  --white-color-d: #aeaeae;
 
   --dark-color: #222222;
   --dark-color-l: #555555;
@@ -49,13 +49,9 @@
   font-family: mtg-bold;
   src: url(/assets/Fonts/typeface-beleren-bold-master/Beleren2016SmallCaps-Bold.ttf);
 }
-
 .ch1{
   font-family: mtg-bold, Arial, Helvetica, sans-serif;
-  color: var(--light-color-d);
 }
-
-
 /* Text colors */
 .ctext-primary,
 .ctext-primary:hover {
@@ -95,7 +91,6 @@
 .ctext-success-d:hover {
   color: var(--success-color-d);
 }
-
 .ctext-danger,
 .ctext-danger:hover {
   color: var(--danger-color);
@@ -108,7 +103,6 @@
 .ctext-danger-d:hover {
   color: var(--danger-color-d);
 }
-
 .ctext-warning,
 .ctext-warning:hover {
   color: var(--warning-color);
@@ -121,7 +115,6 @@
 .ctext-warning-d:hover {
   color: var(--warning-color-d);
 }
-
 .ctext-info,
 .ctext-info:hover {
   color: var(--info-color);
@@ -134,7 +127,6 @@
 .ctext-info-d:hover {
   color: var(--info-color-d);
 }
-
 .ctext-light,
 .ctext-light:hover {
   color: var(--light-color);
@@ -147,7 +139,6 @@
 .ctext-light-d:hover {
   color: var(--light-color-d);
 }
-
 .ctext-dark,
 .ctext-dark:hover {
   color: var(--dark-color);
@@ -160,7 +151,6 @@
 .ctext-dark-d:hover {
   color: var(--dark-color-d);
 }
-
 .ctext-muted,
 .ctext-muted:hover {
   color: var(--muted-color);
@@ -173,7 +163,6 @@
 .ctext-muted-d:hover {
   color: var(--muted-color-d);
 }
-
 .ctext-white,
 .ctext-white:hover {
   color: var(--white-color);
@@ -186,7 +175,6 @@
 .ctext-white-d:hover {
   color: var(--white-color-d);
 }
-
 /* Background colors */
 .cbg-primary,
 .cbg-primary:hover {
@@ -200,7 +188,6 @@
 .cbg-primary-d:hover {
   background-color: var(--primary-color-d);
 }
-
 .cbg-secondary,
 .cbg-secondary:hover {
   background-color: var(--secondary-color);
@@ -213,7 +200,6 @@
 .cbg-secondary-d:hover {
   background-color: var(--secondary-color-d);
 }
-
 .cbg-success,
 .cbg-success:hover {
   background-color: var(--success-color);
@@ -226,7 +212,6 @@
 .cbg-success-d:hover {
   background-color: var(--success-color-d);
 }
-
 .cbg-danger,
 .cbg-danger:hover {
   background-color: var(--danger-color);
@@ -239,7 +224,6 @@
 .cbg-danger-d:hover {
   background-color: var(--danger-color-d);
 }
-
 .cbg-warning,
 .cbg-warning:hover {
   background-color: var(--warning-color);
@@ -252,7 +236,6 @@
 .cbg-warning-d:hover {
   background-color: var(--warning-color-d);
 }
-
 .cbg-info,
 .cbg-info:hover {
   background-color: var(--info-color);
@@ -265,7 +248,6 @@
 .cbg-info-d:hover {
   background-color: var(--info-color-d);
 }
-
 .cbg-light,
 .cbg-light:hover {
   background-color: var(--light-color);
@@ -278,7 +260,6 @@
 .cbg-light-d:hover {
   background-color: var(--light-color-d);
 }
-
 .cbg-dark,
 .cbg-dark:hover {
   background-color: var(--dark-color);
@@ -291,7 +272,6 @@
 .cbg-dark-d:hover {
   background-color: var(--dark-color-d);
 }
-
 .cbg-white,
 .cbg-white:hover {
   background-color: var(--white-color);
@@ -316,7 +296,6 @@
   -o-transform:scale(1.15);
   transform:scale(1.15);
 }
-
 #cards_animation .card-flyer:hover{
   background: var(--secondary-color-l);
   box-shadow: 0px 15px 26px rgba(0, 0, 0, 0.50);
@@ -328,10 +307,9 @@
   transition: all 0.2s ease-in;
   margin-top: -10px;
 }
-
 /* Background Images */
 
-body, main {
+body, .offcanvas {
   background-image: url("/assets/images/background/MTGBackground.jpg");
   background-size: cover;
   background-color: #cccccc;

@@ -65,7 +65,8 @@
                     </article>
                     <a class="btn btn-dark" type="button" href="profile.html">Bekijk profiel</a>
                 </section>
-                <button class="btn-close text-reset bg-danger" type="button" data-bs-toggle="offcanvas" aria-label="close">
+                <button class="btn-close text-reset bg-danger" type="button" data-bs-toggle="offcanvas"
+                    aria-label="close">
                 </button>
             </section>
             <section class="offcanvas-body">
@@ -113,7 +114,7 @@
                         <path
                             d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z" />
                     </svg>E-mail</p>
-                <a href=#registerModal class="btn btn-dark cbg-secondary-l mb-5" data-bs-toggle="modal">
+                <a href=#changeInfoModal class="btn btn-dark cbg-secondary-l mb-5" data-bs-toggle="modal">
                     <svg class="pe-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
                         height="1rem"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path fill="#ffffff"
@@ -169,13 +170,14 @@
         </section>
 
         <!-- Modals -->
-        <section class="modal fade" id="registerModal" aria-hidden="true" aria-labelledby="registerModalLabel"
+        <section class="modal fade" id="changeInfoModal" aria-hidden="true" aria-labelledby="changeInfoModalLabel"
             tabindex="-1">
             <section class="modal-dialog modal-dialog-centered">
                 <section class="modal-content">
                     <section class="modal-header cbg-dark text-white border-0">
-                        <h1 class="modal-title fs-5" id="registerModalLabel">Verander gegevens!</h1>
-                        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h1 class="modal-title fs-5" id="changeInfoModalLabel">Verander gegevens!</h1>
+                        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </section>
                     <section class="modal-body cbg-primary">
                         <form class="px-4 py-3">
@@ -188,31 +190,29 @@
                             </fieldset>
                             <fieldset class="row mb-3">
                                 <section class="col">
-                                    <label for="exampleDropdownFormE-mail1"
-                                        class="form-label ctext-white">Voornaam</label>
+                                    <label for="firstnameLabel" class="form-label ctext-white">Voornaam</label>
                                     <input type="text" class="form-control" placeholder="Voornaam"
                                         aria-label="First name">
                                 </section>
                                 <section class="col">
-                                    <label for="exampleDropdownFormE-mail1" class="form-label ctext-white">Naam</label>
+                                    <label for="lastnameLabel" class="form-label ctext-white">Naam</label>
                                     <input type="text" class="form-control" placeholder="Naam" aria-label="Last name">
                                 </section>
                             </fieldset>
                             <fieldset class="mb-3">
-                                <label for="exampleDropdownFormE-mail1" class="form-label ctext-white">E-mail</label>
-                                <input type="e-mail" class="form-control" id="exampleDropdownFormE-mail1"
+                                <label for="e-mailLabel" class="form-label ctext-white">E-mail</label>
+                                <input type="e-mail" class="form-control" id="e-mailFormLabel"
                                     placeholder="e-mail@voorbeeld.com">
                             </fieldset>
                             <fieldset class="mb-3">
-                                <label for="exampleDropdownFormPassword1"
-                                    class="form-label ctext-white">Wachtwoord</label>
-                                <input type="password" class="form-control" id="exampleDropdownFormPassword1"
+                                <label for="passwordLabel" class="form-label ctext-white">Wachtwoord</label>
+                                <input type="password" class="form-control" id="passwordFormLabel"
                                     placeholder="Wachtwoord">
                             </fieldset>
-                            <fieldset class="col mb-3">
-                                <label class="form-label ctext-white" for="description">Beschrijving:</label>
-                                <textarea class="form-control form-control-dark" name="feedback" id="feedback" cols="30"
-                                    rows="6"></textarea>
+                            <fieldset class="mb-3">
+                                <label class="form-label ctext-white" for="description">Beschrijving</label>
+                                <textarea class="form-control form-control-dark" name="description" id="description"
+                                    cols="30" rows="6"></textarea>
                             </fieldset>
                         </form>
                     </section>
@@ -222,12 +222,14 @@
                 </section>
             </section>
         </section>
+
         <section class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
             <section class="modal-dialog">
                 <section class="modal-content">
                     <section class="modal-header cbg-dark text-white border-0">
                         <h1 class="modal-title ctext-white fs-5" id="infoModalLabel">Hoe word mijn data gebruikt?</h1>
-                        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </section>
                     <section class="modal-body cbg-primary text-light">
                         <p>
@@ -248,12 +250,11 @@
             </section>
         </section>
 
-        <section class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
+        <section class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
             <section class="modal-dialog modal-dialog-centered">
                 <section class="modal-content">
                     <article class="modal-header bg-danger border-0">
-                        <h5 class="modal-title text-white" id="exampleModalLabel">Waarschuwing!</h5>
+                        <h5 class="modal-title text-white" id="errorModalLabel">Waarschuwing!</h5>
                         <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </article>
@@ -324,50 +325,6 @@
             </footer>
         </div>
     </footer>
-    <!-- bootstrap offcanvases-->
-
-    <!-- - mini profile offcanvas-->
-    <section class="offcanvas offcanvas-start bg-secondary" tabindex="-1" id="miniProfile"
-        aria-labelledby="miniprofileLabel">
-        <section class="offcanvas-header bg-primary align-items-start">
-            <section class="d-flex flex-column gap-2">
-                <section class="d-flex gap-3">
-                    <img class="fa fa-user-circle display-2" width="100px" src="" />
-                    <section class="container">
-                        <h5 class="">Welkom ${username}</h5>
-                        <h6 class="">${email}</h6>
-                    </section>
-                </section>
-                <a class="btn btn-dark" type="button" href="profile.html">Bekijk profiel</a>
-            </section>
-
-            <button class="btn-close text-reset bg-danger" type="button" data-bs-toggle="offcanvas"
-                aria-label="close"></button>
-        </section>
-        <section class="offcanvas-body">
-            <form class="mb-5">
-                <fieldset class="d-flex flex-column gap-1">
-                    <legend>Geef ons je feedback:</legend>
-                    <label for="feedbackType">Welke soort feedback wil je geven?</label>
-                    <select name="feedbackType" id="feedbackType">
-                        <option value="bug">Meld een bug</option>
-                        <option value="suggestion">Suggestie indienen</option>
-                        <option value="compliment">Geef een compliment</option>
-                        <option value="general">Algemene feedback</option>
-                    </select>
-                    <label for="feedback">Feedback:</label>
-                    <textarea class="form-control form-control-dark" name="feedback" id="feedback" cols="30"
-                        rows="10"></textarea>
-                    <input class="btn btn-dark" type="submit" value="Stuur feedback in*" />
-                    <p class="h6 text-dark">
-                        * Door op "Stuur feedback in" te klikken, accepteer je onze
-                        algemene voorwaarden
-                    </p>
-                </fieldset>
-            </form>
-            <button class="btn btn-danger" aria-label="exit">Log uit</button>
-        </section>
-    </section>
 </body>
 
 </html>

@@ -14,6 +14,7 @@
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="css/bootstrap.css" />
   <script src="js/infoPopUp.js"></script>
+  <script src="js/manaCheckbox.js" defer></script>
 </head>
 
 <body>
@@ -94,7 +95,7 @@
   <main class="p-3 container">
     <section class="row d-flex justify-content-center mb-3">
       <form class="col-12 container d-flex justify-content-between flex-wrap">
-        <fieldset class="col-12">
+        <fieldset class="col-12 mb-3">
           <div class="form-control d-flex">
             <button class="bg-white text-secondary p-1 border-0" type="submit" id="search">
               <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -111,7 +112,7 @@
           <legend class="text-center col-12 ctext-white ch1">Filter</legend>
           <div class="form-group col-12 mb-2">
             <select class="form-select" name="type" id="type">
-              <option value="blank"></option>
+              <option value="blank">Type</option>
               <option value="artifact">Artifact</option>
               <option value="basic">Basic</option>
               <option value="battle">Battle</option>
@@ -126,48 +127,37 @@
               <option value="land">Land</option>
             </select>
           </div>
-          <div class="d-flex flex-column align-items-center col-1 cbg-primary rounded py-1 px-3">
-            <input class="form-check-input" type="radio" name="W" id="W">
-            <label class="form-check-label" for="W">
-              <img src="assets/images/mana_symbols/W.svg" height="30px" class="mt-1">
-            </label>
-          </div>
-          <div class="d-flex flex-column align-items-center col-1 cbg-primary rounded py-1 px-3">
-            <input class="form-check-input" type="radio" name="U" id="U">
-            <label class="form-check-label" for="U">
-              <img src="assets/images/mana_symbols/U.svg" height="30px" class="mt-1">
-            </label>
-          </div>
-          <div class="d-flex flex-column align-items-center col-1 cbg-primary rounded py-1 px-3">
-            <input class="form-check-input" type="radio" name="B" id="B">
-            <label class="form-check-label" for="B">
-              <img src="assets/images/mana_symbols/B.svg" height="30px" class="mt-1">
-            </label>
-          </div>
-          <div class="d-flex flex-column align-items-center col-1 cbg-primary rounded py-1 px-3">
-            <input class="form-check-input" type="radio" name="R" id="R">
-            <label class="form-check-label" for="R">
-              <img src="assets/images/mana_symbols/R.svg" height="30px" class="mt-1">
-            </label>
-          </div>
-          <div class="d-flex flex-column align-items-center col-1 cbg-primary rounded py-1 px-3">
-            <input class="form-check-input" type="radio" name="G" id="G">
-            <label class="form-check-label" for="G">
-              <img src="assets/images/mana_symbols/G.svg" height="30px" class="mt-1">
-            </label>
-          </div>
-          <div class="d-flex flex-column align-items-center col-1 cbg-primary rounded py-1 px-3">
-            <input class=" form-check-input" type="radio" name="C" id="C">
-            <label class="form-check-label" for="C">
-              <img src="assets/images/mana_symbols/C.svg" height="30px" class="mt-1">
-            </label>
-          </div>
+          <label for="mana-symbol" class="col-12 ch1 text-center ctext-white fs-3">Soort mana</label>
+          <button class="rounded-circle border-0 cbg-success mana-checkbox" style="width: 40px; height: 40px;"
+            data-cbs-checked="true">
+            <img src="assets/images/mana_symbols/W.svg" alt="mana-symbol-W">
+          </button>
+          <button class="rounded-circle border-0 cbg-success mana-checkbox" style="width: 40px; height: 40px;"
+            data-cbs-checked="true">
+            <img src="assets/images/mana_symbols/U.svg" alt="mana-symbol-U">
+          </button>
+          <button class="rounded-circle border-0 cbg-success mana-checkbox" style="width: 40px; height: 40px;"
+            data-cbs-checked="true">
+            <img src="assets/images/mana_symbols/B.svg" alt="mana-symbol-B">
+          </button>
+          <button class="rounded-circle border-0 cbg-success mana-checkbox" style="width: 40px; height: 40px;"
+            data-cbs-checked="true">
+            <img src="assets/images/mana_symbols/R.svg" alt="mana-symbol-R">
+          </button>
+          <button class="rounded-circle border-0 cbg-success mana-checkbox" style="width: 40px; height: 40px;"
+            data-cbs-checked="true">
+            <img src="assets/images/mana_symbols/G.svg" alt="mana-symbol-G">
+          </button>
+          <button class="rounded-circle border-0 cbg-success mana-checkbox" style="width: 40px; height: 40px;"
+            data-cbs-checked="true">
+            <img src="assets/images/mana_symbols/C.svg" alt="mana-symbol-C">
+          </button>
         </fieldset>
         <fieldset class="col-12 col-md-5">
           <legend class="text-center ctext-white ch1">Sorteer</legend>
           <div class="form-group">
             <select class="form-select" name="sort" id="sort">
-              <option value="blank"></option>
+              <option value="blank">Sorteer op ...</option>
               <option value="color">Color</option>
               <option value="colorWeight">Color Weight</option>
               <option value="...">...</option>
@@ -297,8 +287,55 @@
       </article>
     </section>
   </main>
-  <footer class="p-5 cbg-primary d-flex justify-content-md-end justify-content-center">
-    <a href="#" class="text-dark text-decoration-none">&copy; Codecaster Wizards</a>
+  <footer class="cbg-primary text-light">
+    <section class="container py-5">
+      <section class="row">
+        <section class="col-6 col-md-2 mb-3">
+          <h5>Links</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2"><a href="home.html" class="nav-link p-0 text-light">Home</a></li>
+            <li class="nav-item mb-2"><a href="decks.html" class="nav-link p-0 text-light">Decks</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light">Draw</a></li>
+            <li class="nav-item mb-2"><a href="landingspage.html  " class="nav-link p-0 text-light">Landingspagina</a>
+            </li>
+          </ul>
+        </section>
+        <section class="col-md-5 offset-md-1 mb-3">
+          <form>
+            <h5>Abboneer op onze nieuwsbrief!</h5>
+            <p>Maandelijkse samenvatting van wat er nieuw en spannend is voor ons.</p>
+            <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+              <label for="newsletter1" class="visually-hidden">E-mail address</label>
+              <input id="newsletter1" type="text" class="form-control" placeholder="E-mail address">
+              <button class="btn btn-primary cbg-secondary border-dark" type="button">Abboneer</button>
+            </div>
+          </form>
+        </section>
+      </section>
+      <section class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+        <p>&copy; 2024 Codecaster Wizards. Alle rechten voorbehouden.</p>
+        <ul class="list-unstyled d-flex">
+          <li class="ms-3"><a class="link-dark" href="https://twitter.com/" target="_blank"><svg fill="#ffffff"
+                height="35" width="35" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                <path
+                  d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm297.1 84L257.3 234.6 379.4 396H283.8L209 298.1 123.3 396H75.8l111-126.9L69.7 116h98l67.7 89.5L313.6 116h47.5zM323.3 367.6L153.4 142.9H125.1L296.9 367.6h26.3z" />
+              </svg></a></li>
+          <li class="ms-3"><a class="link-dark" href="https://www.instagram.com/" target="_blank"><svg fill="#ffffff"
+                height="35" width="35" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                <path
+                  d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" />
+              </svg></a></li>
+          <li class="ms-3"><a class="link-dark" href="https://www.facebook.com/" target="_blank"><svg fill="#ffffff"
+                height="35" width="35" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                <path
+                  d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z" />
+              </svg></a></li>
+        </ul>
+      </section>
+    </section>
   </footer>
   <!-- bootstrap offcanvases-->
   <!-- - mini profile offcanvas-->
@@ -344,40 +381,40 @@
   <!-- Modals -->
   <section class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
     <section class="modal-dialog modal-lg">
-      <section class="modal-content">
-        <section class="modal-header cbg-primary-d">
+      <section class="modal-content ctext-white cbg-primary">
+        <section class="modal-header cbg-dark border-0">
           <h1 class="modal-title ctext-white fs-6 col-11" id="infoModalLabel">
             Welkom bij de Magic the Gathering webapp!</h1>
           <button type="button" class="btn-close cbg-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </section>
         <section class="modal-body">
-          <h3 class="ch1 ctext-dark">Over de webapp</h3>
+          <h3 class="ch1 fs-2">Over de webapp</h3>
           <p> Hier kun je alles leren over het spel en je decks beheren. Hier
             zijn enkele functies die je kunt gebruiken
           </p>
-          <h3 class="ch1 ctext-dark">Speluitleg</h3>
+          <h3 class="ch1">Speluitleg</h3>
           <p>
             Magic the Gathering is een strategisch kaartspel waarbij spelers elkaar proberen te verslaan door spreuken
             te casten, wezens op te roepen en hun tegenstanders levenspunten te verminderen.
           </p>
-          <h3 class="ch1 ctext-dark">Kaarten zoeken</h3>
+          <h3 class="ch1">Kaarten zoeken</h3>
           <p>
             Gebruik de zoekfunctie om kaarten te vinden op basis van naam, kleur, type, of andere kenmerken. Zoek naar
             specifieke kaarten om je deck te verbeteren.
           </p>
-          <h3 class="ch1 ctext-dark">Deck beheren</h3>
+          <h3 class="ch1">Deck beheren</h3>
           <p>
             Voeg kaarten toe aan je deck, bekijk de kaarten in je deck en pas je decks aan om de perfecte strategie te
             creëren.
           </p>
-          <h3 class="ch1 ctext-dark">Deck simuleren</h3>
+          <h3 class="ch1">Deck simuleren</h3>
           <p>
             Gebruik de decksimulator om willekeurige kaarten te trekken en je kansen te beoordelen. Dit helpt je om de
             consistentie van je deck te optimaliseren en te zien hoe het presteert in verschillende scenario's.
           </p>
         </section>
         <section class="modal-footer">
-          <button type="button" class="btn btn-dark cbg-primary" data-bs-dismiss="modal">Ik begrijp het</button>
+          <button type="button" class="btn btn-dark bg-dark" data-bs-dismiss="modal">Ik begrijp het</button>
         </section>
       </section>
     </section>

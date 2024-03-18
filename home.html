@@ -14,7 +14,7 @@
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="css/bootstrap.css" />
   <script src="js/infoPopUp.js"></script>
-  <script src="js/manaCheckbox.js"></script>
+  <script src="js/manaCheckbox.js" defer></script>
 </head>
 
 <body>
@@ -112,7 +112,7 @@
           <legend class="text-center col-12 ctext-white ch1">Filter</legend>
           <div class="form-group col-12 mb-2">
             <select class="form-select" name="type" id="type">
-              <option value="blank"></option>
+              <option value="blank">Type</option>
               <option value="artifact">Artifact</option>
               <option value="basic">Basic</option>
               <option value="battle">Battle</option>
@@ -127,36 +127,37 @@
               <option value="land">Land</option>
             </select>
           </div>
-          <button class="rounded-circle border-0 cbg-danger mana-checkbox" style="width: 40px; height: 40px;"
-            data-cbs-checked="false">
-            <img src="assets/images/mana_symbols/W.svg" alt="mana-symbol-">
+          <label for="mana-symbol" class="col-12 ch1 text-center ctext-white fs-3">Soort mana</label>
+          <button class="rounded-circle border-0 cbg-success mana-checkbox" style="width: 40px; height: 40px;"
+            data-cbs-checked="true">
+            <img src="assets/images/mana_symbols/W.svg" alt="mana-symbol-W">
           </button>
-          <button class="rounded-circle border-0 cbg-danger mana-checkbox" style="width: 40px; height: 40px;"
-            data-cbs-checked="false">
-            <img src="assets/images/mana_symbols/U.svg" alt="mana-symbol-">
+          <button class="rounded-circle border-0 cbg-success mana-checkbox" style="width: 40px; height: 40px;"
+            data-cbs-checked="true">
+            <img src="assets/images/mana_symbols/U.svg" alt="mana-symbol-U">
           </button>
-          <button class="rounded-circle border-0 cbg-danger mana-checkbox" style="width: 40px; height: 40px;"
-            data-cbs-checked="false">
-            <img src="assets/images/mana_symbols/B.svg" alt="mana-symbol-">
+          <button class="rounded-circle border-0 cbg-success mana-checkbox" style="width: 40px; height: 40px;"
+            data-cbs-checked="true">
+            <img src="assets/images/mana_symbols/B.svg" alt="mana-symbol-B">
           </button>
-          <button class="rounded-circle border-0 cbg-danger mana-checkbox" style="width: 40px; height: 40px;"
-            data-cbs-checked="false">
-            <img src="assets/images/mana_symbols/R.svg" alt="mana-symbol-">
+          <button class="rounded-circle border-0 cbg-success mana-checkbox" style="width: 40px; height: 40px;"
+            data-cbs-checked="true">
+            <img src="assets/images/mana_symbols/R.svg" alt="mana-symbol-R">
           </button>
-          <button class="rounded-circle border-0 cbg-danger mana-checkbox" style="width: 40px; height: 40px;"
-            data-cbs-checked="false">
-            <img src="assets/images/mana_symbols/G.svg" alt="mana-symbol-">
+          <button class="rounded-circle border-0 cbg-success mana-checkbox" style="width: 40px; height: 40px;"
+            data-cbs-checked="true">
+            <img src="assets/images/mana_symbols/G.svg" alt="mana-symbol-G">
           </button>
-          <button class="rounded-circle border-0 cbg-danger mana-checkbox" style="width: 40px; height: 40px;"
-            data-cbs-checked="false">
-            <img src="assets/images/mana_symbols/C.svg" alt="mana-symbol-">
+          <button class="rounded-circle border-0 cbg-success mana-checkbox" style="width: 40px; height: 40px;"
+            data-cbs-checked="true">
+            <img src="assets/images/mana_symbols/C.svg" alt="mana-symbol-C">
           </button>
         </fieldset>
         <fieldset class="col-12 col-md-5">
           <legend class="text-center ctext-white ch1">Sorteer</legend>
           <div class="form-group">
             <select class="form-select" name="sort" id="sort">
-              <option value="blank"></option>
+              <option value="blank">Sorteer op ...</option>
               <option value="color">Color</option>
               <option value="colorWeight">Color Weight</option>
               <option value="...">...</option>

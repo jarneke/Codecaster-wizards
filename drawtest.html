@@ -20,35 +20,40 @@
 <body class="bg-secondary">
     <header class="p-3 cbg-primary text-dark">
         <section class="container">
-            <article class="d-flex flex-wrap align-items-center justify-content-between">
+            <article class="d-flex flex-wrap align-items-center justify-content-between gapx-1">
+                <img height="100px" src="assets/images/header/CcW_Logo.png">
+                <section>
+                    <h1 class="ch1 ctext-secondary">Magic The Gathering</h1>
+                </section>
+                <ul class="nav">
+                    <li>
+                        <a href="home.html" class="nav-link px-2 ctext-white">Home</a>
+                    </li>
+                    <li>
+                        <a href="decks.html" class="nav-link px-2 ctext-white">Decks nakijken</a>
+                    </li>
+                    <li>
+                        <a href="drawtest.html" class="nav-link px-2 ctext-secondary">Deck simuleren</a>
+                    </li>
+                </ul>
                 <a data-bs-toggle="offcanvas" href="#miniProfile" role="button" aria-controls="miniProfile"
                     class="d-flex align-items-center text-dark text-decoration-none">
-                    <svg class="display-6" height="3rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                    <svg class="display-6" height="3rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 448 512">
                         <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
                     </svg>
                 </a>
-                <ul class="nav">
-                    <li>
-                        <a href="home.html" class="nav-link px-2 ctext-dark">Home</a>
-                    </li>
-                    <li>
-                        <a href="decks.html" class="nav-link px-2 ctext-dark">Decks nakijken</a>
-                    </li>
-                    <li>
-                        <a href="drawtest.html" class="nav-link px-2 ctext-light">Deck simuleren</a>
-                    </li>
-                </ul>
             </article>
         </section>
         <!-- - mini profile offcanvas-->
-        <section class="offcanvas offcanvas-start bg-secondary" tabindex="-1" id="miniProfile"
+        <section class="offcanvas offcanvas-end ctext-white" tabindex="-1" id="miniProfile"
             aria-labelledby="miniprofileLabel">
             <section class="offcanvas-header cbg-primary align-items-start">
                 <section class="d-flex flex-column gap-2">
                     <article class="d-flex gap-3">
-                        <svg height="4rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                        <svg height="4rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                             <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                             <path
                                 d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
@@ -60,7 +65,6 @@
                     </article>
                     <a class="btn btn-dark" type="button" href="profile.html">Bekijk profiel</a>
                 </section>
-
                 <button class="btn-close text-reset bg-danger" type="button" data-bs-toggle="offcanvas"
                     aria-label="close">
                 </button>
@@ -80,7 +84,7 @@
                         <textarea class="form-control form-control-dark" name="feedback" id="feedback" cols="30"
                             rows="10"></textarea>
                         <input class="btn btn-dark" type="submit" value="Stuur feedback in*" />
-                        <p class="h6 text-dark">
+                        <p class="h6 ctext-muted">
                             * Door op "Stuur feedback in" te klikken, accepteer je onze
                             algemene voorwaarden
                         </p>
@@ -90,7 +94,7 @@
             </section>
         </section>
     </header>
-    <main class="d-flex flex-wrap justify-content-center">
+    <main class="d-flex flex-wrap align-items-center justify-content-center ctext-white">
         <section class="d-flex flex-wrap col-12 col-md-10 col-lg-8 m-3">
             <form action="" class="col-12 col-sm-4 pt-2 p-2">
                 <select name="decks" id="decks" class="form-select p-2">
@@ -116,41 +120,42 @@
                 </div>
             </form>
             <div class="col-12 col-sm-4 p-2">
-                <a class="btn cbg-primary col-12 p-2" data-bs-toggle="offcanvas" href="#pulledCards" role="button"
+                <a class="btn btn-dark col-12 p-2" data-bs-toggle="offcanvas" href="#pulledCards" role="button"
                     aria-controls="pulledCards">
                     Getrokken kaarten
                 </a>
             </div>
         </section>
-        <section class="d-flex justify-content-center mt-3 mb-3 col-12 col-sm-8 col-md-4">
+        <section class="d-flex justify-content-center flex-wrap mb-3 col-12 col-sm-8 col-md-4">
             <img src="assets/images/demoCards/MTG-card_back.jpg" class="col-10">
+            <p class="col-12 text-center">59/60</p>
         </section>
-        <section class="d-flex flex-column justify-content-evenly p-3 col-12 col-md-4">
-            <article>
+        <section class="d-flex flex-wrap justify-content-center p-3 text-center col-12 col-md-4">
+            <article class="col-12 mb-5">
                 <h3>Kans om kaart te trekken 3.33%</h3>
                 <p>Deze kaart zit 2 keer in het deck</p>
             </article>
-            <button class="btn btn-dark mb-3">Trek een kaart</button>
-            <button class="btn btn-danger">Reset</button>
+            <button class="btn btn-dark mb-3 col-7">Trek een kaart</button>
+            <button class="btn btn-danger col-7">Reset</button>
         </section>
         <section class=" d-flex justify-content-center mt-3 mb-3 col-12 col-sm-8 col-md-4">
-            <button class="btn" data-bs-toggle="offcanvas" href="#pulledCards" role="button"
+            <button class="btn d-flex" data-bs-toggle="offcanvas" href="#pulledCards" role="button"
                 aria-controls="pulledCards">
-                <img src="assets/images/demoCards/card6.jpeg" class="col-10">
+                <img src="assets/images/demoCards/card4.jpg" class="col-10">
             </button>
         </section>
         <!-- Pulled Cards Offcanvas -->
-        <section class=" offcanvas offcanvas-end bg-secondary" tabindex="-1" id="pulledCards"
+        <section class="offcanvas offcanvas-end bg-secondary ctext-white" tabindex="-1" id="pulledCards"
             aria-labelledby="pulledCardsLabel">
             <section class="offcanvas-header cbg-primary">
-                <h1 class="display-6">Getrokken kaarten</h1>
+                <h1 class="ch1 fs-2 ctext-secondary">Getrokken kaarten</h1>
                 <button class="btn-close text-reset bg-danger" type="button" data-bs-toggle="offcanvas"
                     aria-label="close">
                 </button>
             </section>
             <section class="offcanvas-body">
                 <section>
-                    <form class="col-12 container d-flex justify-content-between flex-wrap">
+                    <form class="col-12 container d-flex justify-content-between flex-wrap mb-3">
                         <fieldset class="col-12">
                             <div class="form-control d-flex">
                                 <button class="bg-white text-secondary p-1 border-0" type="submit" id="search">
@@ -164,7 +169,7 @@
                                     id="cardLookup" class="form-control border-0" />
                             </div>
                         </fieldset>
-                        <fieldset class="col-12 d-flex flex-wrap">
+                        <fieldset class="col-12 d-flex flex-wrap justify-content-between">
                             <legend class="text-center col-12">Filter</legend>
                             <div class="form-group col-12 mb-2">
                                 <select class="form-control" name="type" id="type">
@@ -183,34 +188,34 @@
                                     <option value="land">Land</option>
                                 </select>
                             </div>
-                            <div class="d-flex flex-column align-items-center col-2">
-                                <input class="form-check-input" type="radio" name="W" id="W">
+                            <div class="d-flex flex-column align-items-center col-1 cbg-primary rounded py-1 px-3">
+                                <input class="form-check-input" type="checkbox" name="W" id="W">
                                 <label class="form-check-label" for="W">
                                     <img src="assets/images/mana_symbols/W.svg" height="20px" alt="">
                                 </label>
                             </div>
-                            <div class="d-flex flex-column align-items-center col-2">
-                                <input class="form-check-input" type="radio" name="U" id="U">
+                            <div class="d-flex flex-column align-items-center col-1 cbg-primary rounded py-1 px-3">
+                                <input class="form-check-input" type="checkbox" name="U" id="U">
                                 <label class="form-check-label" for="U">
                                     <img src="assets/images/mana_symbols/U.svg" height="20px" alt=""></label>
                             </div>
-                            <div class="d-flex flex-column align-items-center col-2">
-                                <input class="form-check-input" type="radio" name="B" id="B">
+                            <div class="d-flex flex-column align-items-center col-1 cbg-primary rounded py-1 px-3">
+                                <input class="form-check-input" type="checkbox" name="B" id="B">
                                 <label class="form-check-label" for="B">
                                     <img src="assets/images/mana_symbols/B.svg" height="20px" alt=""></label>
                             </div>
-                            <div class="d-flex flex-column align-items-center col-2">
-                                <input class="form-check-input" type="radio" name="R" id="R">
+                            <div class="d-flex flex-column align-items-center col-1 cbg-primary rounded py-1 px-3">
+                                <input class="form-check-input" type="checkbox" name="R" id="R">
                                 <label class="form-check-label" for="R">
                                     <img src="assets/images/mana_symbols/R.svg" height="20px" alt=""></label>
                             </div>
-                            <div class="d-flex flex-column align-items-center col-2">
-                                <input class="form-check-input" type="radio" name="G" id="G">
+                            <div class="d-flex flex-column align-items-center col-1 cbg-primary rounded py-1 px-3">
+                                <input class="form-check-input" type="checkbox" name="G" id="G">
                                 <label class="form-check-label" for="G">
                                     <img src="assets/images/mana_symbols/G.svg" height="20px" alt=""></label>
                             </div>
-                            <div class="d-flex flex-column align-items-center col-2">
-                                <input class=" form-check-input" type="radio" name="C" id="C">
+                            <div class="d-flex flex-column align-items-center col-1 cbg-primary rounded py-1 px-3">
+                                <input class=" form-check-input" type="checkbox" name="C" id="C">
                                 <label class="form-check-label" for="C">
                                     <img src="assets/images/mana_symbols/C.svg" height="20px" alt=""></label>
                             </div>
@@ -240,6 +245,50 @@
                         <a href="cardetail.html" class="col-6 p-1">
                             <img src="assets/images/demoCards/card4.jpg" class="col-12">
                         </a>
+                    </section>
+                    <section class="container d-flex justify-content-between mt-2">
+                        <article>
+                            <button class="btn btn-dark cbg-primary">
+                                <svg height="1.5rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 512 512">
+                                    <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                    <path
+                                        d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
+                                </svg>
+                            </button>
+                            <button class="btn btn-dark cbg-primary">
+                                <svg height="1.5rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 320 512">
+                                    <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                    <path
+                                        d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+                                </svg>
+                            </button>
+                        </article>
+                        <section class="d-flex gap-2 ctext-white">
+                            <p>1.</p>
+                            <p>2.</p>
+                            <p>3.</p>
+                            <p>...</p>
+                        </section>
+                        <article>
+                            <button class="btn btn-dark cbg-primary">
+                                <svg height="1.5rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 320 512">
+                                    <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                    <path
+                                        d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z" />
+                                </svg>
+                            </button>
+                            <button class="btn btn-dark cbg-primary">
+                                <svg height="1.5rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 512 512">
+                                    <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                    <path
+                                        d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
+                                </svg>
+                            </button>
+                        </article>
                     </section>
                 </section>
             </section>

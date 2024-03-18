@@ -1,76 +1,99 @@
-<header class="p-3 cbg-primary text-dark">
-    <section class="container">
-        <article class="d-flex flex-wrap align-items-center justify-content-between gapx-1">
-            <img height="100px" src="assets/images/header/CcW_Logo.png">
-            <section>
-                <h1 class="ch1 ctext-secondary">Magic The Gathering</h1>
-            </section>
-            <ul class="nav">
-                <li>
-                    <a href="home.html" class="nav-link px-2 ctext-secondary">Home</a>
-                </li>
-                <li>
-                    <a href="decks.html" class="nav-link px-2 ctext-white">Decks nakijken</a>
-                </li>
-                <li>
-                    <a href="drawtest.html" class="nav-link px-2 ctext-white">Deck simuleren</a>
-                </li>
-            </ul>
-            <a data-bs-toggle="offcanvas" href="#miniProfile" role="button" aria-controls="miniProfile"
-                class="d-flex align-items-center text-dark text-decoration-none">
-                <svg class="display-6" height="3rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 448 512">
-                    <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                    <path
-                        d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
-                </svg>
-            </a>
-        </article>
-    </section>
-    <!-- ========== Start mini profile offcanvas ========== -->
-    <section class="offcanvas offcanvas-end ctext-white" tabindex="-1" id="miniProfile"
-        aria-labelledby="miniprofileLabel">
-        <section class="offcanvas-header cbg-primary align-items-start">
-            <section class="d-flex flex-column gap-2">
-                <article class="d-flex gap-3">
-                    <svg height="4rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+<!DOCTYPE html>
+<html lang="nl-BE">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <!-- Link bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <!-- Link bootstrap Js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <script src="js/infoPopUp.js"></script>
+</head>
+
+<body>
+    <header class="p-3 cbg-primary text-dark">
+        <section class="container">
+            <article class="d-flex flex-wrap align-items-center justify-content-between gapx-1">
+                <img height="100px" src="assets/images/header/CcW_Logo.png">
+                <section>
+                    <h1 class="ch1 ctext-secondary">Magic The Gathering</h1>
+                </section>
+                <ul class="nav">
+                    <li>
+                        <a href="home.html" class="nav-link px-2 ctext-secondary">Home</a>
+                    </li>
+                    <li>
+                        <a href="decks.html" class="nav-link px-2 ctext-white">Decks nakijken</a>
+                    </li>
+                    <li>
+                        <a href="drawtest.html" class="nav-link px-2 ctext-white">Deck simuleren</a>
+                    </li>
+                </ul>
+                <a data-bs-toggle="offcanvas" href="#miniProfile" role="button" aria-controls="miniProfile"
+                    class="d-flex align-items-center text-dark text-decoration-none">
+                    <svg class="display-6" height="3rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 448 512">
                         <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
                     </svg>
-                    <section class="container">
-                        <h5 class="">Welkom ${username}</h5>
-                        <h6 class="">${email}</h6>
-                    </section>
-                </article>
-                <a class="btn btn-dark" type="button" href="profile.html">Bekijk profiel</a>
+                </a>
+            </article>
+        </section>
+        <!-- ========== Start mini profile offcanvas ========== -->
+        <section class="offcanvas offcanvas-end ctext-white" tabindex="-1" id="miniProfile"
+            aria-labelledby="miniprofileLabel">
+            <section class="offcanvas-header cbg-primary align-items-start">
+                <section class="d-flex flex-column gap-2">
+                    <article class="d-flex gap-3">
+                        <svg height="4rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                            <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                            <path
+                                d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                        </svg>
+                        <section class="container">
+                            <h5 class="">Welkom ${username}</h5>
+                            <h6 class="">${email}</h6>
+                        </section>
+                    </article>
+                    <a class="btn btn-dark" type="button" href="profile.html">Bekijk profiel</a>
+                </section>
+                <button class="btn-close text-reset bg-danger" type="button" data-bs-toggle="offcanvas"
+                    aria-label="close">
+                </button>
             </section>
-            <button class="btn-close text-reset bg-danger" type="button" data-bs-toggle="offcanvas" aria-label="close">
-            </button>
+            <section class="offcanvas-body">
+                <form class="mb-5">
+                    <fieldset class="d-flex flex-column gap-1">
+                        <legend>Geef ons je feedback:</legend>
+                        <label for="feedbackType">Welke soort feedback wil je geven?</label>
+                        <select name="feedbackType" id="feedbackType" class="form-select p-2">
+                            <option value="bug">Meld een bug</option>
+                            <option value="suggestion">Suggestie indienen</option>
+                            <option value="compliment">Geef een compliment</option>
+                            <option value="general">Algemene feedback</option>
+                        </select>
+                        <label for="feedback">Feedback:</label>
+                        <textarea class="form-control form-control-dark" name="feedback" id="feedback" cols="30"
+                            rows="10"></textarea>
+                        <input class="btn btn-dark" type="submit" value="Stuur feedback in*" />
+                        <p class="h6 ctext-white-d">
+                            * Door op "Stuur feedback in" te klikken, accepteer je onze
+                            algemene voorwaarden
+                        </p>
+                    </fieldset>
+                </form>
+                <button class="btn btn-danger" aria-label="exit">Log uit</button>
+            </section>
         </section>
-        <section class="offcanvas-body">
-            <form class="mb-5">
-                <fieldset class="d-flex flex-column gap-1">
-                    <legend>Geef ons je feedback:</legend>
-                    <label for="feedbackType">Welke soort feedback wil je geven?</label>
-                    <select name="feedbackType" id="feedbackType" class="form-select p-2">
-                        <option value="bug">Meld een bug</option>
-                        <option value="suggestion">Suggestie indienen</option>
-                        <option value="compliment">Geef een compliment</option>
-                        <option value="general">Algemene feedback</option>
-                    </select>
-                    <label for="feedback">Feedback:</label>
-                    <textarea class="form-control form-control-dark" name="feedback" id="feedback" cols="30"
-                        rows="10"></textarea>
-                    <input class="btn btn-dark" type="submit" value="Stuur feedback in*" />
-                    <p class="h6 ctext-muted">
-                        * Door op "Stuur feedback in" te klikken, accepteer je onze
-                        algemene voorwaarden
-                    </p>
-                </fieldset>
-            </form>
-            <button class="btn btn-danger" aria-label="exit">Log uit</button>
-        </section>
-    </section>
-    <!-- ========== End mini profile offcanvas ========== -->
-</header>
+        <!-- ========== End mini profile offcanvas ========== -->
+    </header>
+</body>
+
+</html>

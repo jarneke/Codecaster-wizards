@@ -13,7 +13,7 @@
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="css/bootstrap.css" />
-  <script src="js/infoPopUp.js"></script>
+  <script src="js/infoPopUp.js" defer></script>
   <script src="js/manaCheckbox.js" defer></script>
 </head>
 
@@ -437,47 +437,6 @@
       </section>
     </section>
   </footer>
-  <!-- bootstrap offcanvases-->
-  <!-- - mini profile offcanvas-->
-  <section class="offcanvas offcanvas-start bg-secondary" tabindex="-1" id="miniProfile"
-    aria-labelledby="miniprofileLabel">
-    <section class="offcanvas-header bg-primary align-items-start">
-      <section class="d-flex flex-column gap-2">
-        <section class="d-flex gap-3">
-          <img class="display-2" width="100px" src="" />
-          <section class="container">
-            <h5 class="">Welkom ${username}</h5>
-            <h6 class="">${email}</h6>
-          </section>
-        </section>
-        <a class="btn btn-dark" type="button" href="profile.html">Bekijk profiel</a>
-      </section>
-      <button class="btn-close text-reset bg-danger" type="button" data-bs-toggle="offcanvas"
-        aria-label="close"></button>
-    </section>
-    <section class="offcanvas-body">
-      <form class="mb-5">
-        <fieldset class="d-flex flex-column gap-1">
-          <legend>Geef ons je feedback:</legend>
-          <label for="feedbackType">Welke soort feedback wil je geven?</label>
-          <select name="feedbackType" id="feedbackType">
-            <option value="bug">Meld een bug</option>
-            <option value="suggestion">Suggestie indienen</option>
-            <option value="compliment">Geef een compliment</option>
-            <option value="general">Algemene feedback</option>
-          </select>
-          <label for="feedback">Feedback:</label>
-          <textarea class="form-control form-control-dark" name="feedback" id="feedback" cols="30" rows="10"></textarea>
-          <input class="btn btn-dark" type="submit" value="Stuur feedback in*" />
-          <p class="h6 text-dark">
-            * Door op "Stuur feedback in" te klikken, accepteer je onze
-            algemene voorwaarden
-          </p>
-        </fieldset>
-      </form>
-      <button class="btn btn-danger" aria-label="exit">Log uit</button>
-    </section>
-  </section>
   <!-- Modals -->
   <section class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
     <section class="modal-dialog modal-lg">
@@ -518,7 +477,8 @@
             <input type="checkbox" name="dontShowAgain" id="dontShowAgain">
             <label for="dontShowAgain">Laat dit bericht niet meer zien</label>
           </div>
-          <button type="button" class="btn btn-dark bg-dark" data-bs-dismiss="modal">Ik begrijp het</button>
+          <button type="button" class="btn btn-dark bg-dark" data-bs-dismiss="modal" id="CloseInfo">Ik begrijp
+            het</button>
         </section>
       </section>
     </section>

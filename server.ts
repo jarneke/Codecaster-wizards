@@ -18,7 +18,7 @@ app.get("/decks", (req, res) => {
     res.render("decks")
 })
 app.get("/deckdetails", (req, res) => {
-    res.render("deckdetail")
+    res.render("deckdetails")
 })
 app.get("/drawtest", (req, res) => {
     res.render("drawtest")

@@ -1,4 +1,4 @@
-<% include("partials/landingsheader") %>
+<%- include("partials/landingsheader") %>
 <section class="container d-flex flex-wrap justify-content-center align-items-center min-vh-50 col-sm-12 gap-3">
     <section id="cards_animation_b">
       <h1 class="text-nowrap text-center ctext-white">Fifa</h1>
@@ -56,12 +56,7 @@
     </section>
   </section>
 </main>
-<footer class="text-wrap text-center mt-3 cbg-dark ctext-white p-5">
-  FOTOS: &copy
-  <a class="ctext-white" href="https://openai.com/dall-e-3">
-    DALL-E 3
-  </a>
-</footer>
+<%- include("partials/landingsfooter") %>
 <!-- Modals -->
 <section class="modal fade" id="loginModal" aria-hidden="true" aria-labelledby="loginModalLabel" tabindex="-1">
   <section class="modal-dialog modal-dialog-centered">

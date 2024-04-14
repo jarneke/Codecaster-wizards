@@ -4,14 +4,18 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
+    <title>
+        <%= title %>
+    </title>
+    <link rel="icon" href="/assets/images/header/CcW_Logo.png">
     <!-- Link bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
     <!-- Link bootstrap Js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/css/bootstrap.css" />
-    <script src="/js/infoPopUp.js" defer></script>
-    <script src="/js/manaCheckbox.js" defer></script>
+    <% for (const filename of jsFiles) { %>
+        <script src="/js/<%= filename %>.js"></script>
+        <% } %>
 </head>
 
 <body>
@@ -24,13 +28,13 @@
                 </section>
                 <ul class="nav">
                     <li>
-                        <a href="/home" class="nav-link px-2 ctext-secondary">Home</a>
+                        <a href="/home" class="nav-link px-2 <%= tabToColor === 0? " ctext-secondary" : "ctext-white" %>">Home</a>
                     </li>
                     <li>
-                        <a href="/decks" class="nav-link px-2 ctext-white">Decks nakijken</a>
+                        <a href="/decks" class="nav-link px-2 <%= tabToColor === 1? " ctext-secondary" : "ctext-white" %>">Decks nakijken</a>
                     </li>
                     <li>
-                        <a href="/drawtest" class="nav-link px-2 ctext-white">Deck simuleren</a>
+                        <a href="/drawtest" class="nav-link px-2 <%= tabToColor === 2? " ctext-secondary" : "ctext-white" %>">Deck simuleren</a>
                     </li>
                 </ul>
                 <a data-bs-toggle="offcanvas" href="#miniProfile" role="button" aria-controls="miniProfile" class="d-flex align-items-center text-dark text-decoration-none">
@@ -51,8 +55,11 @@
                             <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
                         </svg>
                         <section class="container">
-                            <h5 class="">Welkom ${username}</h5>
-                            <h6 class="">${email}</h6>
+                            <h5 class="">Welkom <%= user.userName %>
+                            </h5>
+                            <h6 class="">
+                                <%= user.email %>
+                            </h6>
                         </section>
                     </article>
                     <a class="btn btn-dark" type="button" href="/profile">Bekijk profiel</a>

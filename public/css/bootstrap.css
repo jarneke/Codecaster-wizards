@@ -1,7 +1,7 @@
 /* Root colors */
 :root {
   --primary-color: #555555;
-  --primary-color-l: #AAAAAA;
+  --primary-color-l: #aaaaaa;
   --primary-color-d: #000000;
 
   --secondary-color: #ef4423;
@@ -17,10 +17,10 @@
   --success-color-d: #016536;
 
   --warning-color: #000000a3;
-  --warning-color-l: #004C99;
-  --warning-color-d: #004C99;
+  --warning-color-l: #004c99; /* UNCOMMONS */
+  --warning-color-d: #004c99;
 
-  --danger-color: #ff0000;
+  --danger-color: #ff0000; /* MYTHIC */
   --danger-color-l: #ff7575;
   --danger-color-d: #750000;
 
@@ -28,7 +28,7 @@
   --light-color-l: #dddddd;
   --light-color-d: #a3a3a3;
 
-  --white-color: #ffffff;
+  --white-color: #ffffff; /* COMMONS */
   --white-color-l: #ffffff;
   --white-color-d: #aeaeae;
 
@@ -40,7 +40,8 @@
   --muted-color-l: #d1d1d1;
   --muted-color-d: #595959;
 
-  --transfparent-color: #00000000;
+  --yellow-color: #e6bb00; /* RARES */
+  --transparent-color: #00000000;
 }
 
 /* FONTS */
@@ -49,7 +50,7 @@
   font-family: mtg-bold;
   src: url(/assets/Fonts/typeface-beleren-bold-master/Beleren2016SmallCaps-Bold.ttf);
 }
-.ch1{
+.ch1 {
   font-family: mtg-bold, Arial, Helvetica, sans-serif;
 }
 /* Text colors */
@@ -175,6 +176,10 @@
 .ctext-white-d:hover {
   color: var(--white-color-d);
 }
+.ctext-yellow,
+.ctext-yellow:hover {
+  color: var(--yellow-color);
+}
 /* Background colors */
 .cbg-primary,
 .cbg-primary:hover {
@@ -285,20 +290,24 @@
   background-color: var(--white-color-d);
 }
 .cbg-transparent,
-.cbg-transparent:hover{
-  background-color: var(--transfparent-color);
+.cbg-transparent:hover {
+  background-color: var(--transparent-color);
 }
-#cards_animation .card-flyer:hover .image-box img{
+.cbg-yellow,
+.cbg-yellow:hover {
+  background-color: var(--yellow-color);
+}
+#cards_animation .card-flyer:hover .image-box img {
   opacity: 0.7;
-  -webkit-transform:scale(1.15);
-  -moz-transform:scale(1.15);
-  -ms-transform:scale(1.15);
-  -o-transform:scale(1.15);
-  transform:scale(1.15);
+  -webkit-transform: scale(1.15);
+  -moz-transform: scale(1.15);
+  -ms-transform: scale(1.15);
+  -o-transform: scale(1.15);
+  transform: scale(1.15);
 }
-#cards_animation .card-flyer:hover{
+#cards_animation .card-flyer:hover {
   background: var(--secondary-color-l);
-  box-shadow: 0px 15px 26px rgba(0, 0, 0, 0.50);
+  box-shadow: 0px 15px 26px rgba(0, 0, 0, 0.5);
   /*box-shadow: 0px 15px 26px rgba(0, 0, 0, 0.50);*/
   -webkit-transition: all 0.2s ease-in;
   -moz-transition: all 0.2s ease-in;
@@ -308,17 +317,17 @@
   margin-top: -10px;
 }
 
-#cards_animation_b .card-flyer_b:hover .image-box_b img{
+#cards_animation_b .card-flyer_b:hover .image-box_b img {
   opacity: 0.7;
-  -webkit-transform:scale(1.15);
-  -moz-transform:scale(1.15);
-  -ms-transform:scale(1.15);
-  -o-transform:scale(1.15);
-  transform:scale(1.15);
+  -webkit-transform: scale(1.15);
+  -moz-transform: scale(1.15);
+  -ms-transform: scale(1.15);
+  -o-transform: scale(1.15);
+  transform: scale(1.15);
 }
-#cards_animation_b .card-flyer_b:hover{
+#cards_animation_b .card-flyer_b:hover {
   background: var(--warning-color-l);
-  box-shadow: 0px 15px 26px rgba(0, 0, 0, 0.50);
+  box-shadow: 0px 15px 26px rgba(0, 0, 0, 0.5);
   /*box-shadow: 0px 15px 26px rgba(0, 0, 0, 0.50);*/
   -webkit-transition: all 0.2s ease-in;
   -moz-transition: all 0.2s ease-in;
@@ -327,14 +336,16 @@
   transition: all 0.2s ease-in;
   margin-top: -10px;
 }
-/* Background Images */
-
-body, .offcanvas {
+body,
+.offcanvas {
   background-image: url("/assets/images/background/MTGBackground.jpg");
   background-size: cover;
   background-color: #cccccc;
- }
-
- /*header {
-  background-image: url(/assets/images/background/magicBanner.webp);
- }*/
+}
+.mtg-card:hover {
+  -webkit-transform: scale(1.05);
+  -moz-transform: scale(1.05);
+  -ms-transform: scale(1.05);
+  -o-transform: scale(1.05);
+  transform: scale(1.05);
+}

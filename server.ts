@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
     res.render("landingspage")
 })
 app.get("/home", async (req, res) => {
-    let cardLookup = req.query.cardLookup
+    let cardLookup = `${req.query.cardLookup}`
     let type = req.query.type
     let whiteManaChecked = req.query.whiteManaChecked
     let blueManaChecked = req.query.blueManaChecked
@@ -27,8 +27,16 @@ app.get("/home", async (req, res) => {
     let colorlessManaChecked = req.query.colorlessManaChecked
     let sort = req.query.sort
     let pageQueryParam = req.query.page;
+    console.log(cardLookup);
 
     let filteredCards: Magic.Card[] = [...allCards];
+    if (cardLookup != "undefined") {
+        console.log(allCards[0].name
+        );
+        console.log(allCards[0].name.toLowerCase().includes(cardLookup.toLowerCase()) ? "yup" : "nope");
+
+        filteredCards = allCards.filter(e => `${e.name}${e.setName}${e.id}`.toLowerCase().includes(cardLookup.toLowerCase()))
+    }
     let filterUrl: string = "";
     let page: number = 1;
     if (typeof pageQueryParam === 'string') {
@@ -60,12 +68,12 @@ app.get("/home", async (req, res) => {
         // -- filter system
         cardLookup: req.query.cardLookup,
         type: req.query.type,
-        whiteManaChecked: req.query.whiteManaChecked,
-        blueManaChecked: req.query.blueManaChecked,
-        blackManaChecked: req.query.blackManaChecked,
-        greenManaChecked: req.query.greenManaChecked,
-        redManaChecked: req.query.redManaChecked,
-        colorlessManaChecked: req.query.colorlessManaChecked,
+        whiteManaChecked: whiteManaChecked == undefined ? "true" : whiteManaChecked,
+        blueManaChecked: blueManaChecked == undefined ? "true" : blueManaChecked,
+        blackManaChecked: blackManaChecked == undefined ? "true" : blackManaChecked,
+        greenManaChecked: greenManaChecked == undefined ? "true" : greenManaChecked,
+        redManaChecked: redManaChecked == undefined ? "true" : redManaChecked,
+        colorlessManaChecked: colorlessManaChecked == undefined ? "true" : colorlessManaChecked,
         sort: req.query.sort,
         // -- pagination
         page: page,

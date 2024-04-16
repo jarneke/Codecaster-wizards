@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
     let allCheckboxes = document.getElementsByClassName("mana-checkbox")
     for (const checkbox of allCheckboxes) {
-        // update on page load
-        update(checkbox);
-        // update on click
+        // on page load, initialize checkboxes
+
+
+        // on click do logic
         checkbox.addEventListener("click", (e) => {
             e.preventDefault();
             update(checkbox);
@@ -12,12 +13,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateHiddenField(checkboxId, isChecked) {
         console.log(checkboxId + "Checked");
         let hiddenField = document.getElementById(checkboxId + "Checked");
-        hiddenField.value = isChecked ? "true" : "false";
+        hiddenField.value = isChecked ? "false" : "true";
     }
     function update(checkbox) {
-        let isChecked = checkbox.getAttribute("data-cbs-checked") === "true";
+        let checkedState = checkbox.getAttribute("data-cbs-checked");
+        let isChecked = checkedState === "true";
         checkbox.setAttribute("data-cbs-checked", isChecked ? "false" : "true");
-        isChecked ? checkbox.classList.replace("cbg-danger", "cbg-success") : checkbox.classList.replace("cbg-success", "cbg-danger");
+        isChecked ? checkbox.classList.replace("cbg-success", "cbg-danger") : checkbox.classList.replace("cbg-danger", "cbg-success");
         updateHiddenField(checkbox.id, isChecked);
     }
 })

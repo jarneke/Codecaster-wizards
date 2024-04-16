@@ -12,7 +12,7 @@
         </li>
         <% for (let i=Math.max(1, page - 2); i <=Math.min(page + 2, totalPages); i++) { %>
             <li class="page-item <%= i === page ? 'active' : '' %>">
-                <a class="page-link cbg-dark ctext-white" href="?<%= filterUrl %>&page=<%= i %>">
+                <a class="page-link px-2 cbg-dark ctext-white" href="?<%= filterUrl %>&page=<%= i %>">
                     <%= i %>
                 </a>
             </li>

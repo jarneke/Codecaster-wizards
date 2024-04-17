@@ -4,9 +4,29 @@ import * as i from "./interfaces";
 import Magic = require("mtgsdk-ts");
 import * as f from "./functions"
 
+function generateRandomInteger(): number {
+    return Math.floor(Math.random() * 61); // Generates a random number between 0 and 60 (inclusive)
+}
+const tempDecks: i.Deck[] = [
+]
+setTimeout(() => {
+    for (let i = 0; i < 5; i++) {
+
+        let tempCards: Magic.Card[] = []
+        let max = generateRandomInteger();
+        for (let index = 0; index < max; index++) {
+            tempCards.push(allCards[i])
+        }
+        tempDecks.push({
+            deckName: `Deck ${i}`,
+            cards: tempCards
+        })
+    }
+}, 10000);
 const app = express();
 
 const allCards: Magic.Card[] = [];
+const allDecks: i.Deck[] = tempDecks // change this to load the decks from the database per user
 
 app.set("port", 3000);
 app.set("view engine", "ejs");
@@ -14,6 +34,7 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
+
     res.render("landingspage")
 })
 app.get("/home", async (req, res) => {

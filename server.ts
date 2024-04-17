@@ -105,16 +105,128 @@ app.get("/home", async (req, res) => {
     })
 })
 app.get("/decks", (req, res) => {
-    res.render("decks")
+     // params from route
+     let cardLookup = req.query.cardLookup
+     let sort = req.query.sort
+     let sortDirection = req.query.sortDirection
+     let pageQueryParam = req.query.page;
+
+     // Pagination
+    let pageSize: number = 6;
+    let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, allCards);
+
+    let cardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize)
+
+
+
+    res.render("decks", {
+        // HEADER
+        user: i.tempUser,
+        // -- The names of the js files you want to load on the page.
+        jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
+        // -- The title of the page
+        title: "Home page",
+        // -- The Tab in the nav bar you want to have the orange color 
+        // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
+        tabToColor: 1,
+        // MAIN
+        // -- filter system
+        cardLookup: cardLookup,
+        sort: sort,
+        sortDirection: sortDirection,
+        // -- pagination
+        page: pageData.page,
+        totalPages: pageData.totalPages,
+        filterUrl: pageData.filterUrl,
+        // -- cards
+        cards: cardsToLoad
+
+    })
 })
 app.get("/deckdetails", (req, res) => {
-    res.render("deckdetails")
+    // params from route
+    let cardLookup = req.query.cardLookup
+    let sort = req.query.sort
+    let sortDirection = req.query.sortDirection
+    let pageQueryParam = req.query.page;
+
+    // Pagination
+   let pageSize: number = 6;
+   let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, allCards);
+
+   let cardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize)
+   let modalCardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize / 2)
+
+
+    res.render("deckdetails", {
+        // HEADER
+        user: i.tempUser,
+        // -- The names of the js files you want to load on the page.
+        jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
+        // -- The title of the page
+        title: "Home page",
+        // -- The Tab in the nav bar you want to have the orange color 
+        // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
+        tabToColor: 1,
+        // MAIN
+        // -- filter system
+        cardLookup: cardLookup,
+        sort: sort,
+        sortDirection: sortDirection,
+        // -- pagination
+        page: pageData.page,
+        totalPages: pageData.totalPages,
+        filterUrl: pageData.filterUrl,
+        // -- cards
+        cards: cardsToLoad,
+        modalCards: modalCardsToLoad
+
+    })
 })
 app.get("/drawtest", (req, res) => {
     res.render("drawtest")
 })
 app.get("/profile", (req, res) => {
     res.render("profile")
+})
+
+app.get("/editDeck", (req, res) => {
+    // params from route
+    let cardLookup = req.query.cardLookup
+    let sort = req.query.sort
+    let sortDirection = req.query.sortDirection
+    let pageQueryParam = req.query.page;
+
+    // Pagination
+   let pageSize: number = 6;
+   let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, allCards);
+
+   let cardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize)
+   let modalCardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize / 2)
+
+    res.render("editDeck", {
+        // HEADER
+        user: i.tempUser,
+        // -- The names of the js files you want to load on the page.
+        jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
+        // -- The title of the page
+        title: "Home page",
+        // -- The Tab in the nav bar you want to have the orange color 
+        // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
+        tabToColor: 1,
+        // MAIN
+        // -- filter system
+        cardLookup: cardLookup,
+        sort: sort,
+        sortDirection: sortDirection,
+        // -- pagination
+        page: pageData.page,
+        totalPages: pageData.totalPages,
+        filterUrl: pageData.filterUrl,
+        // -- cards
+        cards: cardsToLoad,
+        modalCards: modalCardsToLoad
+    })
 })
 
 app.listen(app.get("port"), async () => {

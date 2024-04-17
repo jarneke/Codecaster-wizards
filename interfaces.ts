@@ -6,7 +6,11 @@ export interface User {
     description: string,
     Password: string,
 }
-
+export interface PageData {
+    page: number,
+    totalPages: number,
+    filterUrl: string
+}
 export const tempUser: User = {
     firstName: "John",
     lastName: "Doe",

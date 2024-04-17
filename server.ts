@@ -3,7 +3,6 @@ import ejs from "ejs";
 import * as i from "./interfaces";
 import Magic = require("mtgsdk-ts");
 import * as f from "./functions"
-import { Rarity } from "mtgsdk-ts/out/IMagic";
 
 const app = express();
 
@@ -56,7 +55,7 @@ app.get("/home", async (req, res) => {
     filteredCards = f.filterManaType(filteredCards, blackManaChecked, "B")
     filteredCards = f.filterManaType(filteredCards, greenManaChecked, "G")
     filteredCards = f.filterManaType(filteredCards, redManaChecked, "R")
-    filteredCards = f.filterManaType(filteredCards, colorlessManaChecked, "C")
+    filteredCards = f.filterColorlessManaType(filteredCards, colorlessManaChecked)
     // sort logic
     let sortedCards: Magic.Card[] = [...filteredCards]
     if (sort != undefined) {

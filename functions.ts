@@ -104,3 +104,26 @@ export function filterManaType(arrToFilter: Magic.Card[], manaReqQuery: any, col
     }
     return arrToFilter;
 }
+/**
+ * A function to filter cards by colorless mana color
+ * @param arrToFilter The array to filter
+ * @param manaReqQuery the req.query.<mana>ManaColor
+ * @returns filtered array
+ */
+export function filterColorlessManaType(arrToFilter: Magic.Card[], manaReqQuery: any): Magic.Card[] {
+    let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+
+    if (manaReqQuery === false || manaReqQuery === "false") {
+
+        arrToFilter = arrToFilter.filter(card => {
+            let found: boolean = false;
+            for (let i = 0; i < 20; i++) {
+                let number = numbers[i]
+                if (card.manaCost && !card.manaCost.includes(`${i}`)) found = true;
+            }
+            return found
+        });
+    }
+    return arrToFilter;
+}
+

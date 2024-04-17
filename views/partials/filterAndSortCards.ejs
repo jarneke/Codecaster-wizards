@@ -55,7 +55,7 @@
                                             <button class="rounded-circle border-0 cbg-danger mana-checkbox" id="blackMana" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Black mana (B)" style="width: 40px; height: 40px;" data-cbs-checked="false">
                                                 <img src="assets/images/mana_symbols/B.svg" alt="mana-symbol-B">
                                             </button>
-                                            <input type="hidden" name="blackManaChecked" id="blackManaChecked" value="true">
+                                            <input type="hidden" name="blackManaChecked" id="blackManaChecked" value="false">
                                             <% } %>
                                                 <% if (greenManaChecked=="true" ) {%>
                                                     <button class="rounded-circle border-0 cbg-success mana-checkbox" id="greenMana" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Green mana (G)" style="width: 40px; height: 40px;" data-cbs-checked="true">
@@ -155,7 +155,8 @@
                                 </option>
                             </select>
             </div>
-            <button type="submit" class="mt-5 btn btn-dark col-12">Pas filter en sortering toe</button>
+            <button type="submit" class="mt-5 btn btn-dark col-12"><i class="bi bi-funnel-fill"></i> Pas filter en sortering toe</button>
+            <a href="/home" class="mt-2 col-5 btn btn-dark col-12"><i class="bi bi-arrow-clockwise"></i> Reset filter en sortering</a>
         </fieldset>
     </form>
 </section>

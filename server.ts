@@ -4,29 +4,9 @@ import * as i from "./interfaces";
 import Magic = require("mtgsdk-ts");
 import * as f from "./functions"
 
-function generateRandomInteger(): number {
-    return Math.floor(Math.random() * 61); // Generates a random number between 0 and 60 (inclusive)
-}
-const tempDecks: i.Deck[] = [
-]
-setTimeout(() => {
-    for (let i = 0; i < 5; i++) {
-
-        let tempCards: Magic.Card[] = []
-        let max = generateRandomInteger();
-        for (let index = 0; index < max; index++) {
-            tempCards.push(allCards[i])
-        }
-        tempDecks.push({
-            deckName: `Deck ${i}`,
-            cards: tempCards
-        })
-    }
-}, 10000);
 const app = express();
 
 const allCards: Magic.Card[] = [];
-const allDecks: i.Deck[] = tempDecks // change this to load the decks from the database per user
 
 app.set("port", 3000);
 app.set("view engine", "ejs");
@@ -125,13 +105,13 @@ app.get("/home", async (req, res) => {
     })
 })
 app.get("/decks", (req, res) => {
-     // params from route
-     let cardLookup = req.query.cardLookup
-     let sort = req.query.sort
-     let sortDirection = req.query.sortDirection
-     let pageQueryParam = req.query.page;
+    // params from route
+    let cardLookup = req.query.cardLookup
+    let sort = req.query.sort
+    let sortDirection = req.query.sortDirection
+    let pageQueryParam = req.query.page;
 
-     // Pagination
+    // Pagination
     let pageSize: number = 6;
     let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, allCards);
 
@@ -171,11 +151,11 @@ app.get("/deckdetails", (req, res) => {
     let pageQueryParam = req.query.page;
 
     // Pagination
-   let pageSize: number = 6;
-   let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, allCards);
+    let pageSize: number = 6;
+    let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, allCards);
 
-   let cardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize)
-   let modalCardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize / 2)
+    let cardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize)
+    let modalCardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize / 2)
 
 
     res.render("deckdetails", {
@@ -218,11 +198,11 @@ app.get("/editDeck", (req, res) => {
     let pageQueryParam = req.query.page;
 
     // Pagination
-   let pageSize: number = 6;
-   let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, allCards);
+    let pageSize: number = 6;
+    let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, allCards);
 
-   let cardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize)
-   let modalCardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize / 2)
+    let cardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize)
+    let modalCardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize / 2)
 
     res.render("editDeck", {
         // HEADER

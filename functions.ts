@@ -126,4 +126,13 @@ export function filterColorlessManaType(arrToFilter: Magic.Card[], manaReqQuery:
     }
     return arrToFilter;
 }
-
+export function sortBy(a: i.Card, b: i.Card, sortParam: string): number {
+    if (typeof a[`${sortParam}`] === "string" && typeof b[`${sortParam}`] === "string") {
+        return a[`${sortParam}`].localeCompare(b[`${sortParam}`])
+    } else if (typeof a[`${sortParam}`] === "number" && typeof b[`${sortParam}`] === "number") {
+        return a[`${sortParam}`] - b[`${sortParam}`]
+    } else {
+        console.log(typeof a[`${sortParam}`]);
+        return 0;
+    }
+}

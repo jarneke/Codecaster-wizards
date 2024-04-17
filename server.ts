@@ -59,17 +59,21 @@ app.get("/home", async (req, res) => {
     filteredCards = f.filterColorlessManaType(filteredCards, colorlessManaChecked)
     // sort logic
     let sortedCards: Magic.Card[] = [...filteredCards]
-    if (sort != undefined) {
-        // TODO: make sort logic
+    if (sort != undefined && sort != "" && sortDirection != undefined && sortDirection != "") {
+        if (`${sortDirection}` === "down") {
+            sortedCards = [...sortedCards.sort((a: Magic.Card, b: Magic.Card) => f.sortBy(a, b, `${sort}`))]
+        } else {
+            sortedCards = [...sortedCards.sort((a: Magic.Card, b: Magic.Card) => f.sortBy(a, b, `${sort}`) * -1)]
+        }
     }
     // Pagination
     let pageSize: number = 12;
-    let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, filteredCards);
+    let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, sortedCards);
 
-    let cardsToLoad = f.getCardsForPage(filteredCards, pageData.page, pageSize)
+    let cardsToLoad = f.getCardsForPage(sortedCards, pageData.page, pageSize)
     // all Card Types
-    let types: string[] = f.getAllCardTypes(filteredCards);
-    let rarities: string[] = f.getAllRarities(filteredCards);
+    let types: string[] = f.getAllCardTypes(sortedCards);
+    let rarities: string[] = f.getAllRarities(sortedCards);
     // Render
     res.render("home", {
         // HEADER

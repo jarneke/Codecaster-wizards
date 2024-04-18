@@ -104,6 +104,7 @@ export function filterManaType(arrToFilter: Magic.Card[], manaReqQuery: any, col
     }
     return arrToFilter;
 }
+<<<<<<< HEAD
 /**
  * A function to filter cards by colorless mana color
  * @param arrToFilter The array to filter
@@ -135,4 +136,11 @@ export function sortBy(a: i.Card, b: i.Card, sortParam: string): number {
         console.log(typeof a[`${sortParam}`]);
         return 0;
     }
+=======
+
+export function getDecksForPage(allItems: i.Deck[], page: number, pageSize: number): i.Deck[] {
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return allItems.slice(startIndex, endIndex);
+>>>>>>> deckpage
 }

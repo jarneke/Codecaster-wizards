@@ -205,7 +205,18 @@ app.get("/deckdetails", (req, res) => {
   });
 });
 app.get("/drawtest", (req, res) => {
-  res.render("drawtest");
+
+  res.render("drawtest", {
+    // HEADER
+    user: i.tempUser,
+    // -- The names of the js files you want to load on the page.
+    jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
+    // -- The title of the page
+    title: "Home page",
+    // -- The Tab in the nav bar you want to have the orange color
+    // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
+    tabToColor: 2,
+  });
 });
 app.get("/profile", (req, res) => {
   res.render("profile");

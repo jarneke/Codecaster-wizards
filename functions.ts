@@ -99,7 +99,7 @@ export function getAllRarities(allCards: Magic.Card[]): string[] {
 export function filterManaType(arrToFilter: Magic.Card[], manaReqQuery: any, colorCode: string): Magic.Card[] {
     if (manaReqQuery != undefined && manaReqQuery != "") {
         if (manaReqQuery == "false") {
-            arrToFilter = arrToFilter.filter(e => e && e.manaCost && !e.manaCost.includes(colorCode))
+            arrToFilter = arrToFilter.filter(e => e.manaCost && !e.manaCost.includes(colorCode))
         }
     }
     return arrToFilter;
@@ -111,18 +111,13 @@ export function filterManaType(arrToFilter: Magic.Card[], manaReqQuery: any, col
  * @returns filtered array
  */
 export function filterColorlessManaType(arrToFilter: Magic.Card[], manaReqQuery: any): Magic.Card[] {
-    let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-
-    if (manaReqQuery === false || manaReqQuery === "false") {
-
-        arrToFilter = arrToFilter.filter(card => {
-            let found: boolean = false;
-            for (let i = 0; i < 20; i++) {
-                let number = numbers[i]
-                if (card.manaCost && !card.manaCost.includes(`${i}`)) found = true;
-            }
-            return found
-        });
+    if (manaReqQuery !== undefined && manaReqQuery !== "") {
+        if (manaReqQuery == "false") {
+            arrToFilter = arrToFilter.filter(e => {
+                const hasNumber = /\d/.test(e.manaCost);
+                return !hasNumber;
+            })
+        }
     }
     return arrToFilter;
 }

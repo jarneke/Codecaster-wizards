@@ -104,3 +104,9 @@ export function filterManaType(arrToFilter: Magic.Card[], manaReqQuery: any, col
     }
     return arrToFilter;
 }
+
+export function getDecksForPage(allItems: i.Deck[], page: number, pageSize: number): i.Deck[] {
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return allItems.slice(startIndex, endIndex);
+}

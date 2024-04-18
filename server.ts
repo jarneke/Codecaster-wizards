@@ -38,6 +38,7 @@ app.use(express.static("public"));
 app.get("/", (req, res) => {
   res.render("landingspage");
 });
+
 app.get("/home", async (req, res) => {
   // params from route
   let cardLookup = req.query.cardLookup;
@@ -52,51 +53,6 @@ app.get("/home", async (req, res) => {
   let sort = req.query.sort;
   let sortDirection = req.query.sortDirection;
   let pageQueryParam = req.query.page;
-
-  // filter logic
-  // -- initialize filtered cards
-  let filteredCards: Magic.Card[] = [...allCards];
-  // check if there was a search param specified
-  if (cardLookup != undefined && cardLookup != "") {
-    // filter the cards
-    filteredCards = filteredCards.filter((e) =>
-      `${e.name}${e.id}`.toLowerCase().includes(`${cardLookup}`.toLowerCase())
-    );
-  }
-  // check if type param was specified
-  if (filterType != undefined && filterType != "") {
-    // filter the cards
-    filteredCards = filteredCards.filter((e) =>
-      e.types.includes(`${filterType}`)
-    );
-  }
-  // check if rarity param was specified
-  if (filterRarity != undefined && filterRarity != "") {
-    filteredCards = filteredCards.filter((e) =>
-      e.rarity.includes(`${filterRarity}`)
-    );
-  }
-  // check if checkboxes are checked
-  // filter White mana
-  filteredCards = f.filterManaType(filteredCards, whiteManaChecked, "W");
-  filteredCards = f.filterManaType(filteredCards, blueManaChecked, "U");
-  filteredCards = f.filterManaType(filteredCards, blackManaChecked, "B");
-  filteredCards = f.filterManaType(filteredCards, greenManaChecked, "G");
-  filteredCards = f.filterManaType(filteredCards, redManaChecked, "R");
-  filteredCards = f.filterManaType(filteredCards, colorlessManaChecked, "C");
-  // sort logic
-  let sortedCards: Magic.Card[] = [...filteredCards];
-  if (sort != undefined) {
-    // TODO: make sort logic
-  }
-  // Pagination
-  let pageSize: number = 12;
-  let pageData: i.PageData = f.handlePageClickEvent(
-    req.query,
-    `${pageQueryParam}`,
-    pageSize,
-    filteredCards
-  );
   // filter logic
   // -- initialize filtered cards
   let filteredCards: Magic.Card[] = [...allCards];

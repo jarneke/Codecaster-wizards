@@ -1,14 +1,16 @@
 <%- include("partials/header") %>
-    <main class="d-flex flex-wrap align-items-center justify-content-center ctext-white">
+    <main class="d-flex flex-wrap align-items-between justify-content-center ctext-white" style="min-height: 100vh;">
         <section class="d-flex flex-wrap col-12 col-md-10 col-lg-8 m-3">
             <form action="" class="col-12 col-sm-4 pt-2 p-2">
                 <select name="decks" id="decks" class="form-select p-2">
-                    <option value=" deck1">Deck 1</option>
-                    <option value="deck2">Deck 2</option>
-                    <option value="deck3">Deck 3</option>
-                    <option value="deck4">Deck 4</option>
-                    <option value="deck5">Deck 5</option>
-                    <option value="deck6">Deck 6</option>
+                    <% for (const deck of allDecks) { %>
+                        <option <% if (selectedDeck.deckName===deck.deckName ) { %>
+                            selected
+                            <% } %>
+                                value="<%= deck.deckName %>"><%= deck.deckName %>
+                        </option>
+                        <% } %>
+
                 </select>
             </form>
             <form action="" class="col-12 col-sm-4 p-2">
@@ -28,23 +30,56 @@
                 </a>
             </section>
         </section>
-        <section class="d-flex justify-content-center flex-wrap mb-3 col-12 col-sm-8 col-md-4">
-            <img src="assets/images/demoCards/MTG-card_back.jpg" class="col-10">
+
+        <section class="d-flex align-items-between justify-content-center flex-wrap mb-3 col-12 col-sm-8 col-md-4">
+            <a class="btn d-flex justify-content-center flex-wrap ctext-white p-0 w-100">
+                <% if (unpulledCards.length==0){ %>
+                    <article class="p-2 col-9">
+                        <article class="card mtg-card rounded-5">
+                            <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=97066&type=card" class="rounded-5" style="width: 100%;" alt="">
+                        </article>
+                    </article>
+                    <% } else {%>
+                        <article class="p-2 col-9">
+                            <article class="card mtg-card rounded-5">
+                                <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=97066&type=card" class="rounded-5" style="width: 100%;" alt="">
+                            </article>
+                        </article>
+                        <% } %>
+            </a>
             <p class="col-12 text-center ch1 mt-2 fs-2">56/60</p>
         </section>
-        <section class="d-flex flex-wrap justify-content-center p-3 text-center col-12 col-md-4">
+
+        <section class="d-flex flex-wrap align-items-evenly justify-content-center p-3 text-center col-12 col-md-4">
             <article class="col-12 mb-5">
                 <h3>Kans om kaart te trekken 3.33%</h3>
                 <p>Deze kaart zit 2 keer in het deck</p>
             </article>
-            <button class="btn btn-dark mb-3 col-7">Trek een kaart</button>
-            <button class="btn btn-danger col-7">Reset</button>
+            <article>
+                <button class="btn btn-dark mb-3 col-12 p-3">Trek een kaart</button>
+                <button class="btn btn-danger col-12 p-3">Reset</button>
+            </article>
         </section>
-        <section class=" d-flex justify-content-center mt-3 mb-3 col-12 col-sm-8 col-md-4">
-            <button class="btn d-flex justify-content-center" data-bs-toggle="offcanvas" href="#pulledCards" role="button" aria-controls="pulledCards">
-                <img src="assets/images/demoCards/card4.jpg" class="col-10">
-            </button>
+
+        <section class="d-flex align-items-between justify-content-center flex-wrap mb-3 col-12 col-sm-8 col-md-4">
+            <a class="btn d-flex justify-content-center flex-wrap ctext-white p-0 w-100">
+                <% if (unpulledCards.length==0){ %>
+                    <article class="p-2 col-9">
+                        <article class="card mtg-card rounded-5 p-1 <%= card.rarity == 'Common' ? 'cbg-white' : card.rarity == 'Uncommon' ? 'cbg-warning-l' : card.rarity == 'Rare' ? 'cbg-yellow' : card.rarity == 'Mythic' ? 'cbg-danger' : 'cbg-success' %>">
+                            <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=97066&type=card" class="rounded-5" style="width: 100%;" alt="">
+                        </article>
+                    </article>
+                    <% } else {%>
+                        <article class="p-2 col-9">
+                            <article class="card mtg-card rounded-5 p-1 <%= card.rarity == 'Common' ? 'cbg-white' : card.rarity == 'Uncommon' ? 'cbg-warning-l' : card.rarity == 'Rare' ? 'cbg-yellow' : card.rarity == 'Mythic' ? 'cbg-danger' : 'cbg-success' %>">
+                                <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=97066&type=card" class="rounded-5" style="width: 100%;" alt="">
+                            </article>
+                        </article>
+                        <% } %>
+            </a>
+            <p class="col-12 text-center ch1 mt-2 fs-2">56/60</p>
         </section>
+
         <!-- Pulled Cards Offcanvas -->
         <section class="offcanvas offcanvas-end bg-secondary ctext-white" tabindex="-1" id="pulledCards" aria-labelledby="pulledCardsLabel">
             <section class="offcanvas-header cbg-primary">
@@ -53,208 +88,18 @@
                 </button>
             </section>
             <section class="offcanvas-body">
-                <section>
-                    <form class="col-12 container d-flex justify-content-between flex-wrap mb-3">
-                        <fieldset class="col-12">
-                            <section class="form-control d-flex">
-                                <button class="bg-white text-secondary p-1 border-0" type="submit" id="search">
-                                    <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                        <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                                        <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
-                                    </svg>
-                                </button>
-                                <input aria-label="Search" placeholder="Zoeken..." type="search" name="cardLookup" id="cardLookup" class="form-control border-0" />
-                            </section>
-                        </fieldset>
-                        <fieldset class="col-12 d-flex flex-wrap justify-content-between">
-                            <legend class="text-center col-12 ch1">Filter</legend>
-                            <section class="form-group col-12 mb-2">
-                                <select class="form-control" name="type" id="type">
-                                    <option value="blank"></option>
-                                    <option value="artifact">Artifact</option>
-                                    <option value="basic">Basic</option>
-                                    <option value="battle">Battle</option>
-                                    <option value="conspiracy">Conspiracy</option>
-                                    <option value="creature">Creatue</option>
-                                    <option value="dungeon">Dungeon</option>
-                                    <option value="eaturecray">Eaturecray</option>
-                                    <option value="enchantment">Enchantment</option>
-                                    <option value="ever">Ever</option>
-                                    <option value="host">Host</option>
-                                    <option value="instant">Instant</option>
-                                    <option value="land">Land</option>
-                                </select>
-                            </section>
-                            <label for="mana-symbol" class="col-12 ch1 text-center ctext-white fs-3">Soort mana</label>
-                            <button class="rounded-circle border-0 cbg-success mana-checkbox" style="width: 40px; height: 40px;" data-cbs-checked="true">
-                                <img src="assets/images/mana_symbols/W.svg" alt="mana-symbol-W">
-                            </button>
-                            <button class="rounded-circle border-0 cbg-success mana-checkbox" style="width: 40px; height: 40px;" data-cbs-checked="true">
-                                <img src="assets/images/mana_symbols/U.svg" alt="mana-symbol-U">
-                            </button>
-                            <button class="rounded-circle border-0 cbg-success mana-checkbox" style="width: 40px; height: 40px;" data-cbs-checked="true">
-                                <img src="assets/images/mana_symbols/B.svg" alt="mana-symbol-B">
-                            </button>
-                            <button class="rounded-circle border-0 cbg-success mana-checkbox" style="width: 40px; height: 40px;" data-cbs-checked="true">
-                                <img src="assets/images/mana_symbols/R.svg" alt="mana-symbol-R">
-                            </button>
-                            <button class="rounded-circle border-0 cbg-success mana-checkbox" style="width: 40px; height: 40px;" data-cbs-checked="true">
-                                <img src="assets/images/mana_symbols/G.svg" alt="mana-symbol-G">
-                            </button>
-                            <button class="rounded-circle border-0 cbg-success mana-checkbox" style="width: 40px; height: 40px;" data-cbs-checked="true">
-                                <img src="assets/images/mana_symbols/C.svg" alt="mana-symbol-C">
-                            </button>
-                        </fieldset>
-                        <fieldset class="col-12">
-                            <legend class="text-center ch1">Sorteer</legend>
-                            <div class="form-group">
-                                <select class="form-control" name="sort" id="sort">
-                                    <option value="blank"></option>
-                                    <option value="color">Color</option>
-                                    <option value="colorWeight">Color Weight</option>
-                                    <option value="...">...</option>
-                                </select>
-                            </div>
-                        </fieldset>
-                    </form>
-                    <nav aria-label="Page navigation example" class="d-flex align-items-center justify-content-center pagination-small">
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link cbg-dark ctext-white" href="#" aria-label="Previous">
-                                    <svg height="1rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                        <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                                        <path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
-                                    </svg>
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link cbg-dark ctext-white" href="#">
-                                    <svg height="1rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                                        <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                                        <path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
-                                    </svg>
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link cbg-dark ctext-white" href="#">
-                                    ...
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link cbg-dark ctext-white" href="#">
-                                    5
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link cbg-dark ctext-white" href="#">
-                                    6
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link cbg-dark ctext-white" href="#">
-                                    7
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link cbg-dark ctext-white" href="#">
-                                    ...
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link cbg-dark ctext-white" href="#">
-                                    <svg height="1rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                                        <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                                        <path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z" />
-                                    </svg>
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link cbg-dark ctext-white" href="#" aria-label="Next">
-                                    <svg height="1rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                        <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                                        <path d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
-                                    </svg>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                    <section class="container d-flex flex-wrap mt-3">
-                        <a href="cardetail.html" class="col-6 p-1 border-1">
-                            <img src="assets/images/demoCards/card1.jpg" class="col-12">
-                        </a>
-                        <a href="cardetail.html" class="col-6 p-1">
-                            <img src="assets/images/demoCards/card2.jpg" class="col-12">
-                        </a>
-                        <a href="cardetail.html" class="col-6 p-1 border-1">
-                            <img src="assets/images/demoCards/card3.jpg" class="col-12">
-                        </a>
-                        <a href="cardetail.html" class="col-6 p-1">
-                            <img src="assets/images/demoCards/card4.jpg" class="col-12">
-                        </a>
-                    </section>
-
-                    <nav aria-label="Page navigation example" class="d-flex align-items-center justify-content-center pagination-small">
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link cbg-dark ctext-white" href="#" aria-label="Previous">
-                                    <svg height="1rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                        <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                                        <path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
-                                    </svg>
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link cbg-dark ctext-white" href="#">
-                                    <svg height="1rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                                        <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                                        <path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
-                                    </svg>
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link cbg-dark ctext-white" href="#">
-                                    ...
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link cbg-dark ctext-white" href="#">
-                                    5
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link cbg-dark ctext-white" href="#">
-                                    6
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link cbg-dark ctext-white" href="#">
-                                    7
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link cbg-dark ctext-white" href="#">
-                                    ...
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link cbg-dark ctext-white" href="#">
-                                    <svg height="1rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                                        <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                                        <path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z" />
-                                    </svg>
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link cbg-dark ctext-white" href="#" aria-label="Next">
-                                    <svg height="1rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                        <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                                        <path d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
-                                    </svg>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </section>
+                <%- include("partials/filterAndSortCards") %>
+                    <%- include("partials/paginationShort") %>
+                        <% for (const card of pulledCards) { %>
+                            <article class="p-2 col-12 col-md-6 col-lg-4 col-xl-3">
+                                <article class="card mtg-card rounded-5 p-1 <%= card.rarity == 'Common' ? 'cbg-white' : card.rarity == 'Uncommon' ? 'cbg-warning-l' : card.rarity == 'Rare' ? 'cbg-yellow' : card.rarity == 'Mythic' ? 'cbg-danger' : 'cbg-success' %>">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#cardModal" data-bs-name="<%= card.name %>" data-bs-manaCost="<%= card.manaCost %>" data-bs-cmc="<%= card.cmc %>" data-bs-colorId="<%= card.colorIdentity %>" data-bs-rarity="<%= card.rarity %>" data-bs-imageUrl="<%= card.imageUrl %>" class="p-0">
+                                        <img src="<%= card.imageUrl %>" class="rounded-5" style="width: 100%;" alt="">
+                                    </a>
+                                </article>
+                            </article>
+                            <% } %>
+                                <%- include("partials/paginationShort") %>
             </section>
         </section>
     </main>

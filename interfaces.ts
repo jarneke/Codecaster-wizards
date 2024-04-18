@@ -23,7 +23,7 @@ export const tempUser: User = {
     Password: "Passw0rd123"
 }
 export interface Card extends Magic.Card {
-    [key: string]: any
+    [key: string]: any,
 }
 
 export interface Deck {

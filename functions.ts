@@ -66,9 +66,10 @@ export function getAllCardTypes(allCards: Magic.Card[]): string[] {
     for (const card of allCards) {
         let cardTypes = card.types
         if (cardTypes && Array.isArray(cardTypes)) {
-            const type = cardTypes.join(" ");
-            if (!types.includes(type)) {
-                types.push(type);
+            for (const type of cardTypes) {
+                if (!types.includes(type)) {
+                    types.push(type);
+                }
             }
         }
     }
@@ -80,14 +81,14 @@ export function getAllCardTypes(allCards: Magic.Card[]): string[] {
  * @returns array of all types
  */
 export function getAllRarities(allCards: Magic.Card[]): string[] {
-    let rarities: string[] = []
+    let types: string[] = []
     for (const card of allCards) {
-        let rarity: string = card.rarity
-        if (!rarities.includes(rarity)) {
-            rarities.push(rarity);
+        let cardTypes = card.rarity
+        if (!types.includes(cardTypes)) {
+            types.push(cardTypes);
         }
     }
-    return rarities;
+    return types;
 }
 /**
  * A function to filter cards by a specified mana color
@@ -125,7 +126,7 @@ export function sortBy(a: i.Card, b: i.Card, sortParam: string): number {
     if (typeof a[`${sortParam}`] === "string" && typeof b[`${sortParam}`] === "string") {
         return a[`${sortParam}`].localeCompare(b[`${sortParam}`])
     } else if (typeof a[`${sortParam}`] === "number" && typeof b[`${sortParam}`] === "number") {
-        return a[`${sortParam}`] - b[`${sortParam}`]
+        return b[`${sortParam}`] - a[`${sortParam}`]
     } else {
         console.log(typeof a[`${sortParam}`]);
         return 0;
@@ -135,4 +136,40 @@ export function getDecksForPage(allItems: i.Deck[], page: number, pageSize: numb
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
     return allItems.slice(startIndex, endIndex);
+}
+export function filterAndSortCards(allCards: Magic.Card[], cardLookup: any, filterType: any, filterRarity: any, whiteManaChecked: any, blueManaChecked: any, blackManaChecked: any, greenManaChecked: any, redManaChecked: any, colorlessManaChecked: any, sort: any, sortDirection: any): Magic.Card[] {
+    let filteredCards: Magic.Card[] = [...allCards];
+    // check if there was a search param specified
+    if (cardLookup != undefined && cardLookup != "") {
+        // filter the cards
+        filteredCards = filteredCards.filter(e => `${e.name}${e.id}`.toLowerCase().includes(`${cardLookup}`.toLowerCase()))
+    }
+    // check if type param was specified
+    if (filterType != undefined && filterType != "") {
+        // filter the cards
+        filteredCards = filteredCards.filter(e => e.types.includes(`${filterType}`))
+    }
+    // check if rarity param was specified
+    if (filterRarity != undefined && filterRarity != "") {
+        filteredCards = filteredCards.filter(e => e.rarity.includes(`${filterRarity}`))
+    }
+    // check if checkboxes are checked
+    // filter White mana
+    filteredCards = filterManaType(filteredCards, whiteManaChecked, "W")
+    filteredCards = filterManaType(filteredCards, blueManaChecked, "U")
+    filteredCards = filterManaType(filteredCards, blackManaChecked, "B")
+    filteredCards = filterManaType(filteredCards, greenManaChecked, "G")
+    filteredCards = filterManaType(filteredCards, redManaChecked, "R")
+    filteredCards = filterColorlessManaType(filteredCards, colorlessManaChecked)
+    // sort logic
+    let sortedCards: Magic.Card[] = [...filteredCards]
+    if (sort != undefined && sort != "" && sortDirection != undefined && sortDirection != "") {
+        if (`${sortDirection}` === "down") {
+            sortedCards = [...sortedCards.sort((a: Magic.Card, b: Magic.Card) => sortBy(a, b, `${sort}`))]
+        } else {
+            sortedCards = [...sortedCards.sort((a: Magic.Card, b: Magic.Card) => sortBy(a, b, `${sort}`) * -1)]
+        }
+    }
+
+    return sortedCards
 }

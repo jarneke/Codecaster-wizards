@@ -66,7 +66,7 @@
         <button type="button" class="btn-close cbg-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </section>
       <section class="modal-body cbg-primary">
-        <form class="px-4 py-3">
+        <form action="/login" method="POST" class="px-4 py-3">
           <fieldset class="text-center mb-3">
             <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" width="130" height="130" fill="currentColor"
               class="bi bi-person-circle" viewBox="0 0 16 16">
@@ -110,7 +110,7 @@
         <button type="button" class="btn-close  cbg-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </section>
       <section class="modal-body cbg-primary">
-        <form class="px-4 py-3">
+        <form action="/register" method="POST" class="px-4 py-3">
           <fieldset class="text-center mb-3">
             <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" width="130" height="130" fill="currentColor"
               class="bi bi-person-circle" viewBox="0 0 16 16">
@@ -132,8 +132,13 @@
             </section>
           </fieldset>
           <fieldset class="mb-3">
-            <label for="registerE-mail" class="form-label ctext-white">E-mail</label>
-            <input type="email" name="registerE-mail" id="registerE-mail" class="form-control"
+            <label for="registerUsername" class="form-label ctext-white">Gebruikersnaam</label>
+            <input type="text" name="registerUsername" id="registerUsername" class="form-control"
+              placeholder="gebruikersnaam" aria-label="Username">
+          </fieldset>
+          <fieldset class="mb-3">
+            <label for="registerEmail" class="form-label ctext-white">E-mail</label>
+            <input type="email" name="registerEmail" id="registerEmail" class="form-control"
               placeholder="e-mail@voorbeeld.com" aria-label="e-mail">
           </fieldset>
           <fieldset class="mb-3">
@@ -144,7 +149,7 @@
           <fieldset class="mb-3">
             <label for="registerConfirmPassword" class="form-label ctext-white">Bevestig wachtwoord</label>
             <input type="password" name="registerConfirmPassword" id="registerConfirmPassword" class="form-control"
-              placeholder="Bevestig wachtwoord" aria-label="confitmPassword">
+              placeholder="Bevestig wachtwoord" aria-label="confirmPassword">
           </fieldset>
           <button type="submit" class="btn btn-primary btn-dark cbg-dark col-3">Registreer</button>
         </form>

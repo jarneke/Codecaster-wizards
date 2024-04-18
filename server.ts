@@ -12,23 +12,29 @@ function generateRandomInteger(): number {
 let allCards: Magic.Card[] = [];
 
 const tempDecks: i.Deck[] = [];
+setTimeout(() => {
+    for (let i = 0; i < 9; i++) {
+        let tempCards: Magic.Card[] = [];
+        let max = generateRandomInteger();
+        for (let index = 0; index < max; index++) {
+          tempCards.push(allCards[index]);
+        }
+        tempDecks.push({
+          deckName: `Deck ${i + 1}`,
+          cards: tempCards,
+          deckImageUrl: `/assets/images/decks/Deck${i + 1}.jpg`,
+        });
+      }
+}, 1000);
 
-for (let i = 0; i < 9; i++) {
-  let tempCards: Magic.Card[] = [];
-  let max = generateRandomInteger();
-  for (let index = 0; index < max; index++) {
-    tempCards.push(allCards[i]);
-  }
-  tempDecks.push({
-    deckName: `Deck ${i + 1}`,
-    cards: tempCards,
-    deckImageUrl: `/assets/images/demoCards/card${i + 1}.jpg`,
-  });
-}
 
 const app = express();
 
-let allDecks: i.Deck[] = [...tempDecks];
+async function getDecks(){
+    
+}
+
+let allDecks: i.Deck[] = tempDecks;
 
 app.set("port", 3000);
 app.set("view engine", "ejs");
@@ -38,6 +44,7 @@ app.use(express.static("public"));
 app.get("/", (req, res) => {
   res.render("landingspage");
 });
+
 app.get("/home", async (req, res) => {
   // params from route
   let cardLookup = req.query.cardLookup;
@@ -137,6 +144,8 @@ app.get("/home", async (req, res) => {
     cards: cardsToLoad,
   });
 });
+
+
 app.get("/decks", (req, res) => {
   // params from route
   let pageQueryParam = req.query.page;
@@ -152,7 +161,6 @@ app.get("/decks", (req, res) => {
 
   let decksForPage = f.getDecksForPage(allDecks, pageData.page, pageSize);
 
-  console.log(allDecks);
 
   res.render("decks", {
     // HEADER
@@ -173,29 +181,38 @@ app.get("/decks", (req, res) => {
     decks: decksForPage,
   });
 });
-app.get("/deckdetails", (req, res) => {
+
+
+app.get("/decks/:deckName", (req, res) => {
   // params from route
   let cardLookup = req.query.cardLookup;
   let sort = req.query.sort;
   let sortDirection = req.query.sortDirection;
   let pageQueryParam = req.query.page;
 
+  let deck: i.Deck | undefined = allDecks.find(e => e.deckName == req.params.deckName)
+  if (deck == undefined) {
+    console.log("No Deck Found");
+    
+    deck = allDecks[0]
+  }
   // Pagination
   let pageSize: number = 6;
   let pageData: i.PageData = f.handlePageClickEvent(
     req.query,
     `${pageQueryParam}`,
     pageSize,
-    allCards
+    deck.cards
   );
-
-  let cardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize);
+  
+  let cardsToLoad = f.getCardsForPage(deck.cards, pageData.page, pageSize);
   let modalCardsToLoad = f.getCardsForPage(
-    allCards,
+    deck.cards,
     pageData.page,
     pageSize / 2
   );
 
+  
   res.render("deckdetails", {
     // HEADER
     user: i.tempUser,
@@ -220,18 +237,19 @@ app.get("/deckdetails", (req, res) => {
     modalCards: modalCardsToLoad,
   });
 });
+
+
 app.get("/drawtest", (req, res) => {
   res.render("drawtest");
 });
+
+
 app.get("/profile", (req, res) => {
   res.render("profile");
 });
 
 app.get("/editDeck", (req, res) => {
   // params from route
-  let cardLookup = req.query.cardLookup;
-  let sort = req.query.sort;
-  let sortDirection = req.query.sortDirection;
   let pageQueryParam = req.query.page;
 
   // Pagination
@@ -254,17 +272,12 @@ app.get("/editDeck", (req, res) => {
     // HEADER
     user: i.tempUser,
     // -- The names of the js files you want to load on the page.
-    jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
+    jsFiles: ["deckname"],
     // -- The title of the page
-    title: "Home page",
+    title: "Edit page",
     // -- The Tab in the nav bar you want to have the orange color
     // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
     tabToColor: 1,
-    // MAIN
-    // -- filter system
-    cardLookup: cardLookup,
-    sort: sort,
-    sortDirection: sortDirection,
     // -- pagination
     page: pageData.page,
     totalPages: pageData.totalPages,

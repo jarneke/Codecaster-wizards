@@ -120,13 +120,13 @@
               
             />
             <section class="card-body purplebg">
-              <p class="card-text ctext-white"> <%= deck.deckName %> </p>
+              <p class="card-text ctext-white ch1 text-center fs-3"> <%= deck.deckName %> </p>
               <section
                 class="d-flex justify-content-between align-items-center"
               >
                 <section class="btn-group">
                   <a
-                    href="/deckdetails"
+                    href="/decks/<%= deck.deckName %>"
                     class="btn btn-lg btn-outline-secondary ctext-white"
                     >bekijk</a
                   >

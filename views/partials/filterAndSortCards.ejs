@@ -1,0 +1,162 @@
+<section class="row d-flex justify-content-center mb-3">
+    <form class="col-12 container d-flex justify-content-between flex-wrap">
+        <fieldset class="col-12 mb-3">
+            <section class="form-control d-flex">
+                <button class="bg-white text-secondary p-1 border-0" type="submit" id="search">
+                    <i class="bi bi-search"></i>
+                </button>
+                <input aria-label="Search" placeholder="Zoeken..." type="search" name="cardLookup" id="cardLookup" class="form-control border-0" value="<%= cardLookup %>" />
+            </section>
+        </fieldset>
+        <fieldset class="col-12 col-md-5 d-flex flex-wrap justify-content-between">
+            <legend class="text-center col-12 ctext-white ch1">Filter</legend>
+            <div class="form-group col-12 mb-2">
+                <select class="form-select" name="filterType" id="filterType" aria-placeholder="Type">
+                    <option <% if (type==="" ) { %>
+                        selected
+                        <% } %>
+                            value="">Filter op type ...
+                    </option>
+                    <% for (const existingtype of types) { %>
+                        <option <% if (type===existingtype) { %> selected <% } %> value="<%= existingtype %>"><%= existingtype %>
+                        </option>
+                        <% } %>
+                </select>
+            </div>
+            <label class="ch1 col-12 ctext-white mt-2" for="manaCheckBoxes">Filter op mana kleur</label>
+            <% if (whiteManaChecked=="true" ) {%>
+                <button type="button" class="rounded-circle border-0 mana-checkbox cbg-success" id="whiteMana" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="White mana (W)" style="width: 40px; height: 40px;" data-cbs-checked="true">
+                    <img src="assets/images/mana_symbols/W.svg" alt="mana-symbol-W">
+                </button>
+                <input type="hidden" name="whiteManaChecked" id="whiteManaChecked" value="true">
+                <% } else { %>
+                    <button type="button" class="rounded-circle border-0 mana-checkbox cbg-danger" id="whiteMana" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="White mana (W)" style="width: 40px; height: 40px;" data-cbs-checked="false">
+                        <img src="assets/images/mana_symbols/W.svg" alt="mana-symbol-W">
+                    </button>
+                    <input type="hidden" name="whiteManaChecked" id="whiteManaChecked" value="false">
+                    <% } %>
+                        <% if (blueManaChecked=="true" ) {%>
+                            <button class="rounded-circle border-0 cbg-success mana-checkbox" id="blueMana" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Blue mana (U)" style="width: 40px; height: 40px;" data-cbs-checked="true">
+                                <img src="assets/images/mana_symbols/U.svg" alt="mana-symbol-U">
+                            </button>
+                            <input type="hidden" name="blueManaChecked" id="blueManaChecked" value="true">
+                            <% } else { %>
+                                <button class="rounded-circle border-0 cbg-danger mana-checkbox" id="blueMana" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Blue mana (U)" style="width: 40px; height: 40px;" data-cbs-checked="false">
+                                    <img src="assets/images/mana_symbols/U.svg" alt="mana-symbol-U">
+                                </button>
+                                <input type="hidden" name="blueManaChecked" id="blueManaChecked" value="false">
+                                <% } %>
+                                    <% if (blackManaChecked=="true" ) {%>
+                                        <button class="rounded-circle border-0 cbg-success mana-checkbox" id="blackMana" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Black mana (B)" style="width: 40px; height: 40px;" data-cbs-checked="true">
+                                            <img src="assets/images/mana_symbols/B.svg" alt="mana-symbol-B">
+                                        </button>
+                                        <input type="hidden" name="blackManaChecked" id="blackManaChecked" value="true">
+                                        <% } else { %>
+                                            <button class="rounded-circle border-0 cbg-danger mana-checkbox" id="blackMana" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Black mana (B)" style="width: 40px; height: 40px;" data-cbs-checked="false">
+                                                <img src="assets/images/mana_symbols/B.svg" alt="mana-symbol-B">
+                                            </button>
+                                            <input type="hidden" name="blackManaChecked" id="blackManaChecked" value="false">
+                                            <% } %>
+                                                <% if (greenManaChecked=="true" ) {%>
+                                                    <button class="rounded-circle border-0 cbg-success mana-checkbox" id="greenMana" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Green mana (G)" style="width: 40px; height: 40px;" data-cbs-checked="true">
+                                                        <img src="assets/images/mana_symbols/G.svg" alt="mana-symbol-G">
+                                                    </button>
+                                                    <input type="hidden" name="greenManaChecked" id="greenManaChecked" value="true">
+                                                    <% } else { %>
+                                                        <button class="rounded-circle border-0 cbg-danger mana-checkbox" id="greenMana" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Green mana (G)" style="width: 40px; height: 40px;" data-cbs-checked="false">
+                                                            <img src="assets/images/mana_symbols/G.svg" alt="mana-symbol-G">
+                                                        </button>
+                                                        <input type="hidden" name="greenManaChecked" id="greenManaChecked" value="false">
+                                                        <% } %>
+                                                            <% if (redManaChecked=="true" ) {%>
+                                                                <button class="rounded-circle border-0 cbg-success mana-checkbox" id="redMana" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Red mana (R)" style="width: 40px; height: 40px;" data-cbs-checked="true">
+                                                                    <img src="assets/images/mana_symbols/R.svg" alt="mana-symbol-R">
+                                                                </button>
+                                                                <input type="hidden" name="redManaChecked" id="redManaChecked" value="true">
+                                                                <% } else { %>
+                                                                    <button class="rounded-circle border-0 cbg-danger mana-checkbox" id="redMana" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Red mana (R)" style="width: 40px; height: 40px;" data-cbs-checked="false">
+                                                                        <img src="assets/images/mana_symbols/R.svg" alt="mana-symbol-R">
+                                                                    </button>
+                                                                    <input type="hidden" name="redManaChecked" id="redManaChecked" value="false">
+                                                                    <% } %>
+                                                                        <% if (colorlessManaChecked=="true" ) {%>
+                                                                            <button class="rounded-circle border-0 cbg-success mana-checkbox" id="colorlessMana" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Colorless mana (C)" style="width: 40px; height: 40px;" data-cbs-checked="true">
+                                                                                <img src="assets/images/mana_symbols/C.svg" alt="mana-symbol-C">
+                                                                            </button>
+                                                                            <input type="hidden" name="colorlessManaChecked" id="colorlessManaChecked" value="true">
+                                                                            <% } else { %>
+                                                                                <button class="rounded-circle border-0 cbg-danger mana-checkbox" id="colorlessMana" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Colorless mana (C)" style="width: 40px; height: 40px;" data-cbs-checked="false">
+                                                                                    <img src="assets/images/mana_symbols/C.svg" alt="mana-symbol-C">
+                                                                                </button>
+                                                                                <input type="hidden" name="colorlessManaChecked" id="colorlessManaChecked" value="false">
+                                                                                <% } %>
+                                                                                    <select class="col-12 form-select mt-3" name="filterRarity" id="filterRarity">
+                                                                                        <option <% if (type==="" ) { %>
+                                                                                            selected
+                                                                                            <% } %>
+                                                                                                value="">filter op zeldzaamheid ...
+                                                                                        </option>
+                                                                                        <% for (const existingrarity of rarities) { %>
+                                                                                            <option <% if (rarity===existingrarity) { %> selected <% } %> value="<%= existingrarity %>"><%= existingrarity %>
+                                                                                            </option>
+                                                                                            <% } %>
+                                                                                    </select>
+        </fieldset>
+        <fieldset class="col-12 col-md-5">
+            <legend class="text-center ctext-white ch1">Sorteer</legend>
+            <div class="form-control d-flex ps-0">
+                <% if (sortDirection=="up" ) {%>
+                    <button id="sortDirectionButton" class="border-0 btn cbg-transparent" data-cbs-direction="up"><i class="bi bi-sort-up" data-cbs-direction="up"></i></button>
+                    <input type="hidden" name="sortDirection" id="sortDirection" value="up">
+                    <% } else { %>
+                        <button id="sortDirectionButton" class="border-0 btn cbg-transparent" data-cbs-direction="down"><i class="bi bi-sort-down" data-cbs-direction="down"></i></button>
+                        <input type="hidden" name="sortDirection" id="sortDirection" value="down">
+                        <% } %>
+                            <select class="form-select border-0" name="sort" id="sort">
+                                <option <% if (sort==="" ) { %>
+                                    selected
+                                    <% } %>
+                                        value="">Sorteer op ...
+                                </option>
+                                <option <% if (sort==="name" ) { %>
+                                    selected
+                                    <% } %>
+                                        value="name">naam
+                                </option>
+                                <option <% if (sort==="cmc" ) { %>
+                                    selected
+                                    <% } %>
+                                        value="cmc">omgerekende manakost
+                                </option>
+                                <option <% if (sort==="id" ) { %>
+                                    selected
+                                    <% } %>
+                                        value="id">id
+                                </option>
+                                <option <% if (sort==="multiverseid" ) { %>
+                                    selected
+                                    <% } %>
+                                        value="multiverseid">multiverse id
+                                </option>
+                                <option <% if (sort==="artist" ) { %>
+                                    selected
+                                    <% } %>
+                                        value="artist">artiest
+                                </option>
+                                <option <% if (sort==="rarity" ) { %>
+                                    selected
+                                    <% } %>
+                                        value="rarity">zeldzaamheid
+                                </option>
+                                <option <% if (sort==="type" ) { %>
+                                    selected
+                                    <% } %>
+                                        value="type">type
+                                </option>
+                            </select>
+            </div>
+            <button type="submit" class="mt-5 btn btn-dark col-12"><i class="bi bi-funnel-fill"></i> Pas filter en sortering toe</button>
+            <a href="/home" class="mt-2 col-5 btn btn-dark col-12"><i class="bi bi-arrow-clockwise"></i> Reset filter en sortering</a>
+        </fieldset>
+    </form>
+</section>

@@ -1,0 +1,95 @@
+<%- include("partials/header") %>
+
+<main>
+  <section class="mainDeck">
+    <section class="container px-4 px-lg-5">
+      <section class="row gx-4 gx-lg-5 align-items-center py-5">
+        <section class="col-12 d-flex gap-3 flex-wrap">
+          <img
+            class="img-fluid rounded col-12 col-lg-5 mb-4 mb-lg-7"
+            src="assets/images/decks/MTGDeck.jpg"
+            alt="deck placeholder"
+          />
+          <section class="col-lg-5">
+            <h1 class="font-weight-light text-light ch1">Decknaam</h1>
+            <ul class="text-light">
+              <li>Aantal kaarten: 6/60</li>
+              <br />
+              <li>Aantal landkaarten: 0</li>
+              <br />
+              <li>Gemiddelde manacost: 6</li>
+            </ul>
+            <br />
+
+            <a href="/editDeck"
+              ><button
+                type="button"
+                class="btn btn-danger cbg-secondary-d border-dark"
+              >
+                Wijzig deck
+              </button></a
+            >
+          </section>
+        </section>
+      </section>
+    </section>
+  </section>
+  <section class="tips">
+    <article class="card text-white bg-secondary my-5 py-4 text-center mx-5">
+      <article class="tip-body">
+        <p class="text-white m-0 ch1 fs-3">
+          Tip van de dag: Lees de kaartbeschrijving zeer grondig!
+        </p>
+      </article>
+    </article>
+  </section>
+
+  <%- include("partials/pagination") %>
+
+  <section class="cardsInDeck d-flex justify-content-center">
+    <section
+      class="container gx-4 gx-lg-5 mx-5 d-flex flex-wrap col-10 justify-content-center"
+    >
+      <% for (const card of cards) { %>
+      <article class="col-12 col-md-6 col-lg-4 col-xxl-4 mb-5 px-2 px-2">
+        <article
+          class="card h-100 p-3"
+          style="
+            background-image: url(assets/images/background/MTGTest.jpg);
+            background-size: cover;
+          "
+        >
+          <article
+            class="card mtg-card rounded-5 p-1 <%= card.rarity == 'Common' ? 'cbg-white' : card.rarity == 'Uncommon' ? 'cbg-warning-l' : card.rarity == 'Rare' ? 'cbg-yellow' : card.rarity == 'Mythic' ? 'cbg-danger' : 'cbg-success' %>"
+          >
+            <a
+              href="#"
+              data-bs-toggle="modal"
+              data-bs-target="#cardModal"
+              data-bs-name="<%= card.name %>"
+              data-bs-manaCost="<%= card.manaCost %>"
+              data-bs-cmc="<%= card.cmc %>"
+              data-bs-colorId="<%= card.colorIdentity %>"
+              data-bs-rarity="<%= card.rarity %>"
+              data-bs-imageUrl="<%= card.imageUrl %>"
+              class="p-0"
+            >
+              <img
+                src="<%= card.imageUrl %>"
+                class="rounded-5 col-12"
+                style="width: 100%"
+                alt=""
+              />
+            </a>
+          </article>
+          <h2 class="card-title text-white ch1 mt-2 text-center">aantal : 1</h2>
+        </article>
+      </article>
+      <% } %>
+    </section>
+  </section>
+
+  <%- include("partials/pagination") %>
+</main>
+
+<%- include("partials/footer") %>

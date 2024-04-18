@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="nl-BE">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profiel</title>
+    <!-- link script for font awasome icons -->
+    <script src="https://kit.fontawesome.com/0fbfe9cad5.js" crossorigin="anonymous"></script>
+    <!-- Link bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <!-- Link bootstrap Js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/bootstrap.css" />
+</head>
+
+<body>
+    <header class="p-3 cbg-primary text-dark">
+        <section class="container">
+            <article class="d-flex flex-wrap align-items-center justify-content-between gapx-1">
+                <img height="100px" src="assets/images/header/CcW_Logo.png">
+                <section>
+                    <h1 class="ch1 ctext-secondary">Magic The Gathering</h1>
+                </section>
+                <ul class="nav">
+                    <li>
+                        <a href="home.html" class="nav-link px-2 ctext-white">Home</a>
+                    </li>
+                    <li>
+                        <a href="decks.html" class="nav-link px-2 ctext-white">Decks nakijken</a>
+                    </li>
+                    <li>
+                        <a href="drawtest.html" class="nav-link px-2 ctext-white">Deck simuleren</a>
+                    </li>
+                </ul>
+                <a data-bs-toggle="offcanvas" href="#miniProfile" role="button" aria-controls="miniProfile"
+                    class="d-flex align-items-center text-dark text-decoration-none">
+                    <svg class="display-6" height="3rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 448 512">
+                        <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                    </svg>
+                </a>
+            </article>
+        </section>
+        <!-- ========== Start mini profile offcanvas ========== -->
+        <section class="offcanvas offcanvas-end ctext-white" tabindex="-1" id="miniProfile"
+            aria-labelledby="miniprofileLabel">
+            <section class="offcanvas-header cbg-primary align-items-start">
+                <section class="d-flex flex-column gap-2">
+                    <article class="d-flex gap-3">
+                        <svg height="4rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                            <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                            <path
+                                d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                        </svg>
+                        <section class="container">
+                            <h5 class="">Welkom ${username}</h5>
+                            <h6 class="">${email}</h6>
+                        </section>
+                    </article>
+                    <a class="btn btn-dark" type="button" href="profile.html">Bekijk profiel</a>
+                </section>
+                <button class="btn-close text-reset bg-danger" type="button" data-bs-toggle="offcanvas"
+                    aria-label="close">
+                </button>
+            </section>
+            <section class="offcanvas-body">
+                <form class="mb-5">
+                    <fieldset class="d-flex flex-column gap-1">
+                        <legend>Geef ons je feedback:</legend>
+                        <label for="feedbackType">Welke soort feedback wil je geven?</label>
+                        <select name="feedbackType" id="feedbackType" class="form-select p-2">
+                            <option value="bug">Meld een bug</option>
+                            <option value="suggestion">Suggestie indienen</option>
+                            <option value="compliment">Geef een compliment</option>
+                            <option value="general">Algemene feedback</option>
+                        </select>
+                        <label for="feedback">Feedback:</label>
+                        <textarea class="form-control form-control-dark" name="feedback" id="feedback" cols="30"
+                            rows="10"></textarea>
+                        <input class="btn btn-dark" type="submit" value="Stuur feedback in*" />
+                        <p class="h6 ctext-white-d">
+                            * Door op "Stuur feedback in" te klikken, accepteer je onze
+                            algemene voorwaarden
+                        </p>
+                    </fieldset>
+                </form>
+                <button class="btn btn-danger" aria-label="exit">Log uit</button>
+            </section>
+        </section>
+        <!-- ========== End mini profile offcanvas ========== -->
+    </header>
+    <main class="d-flex flex-wrap">
+        <section style="background-color: #00000063" class="col-12 col-lg-3 text-light p-3">
+            <section>
+                <h2 class="ch1 text-light mt-4 mb-1">Voornaam Achternaam</h2>
+                <h5 class="ch1 text-light mb-5">Gebruikersnaam</h5>
+                <h4 class="ch1 text-light mb-2">Beschrijving</h4>
+                <p class="text-light fs-6">
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quod deserunt corporis enim praesentium
+                    vel
+                    quaerat, illo fuga quis, molestiae dolores architecto quidem aspernatur, est quam laboriosam amet ad
+                    sed sunt.</p>
+            </section>
+            <section class="border-top  border-light border-2 pt-4 d-flex flex-column">
+                <p class="ch1 text-light fs-5"><svg class="pe-2" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 512 512"
+                        height="1rem"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z" />
+                    </svg>E-mail</p>
+                <a href=#changeInfoModal class="btn btn-dark cbg-secondary-l mb-5" data-bs-toggle="modal">
+                    <svg class="pe-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                        height="1rem"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path fill="#ffffff"
+                            d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
+                    </svg>Bewerk profiel
+                </a>
+                <button type="button" class="btn btn-dark cbg-secondary-l mb-3 mt-5" data-bs-toggle="modal"
+                    data-bs-target="#infoModal"><svg height="1rem" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path fill="#ffffff"
+                            d="M80 160c0-35.3 28.7-64 64-64h32c35.3 0 64 28.7 64 64v3.6c0 21.8-11.1 42.1-29.4 53.8l-42.2 27.1c-25.2 16.2-40.4 44.1-40.4 74V320c0 17.7 14.3 32 32 32s32-14.3 32-32v-1.4c0-8.2 4.2-15.8 11-20.2l42.2-27.1c36.6-23.6 58.8-64.1 58.8-107.7V160c0-70.7-57.3-128-128-128H144C73.3 32 16 89.3 16 160c0 17.7 14.3 32 32 32s32-14.3 32-32zm80 320a40 40 0 1 0 0-80 40 40 0 1 0 0 80z" />
+                    </svg>
+                    Hoe wordt mijn data gebruikt
+                </button>
+                <a href="#errorModal" class="btn cbg-danger-l" data-bs-toggle="modal">Verwijder account</a>
+            </section>
+
+        </section>
+        <section class="d-flex flex-wrap justify-content-center col-lg-9">
+            <h1 class="text-center mb-5 text-light border-bottom border-4 col-6 py-3 ch1">Mijn favoriete decks</h1>
+            <section id="cards_animation" class="d-flex flex-wrap justify-content-evenly col-12 mb-5">
+                <figure class="mb-3 border cbg-primary ch1 card-flyer text-center col-12 col-md-6 col-lg-4 col-xxl-4">
+                    <img src="assets/images/decks/MTGDeck.jpg" class="col-12" alt="decknaam">
+                    <figcaption><a href="deckdetails.html" class="h4 text-light text-decoration-none">Decknaam</a>
+                    </figcaption>
+                </figure>
+                <figure class="mb-3 border cbg-primary ch1 card-flyer text-center col-12 col-md-6 col-lg-4 col-xxl-4">
+                    <img src="assets/images/decks/MTGDeck.jpg" class="col-12" alt="decknaam">
+                    <figcaption><a href="deckdetails.html" class="h4 text-light text-decoration-none">Decknaam</a>
+                    </figcaption>
+                </figure>
+                <figure class="mb-3 border cbg-primary ch1 card-flyer text-center col-12 col-md-6 col-lg-4 col-xxl-4">
+                    <img src="assets/images/decks/MTGDeck.jpg" class="col-12" alt="decknaam">
+                    <figcaption><a href="deckdetails.html" class="h4 text-light text-decoration-none">Decknaam</a>
+                    </figcaption>
+                </figure>
+                <figure class="mb-3 border cbg-primary ch1 card-flyer text-center col-12 col-md-6 col-lg-4 col-xxl-4">
+                    <img src="assets/images/decks/MTGDeck.jpg" class="col-12" alt="decknaam">
+                    <figcaption><a href="deckdetails.html" class="h4 text-light text-decoration-none">Decknaam</a>
+                    </figcaption>
+                </figure>
+                <figure class="mb-3 border cbg-primary ch1 card-flyer text-center col-12 col-md-6 col-lg-4 col-xxl-4">
+                    <img src="assets/images/decks/MTGDeck.jpg" class="col-12" alt="decknaam">
+                    <figcaption><a href="deckdetails.html" class="h4 text-light text-decoration-none">Decknaam</a>
+                    </figcaption>
+                </figure>
+                <figure class="mb-3 border cbg-primary ch1 card-flyer text-center col-12 col-md-6 col-lg-4 col-xxl-4">
+                    <img src="assets/images/decks/MTGDeck.jpg" class="col-12" alt="decknaam">
+                    <figcaption><a href="deckdetails.html" class="h4 text-light text-decoration-none">Decknaam</a>
+                    </figcaption>
+                </figure>
+            </section>
+        </section>
+
+
+
+        <section class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+            <section class="modal-dialog">
+                <section class="modal-content">
+                    <section class="modal-header cbg-dark text-white border-0">
+                        <h1 class="modal-title ctext-white fs-5" id="infoModalLabel">Hoe wordt mijn data gebruikt?</h1>
+                        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </section>
+                    <section class="modal-body cbg-primary text-light">
+                        <p>
+                            Wanneer je onze website bezoekt en je vrijwillig verstrekt via
+                            inschrijving of formulieren, verzamelen we beperkte informatie over jou. Dit gaat
+                            bijvoorbeeld over jouw naam en e-mailadres. Deze informatie zullen we uitsluitend gebruiken
+                            om jou te contacteren indien je onze hulp nodig hebt of ons iets zou willen melden over onze
+                            diensten. Jouw privacy is belangrijk voor ons en dus zullen we deze informatie nooit delen
+                            met een derden. Dit zou enkel en alleen gebeuren als we van jouw uitdrukkelijke toestemming
+                            hebben gekregen.
+                        </p>
+                    </section>
+                    <section class="modal-footer cbg-primary text-light">
+                        <button type="button" class="btn btn-dark ctext-white cbg-" data-bs-dismiss="modal">Ik begrijp
+                            het</button>
+                    </section>
+                </section>
+            </section>
+        </section>
+
+        <section class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+            <section class="modal-dialog modal-dialog-centered">
+                <section class="modal-content">
+                    <article class="modal-header bg-danger border-0">
+                        <h5 class="modal-title text-white" id="errorModalLabel">Waarschuwing!</h5>
+                        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </article>
+                    <article class="modal-body cbg-dark-l">
+                        <p class="text-light">Bent u zeker dat u het account wilt verwijderen?</p>
+                    </article>
+                    <article class="modal-footer cbg-primary justify-content-between">
+                        <button type="button" class="btn btn-success " data-bs-dismiss="modal">Annuleer</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Verwijder</button>
+                    </article>
+                </section>
+            </section>
+        </section>
+    </main>
+    <footer class="cbg-primary text-light">
+        <section class="container py-5">
+            <section class="row">
+                <section class="col-6 col-md-2 mb-3">
+                    <h4>Links</h5>
+                        <ul class="nav flex-column">
+                            <li class="nav-item mb-2">
+                                <a href="home.html" class="nav-link p-0 text-light">
+                                    Home
+                                </a>
+                            </li>
+                            <li class="nav-item mb-2">
+                                <a href="decks.html" class="nav-link p-0 text-light">
+                                    Decks
+                                </a>
+                            </li>
+                            <li class="nav-item mb-2">
+                                <a href="drawtest.html" class="nav-link p-0 text-light">
+                                    Deck simuleren
+                                </a>
+                            </li>
+                            <li class="nav-item mb-2">
+                                <a href="#" class="nav-link p-0 text-light">
+                                    Profiel
+                                </a>
+                            </li>
+                        </ul>
+                </section>
+                <section class="col-md-5 offset-md-1 mb-3">
+                    <form>
+                        <h5>Abonneer op onze nieuwsbrief!</h5>
+                        <p>Maandelijkse samenvatting van wat er nieuw en spannend is voor u.</p>
+                        <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+                            <label for="newsletter1" class="visually-hidden">E-mail address</label>
+                            <input id="newsletter1" type="text" class="form-control" placeholder="E-mail address">
+                            <button class="btn btn-primary cbg-secondary border-dark" type="button">Abonneer</button>
+                        </div>
+                    </form>
+                </section>
+            </section>
+            <section class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+                <p>&copy; 2024 Codecaster Wizards. Alle rechten voorbehouden. | Foto's: &copy
+                    <a class="ctext-white" href="https://openai.com/dall-e-3">
+                        DALL-E 3
+                    </a>
+                </p>
+                <ul class="list-unstyled d-flex">
+                    <li class="ms-3">
+                        <a class="link-dark" href="https://twitter.com/" target="_blank">
+                            <svg fill="#ffffff" height="35" width="35" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 448 512">
+                                <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                <path
+                                    d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm297.1 84L257.3 234.6 379.4 396H283.8L209 298.1 123.3 396H75.8l111-126.9L69.7 116h98l67.7 89.5L313.6 116h47.5zM323.3 367.6L153.4 142.9H125.1L296.9 367.6h26.3z" />
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="ms-3">
+                        <a class="link-dark" href="https://www.instagram.com/" target="_blank">
+                            <svg fill="#ffffff" height="35" width="35" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 448 512">
+                                <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                <path
+                                    d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" />
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="ms-3">
+                        <a class="link-dark" href="https://www.facebook.com/" target="_blank">
+                            <svg fill="#ffffff" height="35" width="35" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 512 512">
+                                <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                <path
+                                    d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z" />
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
+            </section>
+        </section>
+    </footer>
+
+    <!-- Modals -->
+    <section class="modal fade" id="changeInfoModal" aria-hidden="true" aria-labelledby="changeInfoModalLabel"
+        tabindex="-1">
+        <section class="modal-dialog modal-dialog-centered">
+            <section class="modal-content">
+                <section class="modal-header cbg-dark text-white border-0">
+                    <h1 class="modal-title fs-5" id="changeInfoModalLabel">Verander gegevens!</h1>
+                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </section>
+                <section class="modal-body cbg-primary">
+                    <form class="px-4 py-3">
+                        <fieldset class="text-center mb-3">
+                            <svg width="130" height="130" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                <path fill="#ffffff"
+                                    d="M406.5 399.6C387.4 352.9 341.5 320 288 320H224c-53.5 0-99.4 32.9-118.5 79.6C69.9 362.2 48 311.7 48 256C48 141.1 141.1 48 256 48s208 93.1 208 208c0 55.7-21.9 106.2-57.5 143.6zm-40.1 32.7C334.4 452.4 296.6 464 256 464s-78.4-11.6-110.5-31.7c7.3-36.7 39.7-64.3 78.5-64.3h64c38.8 0 71.2 27.6 78.5 64.3zM256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-272a40 40 0 1 1 0-80 40 40 0 1 1 0 80zm-88-40a88 88 0 1 0 176 0 88 88 0 1 0 -176 0z" />
+                            </svg>
+                        </fieldset>
+                        <fieldset class="row mb-3">
+                            <section class="col">
+                                <label for="firstnameLabel" class="form-label ctext-white">Voornaam</label>
+                                <input type="text" class="form-control" placeholder="Voornaam" aria-label="First name">
+                            </section>
+                            <section class="col">
+                                <label for="lastnameLabel" class="form-label ctext-white">Naam</label>
+                                <input type="text" class="form-control" placeholder="Naam" aria-label="Last name">
+                            </section>
+                        </fieldset>
+                        <fieldset class="mb-3">
+                            <label for="e-mailLabel" class="form-label ctext-white">E-mail</label>
+                            <input type="e-mail" class="form-control" id="e-mailFormLabel"
+                                placeholder="e-mail@voorbeeld.com">
+                        </fieldset>
+                        <fieldset class="mb-3">
+                            <label for="passwordLabel" class="form-label ctext-white">Wachtwoord</label>
+                            <input type="password" class="form-control" id="passwordFormLabel" placeholder="Wachtwoord">
+                        </fieldset>
+                        <fieldset class="mb-3">
+                            <label class="form-label ctext-white" for="description">Beschrijving</label>
+                            <textarea class="form-control form-control-dark" name="description" id="description"
+                                cols="30" rows="6"></textarea>
+                        </fieldset>
+                    </form>
+                </section>
+                <section class="modal-footer cbg-primary d-flex justify-content-start">
+                    <button type="submit" class="btn btn-dark col-3" data-bs-dismiss="modal">Slaag op</button>
+                </section>
+            </section>
+        </section>
+    </section>
+</body>
+
+</html>

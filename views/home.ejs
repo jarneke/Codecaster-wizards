@@ -4,10 +4,11 @@
             <%- include("partials/pagination") %>
                 <section class="container" id="cards_animation">
                     <section class="d-flex flex-wrap justify-content-evenly">
-                        <% let count=0; let i=0; %>
-                            <!-- Insert if statement to check if there are cards to be displayed, else show no cards found -->
-                            <% for (const card of cards) {%>
-                                <% if (card.imageUrl) { %>
+                        <% if (cards.length==0) { %>
+                            <h1 class="ch1 ctext-secondary text-center col-12">!OOPS... Geen kaarten gevonden!</h1>
+                            <h1 class="ch1 fs-3 ctext-secondary text-center col-12">Probeer je filter aan te passen</h1>
+                            <% } else { %>
+                                <% for (const card of cards) {%>
                                     <article class="p-2 col-12 col-md-6 col-lg-4 col-xl-3">
                                         <article class="card mtg-card rounded-5 p-1 <%= card.rarity == 'Common' ? 'cbg-white' : card.rarity == 'Uncommon' ? 'cbg-warning-l' : card.rarity == 'Rare' ? 'cbg-yellow' : card.rarity == 'Mythic' ? 'cbg-danger' : 'cbg-success' %>">
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#cardModal" data-bs-name="<%= card.name %>" data-bs-manaCost="<%= card.manaCost %>" data-bs-cmc="<%= card.cmc %>" data-bs-colorId="<%= card.colorIdentity %>" data-bs-rarity="<%= card.rarity %>" data-bs-imageUrl="<%= card.imageUrl %>" class="p-0">
@@ -15,10 +16,8 @@
                                             </a>
                                         </article>
                                     </article>
-                                    <% count++ %>
+                                    <% } %>
                                         <% } %>
-                                            <% i++ %>
-                                                <% } %>
                     </section>
                 </section>
 
@@ -69,60 +68,5 @@
             </section>
         </section>
     </section>
-    <section class="modal fade" id="cardModal" tabindex="-1" aria-labelledby="cardModalLabel" aria-hidden="true">
-        <section class="modal-dialog modal-lg">
-            <section class="modal-content ctext-white cbg-primary">
-                <section class="modal-header cbg-dark border-0">
-                    <h1 class="modal-title ctext-white fs-6 col-11" id="cardModalLabel">
-                    </h1>
-                    <button type="button" class="btn-close cbg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </section>
-                <section class="modal-body d-flex flex-wrap">
-                    <section class="col-12 col-md-6">
-                        <article id="cardModalBorderElement">
-                            <img class="rounded-4" id="cardModalImage" style="width: 100%;" alt="">
-                        </article>
-                    </section>
-                    <section class="col-12 col-md-6 d-flex flex-column justify-content-between p-2">
-                        <article class="d-flex flex-column gap-2">
-                            <div>
-                                <p class="mb-0">kaartnaam: </p>
-                                <p id="cardModalCardname"></p>
-                            </div>
-                            <div>
-                                <p class="mb-0">manakost: </p>
-                                <div class="d-flex gap-2" id="cardModalManaCost"></div>
-                            </div>
-                            <div>
-                                <p class="mb-0">Omgevormde manakost: </p>
-                                <div class="d-flex gap-2" id="cardModalCmc"></div>
-                            </div>
-                            <div>
-                                <p class="mb-0">Kleur identiteit: </p>
-                                <div class="d-flex gap-2" id="cardModalColorId"></div>
-                            </div>
-                        </article>
-                        <article>
-                            <div class="mt-2" style="height: 3rem;" id="AlertPlaceHolder"></div>
-                        </article>
-                        <form class="" action="">
-                            <label class="form-control-label" for="deck">Voeg toe aan deck</label>
-                            <select class="form-select" name="deck" id="deck">
-                                <option value="deck1">deck1</option>
-                                <option value="deck1">deck2</option>
-                                <option value="deck1">deck3</option>
-                            </select>
-
-                            <button type="button" class="w-100 btn btn-dark mt-3">
-                                <i class="bi bi-plus"></i>
-                                Voeg toe
-                            </button>
-                        </form>
-                    </section>
-                </section>
-                <section class="modal-footer justify-content-between">
-                </section>
-            </section>
-        </section>
-    </section>
-    <%- include("partials/footer") %>
+    <% include("partials/cardsModal") %>
+        <%- include("partials/footer") %>

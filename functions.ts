@@ -142,7 +142,7 @@ export function filterAndSortCards(allCards: Magic.Card[], cardLookup: any, filt
     // check if there was a search param specified
     if (cardLookup != undefined && cardLookup != "") {
         // filter the cards
-        filteredCards = filteredCards.filter(e => `${e.name}${e.id}`.toLowerCase().includes(`${cardLookup}`.toLowerCase()))
+        filteredCards = filteredCards.filter(e => `${e.name}${e.id}${e.multiverseid}`.toLowerCase().includes(`${cardLookup}`.toLowerCase()))
     }
     // check if type param was specified
     if (filterType != undefined && filterType != "") {
@@ -172,4 +172,16 @@ export function filterAndSortCards(allCards: Magic.Card[], cardLookup: any, filt
     }
 
     return sortedCards
+}
+export function shuffleCards(cards: Magic.Card[]): Magic.Card[] {
+    for (let i = cards.length - 1; i > 0; i--) {
+        const j: number = Math.floor(Math.random() * (i + 1))
+        const temp = cards[i];
+        cards[i] = cards[j];
+        cards[j] = temp
+    }
+    return cards;
+}
+export function getRandomNumber(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }

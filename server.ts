@@ -14,23 +14,25 @@ function generateRandomInteger(): number {
 
 
 const tempDecks: i.Deck[] = [];
-
-for (let i = 0; i < 9; i++) {
-  let tempCards: Magic.Card[] = [];
-  let max = generateRandomInteger();
-  for (let index = 0; index < max; index++) {
-    tempCards.push(allCards[i]);
+setTimeout(() => {
+  for (let i = 0; i < 9; i++) {
+    let tempCards: Magic.Card[] = [];
+    let max = generateRandomInteger();
+    for (let index = 0; index < max; index++) {
+      tempCards.push(allCards[index]);
+    }
+    tempDecks.push({
+      deckName: `Deck ${i + 1}`,
+      cards: tempCards,
+      deckImageUrl: `/assets/images/demoCards/card${i + 1}.jpg`,
+    });
   }
-  tempDecks.push({
-    deckName: `Deck ${i + 1}`,
-    cards: tempCards,
-    deckImageUrl: `/assets/images/demoCards/card${i + 1}.jpg`,
-  });
-}
+}, 1000);
+
 
 const app = express();
 
-let allDecks: i.Deck[] = [...tempDecks];
+let allDecks: i.Deck[] = tempDecks;
 let allCardTypes: string[] = [];
 let allCardRarities: string[] = [];
 
@@ -176,12 +178,19 @@ app.get("/deckdetails", (req, res) => {
   });
 });
 
-let lastSelectedDeck: i.Deck;
+let lastSelectedDeck: i.Deck = {
+  deckName: "",
+  cards: [],
+  deckImageUrl: ""
+};
 let selectedDeck: i.Deck | undefined;
-let unpulledCards: Magic.Card[] = [];
-let pulledCards: Magic.Card[] = [];
+let unpulledCards: Magic.Card[] | undefined = [];
+let pulledCards: Magic.Card[];
 
 app.get("/drawtest", (req, res) => {
+  // !!!!! BUG !!!!!
+  // - If page loads with action = pull set , eeror loading pulledCards
+
   // Query params
   // -- filter and sort
   let cardLookup = req.query.cardLookup;
@@ -195,51 +204,63 @@ app.get("/drawtest", (req, res) => {
   let colorlessManaChecked = req.query.colorlessManaChecked;
   let sort = req.query.sort;
   let sortDirection = req.query.sortDirection;
-  let selectedDeckQuery = req.query.decks;
   // -- pagination
   let pageQueryParam = req.query.page;
-
-  // filter logic
-  let filteredAndSortedCards: Magic.Card[] = f.filterAndSortCards(allCards, cardLookup, filterType, filterRarity, whiteManaChecked, blueManaChecked, blackManaChecked, greenManaChecked, redManaChecked, colorlessManaChecked, sort, sortDirection)
-
-
-  let cardToShowIndex: number | undefined = 0;
-
-  pulledCards[0] ? cardToShowIndex = pulledCards.length - 1 : cardToShowIndex = undefined;
-  let cardToShow: Magic.Card | string
-
-  if (cardToShowIndex == undefined) {
-    cardToShow = ""
-  } else {
-    cardToShow = pulledCards[0]
+  // -- other
+  let whatToDo = req.query.action;
+  let selectedDeckQuery = req.query.decks;
+  // Logic
+  // --filter logic
+  let filterAndSortedCards: Magic.Card[] = [];
+  if (pulledCards !== undefined) {
+    filterAndSortedCards = [...f.filterAndSortCards(pulledCards, cardLookup, filterType, filterRarity, whiteManaChecked, blueManaChecked, blackManaChecked, greenManaChecked, redManaChecked, colorlessManaChecked, sort, sortDirection)]
   }
 
   // Find What Deck is selected
   selectedDeck = allDecks.find(e => e.deckName == selectedDeckQuery)
   // if deck is not found, set to deck nr. 1
   if (selectedDeck === undefined) {
-    selectedDeck = allDecks[0];
+    // select random deck
+    selectedDeck = allDecks[f.getRandomNumber(0, allDecks.length - 1)];
   }
 
   // if deck is diffrent from last load
   if (lastSelectedDeck !== selectedDeck) {
     // set unpulledCards to cards of new deck
     unpulledCards = [...selectedDeck.cards];
+    // Shuffle cards
+    unpulledCards = [...f.shuffleCards(unpulledCards)]
     // clear pulledCards
     pulledCards = [];
+  } else {
+    if (whatToDo == "pull") {
+
+      if (pulledCards !== undefined && unpulledCards !== undefined) {
+        let card = unpulledCards.pop()
+        if (card !== undefined) {
+          pulledCards.unshift(card);
+        }
+      }
+    } else if (whatToDo == "reset") {
+      unpulledCards = [...selectedDeck.cards]
+      unpulledCards = [...f.shuffleCards(unpulledCards)]
+      pulledCards = [];
+    }
   }
 
+
+  let cardToShow: Magic.Card = pulledCards[0];
   // save selectedDeck to be used next load
   lastSelectedDeck = selectedDeck;
   // Pagination
-  let pageSize: number = 12;
-  let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, filteredAndSortedCards);
+  let pageSize: number = 6;
+  let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, filterAndSortedCards);
 
   res.render("drawtest", {
     // HEADER
     user: i.tempUser,
     // -- The names of the js files you want to load on the page.
-    jsFiles: ["submitOnChange"],
+    jsFiles: ["submitOnChange", "cardsModal", "manaCheckbox", "tooltips", "drawCard"],
     // -- The title of the page
     title: "Home page",
     // -- The Tab in the nav bar you want to have the orange color

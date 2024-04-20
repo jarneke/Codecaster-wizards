@@ -17,12 +17,12 @@
                 </a>
             </li>
             <% } %>
-                <li class="page-item <%= page === totalPages ? 'disabled' : '' %>">
+                <li class="page-item <%= page >= totalPages ? 'disabled' : '' %>">
                     <a class="page-link cbg-dark ctext-white" href="?<%= filterUrl %>&page=<%= page + 1 %>" aria-label="Next">
                         <i class="bi bi-caret-right-fill"></i>
                     </a>
                 </li>
-                <li class="page-item <%= page === totalPages ? 'disabled' : '' %>">
+                <li class="page-item <%= page >= totalPages ? 'disabled' : '' %>">
                     <a class="page-link cbg-dark ctext-white" href="?<%= filterUrl %>&page=<%= totalPages %>" aria-label="Last">
                         <i class="bi bi-caret-right-fill"></i><i class="bi bi-caret-right-fill"></i>
                     </a>

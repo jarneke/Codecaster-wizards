@@ -185,3 +185,10 @@ export function shuffleCards(cards: Magic.Card[]): Magic.Card[] {
 export function getRandomNumber(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+export function getChance(cards: Magic.Card[], card: Magic.Card): { chance: number, amount: number } {
+    let amountOfCard: number = cards.filter(e => e === card).length
+    return {
+        chance: Math.floor((amountOfCard / cards.length) * 100),
+        amount: amountOfCard
+    }
+}

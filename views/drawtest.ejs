@@ -51,8 +51,8 @@
 
         <section class="d-flex flex-wrap align-items-evenly justify-content-center p-3 text-center col-12 col-md-4">
             <article class="col-12 mb-5">
-                <h3>Kans om kaart te trekken 3.33%</h3>
-                <p>Deze kaart zit 2 keer in het deck</p>
+                <h3>Kans om kaart te trekken <%= percentile %>%</h3>
+                <p>Deze kaart zit <%= amount %> keer in het deck</p>
             </article>
             <form action="/drawtest" method="GET" id="actionForm">
                 <input type="hidden" name="action" id="actionField" value="">
@@ -92,8 +92,8 @@
                             <h1 class="ch1 ctext-secondary text-center col-12">!OOPS... Geen kaarten gevonden!</h1>
                             <h1 class="ch1 fs-3 ctext-secondary text-center col-12">Probeer je filter aan te passen</h1>
                             <% } else { %>
-                                <% for (const card of pulledCards) {%>
-                                    <article class="p-2 col-12 col-md-6 col-lg-4 col-xl-3">
+                                <% for (const card of cardsToShow) {%>
+                                    <article class="p-2 col-12 col-md-6 col-lg-4">
                                         <article class="card mtg-card rounded-5 p-1 <%= card.rarity == 'Common' ? 'cbg-white' : card.rarity == 'Uncommon' ? 'cbg-warning-l' : card.rarity == 'Rare' ? 'cbg-yellow' : card.rarity == 'Mythic' ? 'cbg-danger' : 'cbg-success' %>">
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#cardModal" data-bs-name="<%= card.name %>" data-bs-manaCost="<%= card.manaCost %>" data-bs-cmc="<%= card.cmc %>" data-bs-colorId="<%= card.colorIdentity %>" data-bs-rarity="<%= card.rarity %>" data-bs-imageUrl="<%= card.imageUrl %>" class="p-0">
                                                 <img src="<%= card.imageUrl %>" class="rounded-5" style="width: 100%;" alt="">

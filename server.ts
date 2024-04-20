@@ -19,7 +19,7 @@ setTimeout(() => {
     let tempCards: Magic.Card[] = [];
     let max = generateRandomInteger();
     for (let index = 0; index < max; index++) {
-      tempCards.push(allCards[index]);
+      tempCards.push(allCards[f.getRandomNumber(0, 60)]);
     }
     tempDecks.push({
       deckName: `Deck ${i + 1}`,
@@ -152,7 +152,6 @@ app.get("/deckdetails", (req, res) => {
   let cardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize)
   let modalCardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize / 2)
 
-
   res.render("deckdetails", {
     // HEADER
     user: i.tempUser,
@@ -210,12 +209,6 @@ app.get("/drawtest", (req, res) => {
   let whatToDo = req.query.action;
   let selectedDeckQuery = req.query.decks;
   // Logic
-  // --filter logic
-  let filterAndSortedCards: Magic.Card[] = [];
-  if (pulledCards !== undefined) {
-    filterAndSortedCards = [...f.filterAndSortCards(pulledCards, cardLookup, filterType, filterRarity, whiteManaChecked, blueManaChecked, blackManaChecked, greenManaChecked, redManaChecked, colorlessManaChecked, sort, sortDirection)]
-  }
-
   // Find What Deck is selected
   selectedDeck = allDecks.find(e => e.deckName == selectedDeckQuery)
   // if deck is not found, set to deck nr. 1
@@ -247,14 +240,26 @@ app.get("/drawtest", (req, res) => {
       pulledCards = [];
     }
   }
-
+  // --filter logic
+  let filterAndSortedCards: Magic.Card[] = pulledCards;
+  if (pulledCards !== undefined) {
+    filterAndSortedCards = [...f.filterAndSortCards(pulledCards, cardLookup, filterType, filterRarity, whiteManaChecked, blueManaChecked, blackManaChecked, greenManaChecked, redManaChecked, colorlessManaChecked, sort, sortDirection)]
+  }
 
   let cardToShow: Magic.Card = pulledCards[0];
+  let nextCard: Magic.Card
+  if (unpulledCards !== undefined) {
+    nextCard = unpulledCards[unpulledCards.length - 1]
+  }
+
+  let chanceData = f.getChance(selectedDeck.cards, cardToShow)
   // save selectedDeck to be used next load
   lastSelectedDeck = selectedDeck;
   // Pagination
   let pageSize: number = 6;
   let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, filterAndSortedCards);
+
+  let cardsToShow = f.getCardsForPage(filterAndSortedCards, pageData.page, pageSize)
 
   res.render("drawtest", {
     // HEADER
@@ -290,7 +295,10 @@ app.get("/drawtest", (req, res) => {
     selectedDeck: selectedDeck,
     unpulledCards: unpulledCards,
     pulledCards: pulledCards,
-    card: cardToShow
+    cardsToShow: cardsToShow,
+    card: cardToShow,
+    percentile: chanceData.chance,
+    amount: chanceData.amount
   });
 });
 app.get("/profile", (req, res) => {

@@ -31,3 +31,7 @@ export interface Deck {
     cards: Magic.Card[],
     deckImageUrl: string
 }
+export interface DeckCard {
+    card: Magic.Card,
+    amount: number,
+}

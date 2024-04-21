@@ -42,7 +42,7 @@ export function handlePageClickEvent(reqQuery: any, pageQueryParam: string, page
     // if true => add to filterUrl
     // if false => skip
     for (const [key, value] of Object.entries(reqQuery)) {
-        if (key !== "page" && value) {
+        if (key !== "page" && value && key !== "action") {
             filterUrl += `${key}=${value}&`;
         }
     }

@@ -1,5 +1,6 @@
 <section class="row d-flex justify-content-center mb-3">
     <form class="col-12 container d-flex justify-content-between flex-wrap">
+        <input type="hidden" name="decks" value="<%= deck %>">
         <fieldset class="col-12 mb-3">
             <section class="form-control d-flex">
                 <button class="bg-white text-secondary p-1 border-0" type="submit" id="search">
@@ -156,7 +157,7 @@
                             </select>
             </div>
             <button type="submit" class="mt-5 btn btn-dark col-12"><i class="bi bi-funnel-fill"></i> Pas filter en sortering toe</button>
-            <a href="/home" class="mt-2 col-5 btn btn-dark col-12"><i class="bi bi-arrow-clockwise"></i> Reset filter en sortering</a>
+            <a href="/<%= pageLink %>" class="mt-2 col-5 btn btn-dark col-12"><i class="bi bi-arrow-clockwise"></i> Reset filter en sortering</a>
         </fieldset>
     </form>
 </section>

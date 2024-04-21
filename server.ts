@@ -12,27 +12,41 @@ function generateRandomInteger(): number {
   return Math.floor(Math.random() * 61); // Generates a random number between 0 and 60 (inclusive)
 }
 
+async function getTempDecks(): Promise<any[]> {
+  let tempDecks: any = [];
 
-const tempDecks: i.Deck[] = [];
-setTimeout(() => {
+  // Simulate an asynchronous operation
+  await new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, 1000);
+  });
+
   for (let i = 0; i < 9; i++) {
-    let tempCards: Magic.Card[] = [];
-    let max = generateRandomInteger();
+    let tempCards = [];
+    let max = f.getRandomNumber(0, 60);
     for (let index = 0; index < max; index++) {
       tempCards.push(allCards[f.getRandomNumber(0, 60)]);
     }
-    tempDecks.push({
+    allDecks.push({
       deckName: `Deck ${i + 1}`,
       cards: tempCards,
       deckImageUrl: `/assets/images/demoCards/card${i + 1}.jpg`,
     });
   }
-}, 1000);
+
+  return tempDecks;
+}
+
+const tempDecks: i.Deck[] = [];
+
 
 
 const app = express();
 
-let allDecks: i.Deck[] = tempDecks;
+let allDecks: i.Deck[] = [];
+getTempDecks();
+
 let allCardTypes: string[] = [];
 let allCardRarities: string[] = [];
 
@@ -94,6 +108,8 @@ app.get("/home", async (req, res) => {
     colorlessManaChecked: colorlessManaChecked == undefined ? "true" : colorlessManaChecked,
     sort: sort,
     sortDirection: sortDirection,
+    deck: "",
+    pageLink: "home",
     // -- pagination
     page: pageData.page,
     totalPages: pageData.totalPages,
@@ -177,18 +193,16 @@ app.get("/deckdetails", (req, res) => {
   });
 });
 
-let lastSelectedDeck: i.Deck = {
-  deckName: "",
-  cards: [],
-  deckImageUrl: ""
-};
+let lastSelectedDeck: i.Deck;
 let selectedDeck: i.Deck | undefined;
 let unpulledCards: Magic.Card[] | undefined = [];
 let pulledCards: Magic.Card[];
 
 app.get("/drawtest", (req, res) => {
   // !!!!! BUG !!!!!
-  // - If page loads with action = pull set , eeror loading pulledCards
+  // - If page loads without action = pull set , error loading pulledCards
+  // - tempDeck making script causes cards to be undefined if page is loaded to fast after server restart
+
 
   // Query params
   // -- filter and sort
@@ -203,6 +217,7 @@ app.get("/drawtest", (req, res) => {
   let colorlessManaChecked = req.query.colorlessManaChecked;
   let sort = req.query.sort;
   let sortDirection = req.query.sortDirection;
+  let deck = req.query.decks;
   // -- pagination
   let pageQueryParam = req.query.page;
   // -- other
@@ -211,11 +226,16 @@ app.get("/drawtest", (req, res) => {
   // Logic
   // Find What Deck is selected
   selectedDeck = allDecks.find(e => e.deckName == selectedDeckQuery)
+
   // if deck is not found, set to deck nr. 1
   if (selectedDeck === undefined) {
-    // select random deck
-    selectedDeck = allDecks[f.getRandomNumber(0, allDecks.length - 1)];
+    if (lastSelectedDeck == undefined) {
+      selectedDeck = allDecks[0]
+    } else {
+      selectedDeck = lastSelectedDeck;
+    }
   }
+
 
   // if deck is diffrent from last load
   if (lastSelectedDeck !== selectedDeck) {
@@ -247,9 +267,9 @@ app.get("/drawtest", (req, res) => {
   }
 
   let cardToShow: Magic.Card = pulledCards[0];
-  let nextCard: Magic.Card
+  let nextCard: Magic.Card = allCards[0];
   if (unpulledCards !== undefined) {
-    nextCard = unpulledCards[unpulledCards.length - 1]
+    nextCard = unpulledCards[unpulledCards?.length - 1]
   }
 
   let chanceData = f.getChance(selectedDeck.cards, cardToShow)
@@ -260,6 +280,7 @@ app.get("/drawtest", (req, res) => {
   let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, filterAndSortedCards);
 
   let cardsToShow = f.getCardsForPage(filterAndSortedCards, pageData.page, pageSize)
+
 
   res.render("drawtest", {
     // HEADER
@@ -286,6 +307,8 @@ app.get("/drawtest", (req, res) => {
     colorlessManaChecked: colorlessManaChecked == undefined ? "true" : colorlessManaChecked,
     sort: sort,
     sortDirection: sortDirection,
+    deck: deck,
+    pageLink: "drawtest",
     // -- pagination
     page: pageData.page,
     totalPages: pageData.totalPages,
@@ -297,6 +320,7 @@ app.get("/drawtest", (req, res) => {
     pulledCards: pulledCards,
     cardsToShow: cardsToShow,
     card: cardToShow,
+    nextCard: nextCard,
     percentile: chanceData.chance,
     amount: chanceData.amount
   });

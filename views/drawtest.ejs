@@ -29,7 +29,7 @@
         </section>
 
         <section class="d-flex align-items-between justify-content-center flex-wrap mb-3 col-12 col-sm-8 col-md-4">
-            <a class="btn btnPullCard border-0 d-flex justify-content-center flex-wrap ctext-white col-9 col-md-12 col-lg-9 p-0">
+            <a class="btn btnPullCard border-0 d-flex justify-content-center ctext-white col-9 col-md-12 col-lg-9 p-0">
                 <% if (unpulledCards.length==0 ){ %>
                     <article class="p-2 col-12">
                         <article class="card rounded-5 p-1 border-5 border-light cbg-transparent">
@@ -37,11 +37,35 @@
                         </article>
                     </article>
                     <% } else {%>
-                        <article class="p-2 col-12">
-                            <article class="card mtg-card rounded-5 p-1 border-5 border-light cbg-transparent">
-                                <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=97066&type=card" class="rounded-5" style="width: 100%;" alt="">
-                            </article>
-                        </article>
+                        <div class="positioning col-12">
+                            <% if (unpulledCards.length !==1){%>
+                                <article class="p-2 col-12">
+                                    <article class="card rounded-5 p-1 border-0 cbg-transparent">
+                                        <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=97066&type=card" class="rounded-5" style="width: 100%;" alt="">
+                                    </article>
+                                </article>
+                                <% } else { %>
+                                    <article class="p-2 col-12">
+                                        <article class="card rounded-5 p-1 border-5 border-light cbg-transparent">
+                                            <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=97066&type=card" class="rounded-5 invisible" style="width: 100%;" alt="">
+                                        </article>
+                                    </article>
+                                    <% } %>
+                                        <div class="flip-card" id="flip-card">
+                                            <div class="flip-card-inner">
+                                                <article class="flip-card-front p-2 col-12">
+                                                    <article class="card rounded-5 p-1 border-0 cbg-transparent">
+                                                        <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=97066&type=card" class="rounded-5" style="width: 100%;" alt="">
+                                                    </article>
+                                                </article>
+                                                <article class="flip-card-back p-2 col-12" id="nextCard">
+                                                    <article class="card rounded-5 p-1border-0 cbg-transparent">
+                                                        <img src="<%= nextCard.imageUrl %>" class="rounded-5" style="width: 100%;" alt="">
+                                                    </article>
+                                                </article>
+                                            </div>
+                                        </div>
+                        </div>
                         <% } %>
             </a>
             <p class="col-12 text-center ch1 mt-2 fs-2">
@@ -51,8 +75,10 @@
 
         <section class="d-flex flex-wrap align-items-evenly justify-content-center p-3 text-center col-12 col-md-4">
             <article class="col-12 mb-5">
-                <h3>Kans om kaart te trekken <%= percentile %>%</h3>
-                <p>Deze kaart zit <%= amount %> keer in het deck</p>
+                <% if (card) { %>
+                    <h3>Kans om <%= card.name %> te trekken <%= percentile %>%</h3>
+                    <p>Deze zit <%= amount %> keer in het deck</p>
+                    <% } %>
             </article>
             <form action="/drawtest" method="GET" id="actionForm">
                 <input type="hidden" name="action" id="actionField" value="">
@@ -65,14 +91,14 @@
         <section class="d-flex align-items-between justify-content-center flex-wrap mb-3 col-12 col-sm-8 col-md-4">
             <a class="btn btnResetCards border-0 d-flex justify-content-center flex-wrap ctext-white col-9 col-md-12 col-lg-9 p-0">
                 <% if (pulledCards.length==0){ %>
-                    <article class="p-2 col-12">
+                    <article class="p-2 col-12 pulledPile">
                         <article class="card rounded-5 p-1 border-5 border-light cbg-transparent">
                             <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=97066&type=card" class="rounded-5 invisible" style="width: 100%;" alt="">
                         </article>
                     </article>
                     <% } else {%>
-                        <article class="p-2 col-12">
-                            <article class="card mtg-card rounded-5 p-1 border-5 border-light cbg-transparent <%= card.rarity == 'Common' ? 'cbg-white' : card.rarity == 'Uncommon' ? 'cbg-warning-l' : card.rarity == 'Rare' ? 'cbg-yellow' : card.rarity == 'Mythic' ? 'cbg-danger' : 'cbg-success' %>">
+                        <article class="p-2 col-12 pulledPile">
+                            <article class="card mtg-card rounded-5 p-1 border-0 <%= card.rarity == 'Common' ? 'cbg-white' : card.rarity == 'Uncommon' ? 'cbg-warning-l' : card.rarity == 'Rare' ? 'cbg-yellow' : card.rarity == 'Mythic' ? 'cbg-danger' : 'cbg-success' %>">
                                 <img src="<%= card.imageUrl %>" class="rounded-5" style="width: 100%;" alt="">
                             </article>
                         </article>

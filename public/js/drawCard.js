@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => {
 
                 form.submit();
-            }, 1900);
+            }, 900);
         });
     }
     for (const btnResetCards of allBtnResetCards) {

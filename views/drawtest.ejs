@@ -18,7 +18,7 @@
                     <button class="bg-white text-secondary p-1 border-0" type="submit" id="search">
                         <i class="bi bi-search"></i>
                     </button>
-                    <input aria-label="Search" placeholder="Zoeken..." type="search" name="cardLookup" id="cardLookup" class="form-control border-0 p-0" />
+                    <input aria-label="Search" placeholder="Zoek kaart in deck..." type="search" name="cardLookupInDeck" id="cardLookupInDeck" class="form-control border-0 p-0" />
                 </section>
             </form>
             <section class="col-12 col-sm-4 p-2">
@@ -76,9 +76,18 @@
         <section class="d-flex flex-wrap align-items-evenly justify-content-center p-3 text-center col-12 col-md-4">
             <article class="col-12 mb-5">
                 <% if (card) { %>
-                    <h3>Kans om <%= card.name %> te trekken <%= percentile %>%</h3>
-                    <p>Deze zit <%= amount %> keer in het deck</p>
-                    <% } %>
+                    <h3 class="ch1 fs-2">
+                        <%= card.name %>
+                    </h3>
+                    <p>
+                        Zit <%= amount %> keer in <%= selectedDeck.deckName %>
+                    </p>
+                    <p>
+                        <%= percentile %>% kans om kaart te trekken
+                    </p>
+                    <% } else {%>
+                        <h3 class="ch1 fs-2">Trek een kaart om info te zien.</h3>
+                        <% } %>
             </article>
             <form action="/drawtest" method="GET" id="actionForm">
                 <input type="hidden" name="action" id="actionField" value="">
@@ -114,7 +123,7 @@
             <%- include("partials/filterAndSortCards") %>
                 <%- include("partials/pagination") %>
                     <section class="d-flex flex-wrap justify-content-evenly">
-                        <% if (pulledCards.length==0) { %>
+                        <% if (cardsToShow.length==0) { %>
                             <h1 class="ch1 ctext-secondary text-center col-12">!OOPS... Geen kaarten gevonden!</h1>
                             <h1 class="ch1 fs-3 ctext-secondary text-center col-12">Probeer je filter aan te passen</h1>
                             <% } else { %>
@@ -132,4 +141,5 @@
                     <%- include("partials/pagination") %>
         </section>
     </main>
-    <%- include("partials/footer") %>
+    <%- include("partials/cardsModal") %>
+        <%- include("partials/footer") %>

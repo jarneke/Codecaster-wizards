@@ -1,5 +1,6 @@
 import Magic = require("mtgsdk-ts");
 import * as f from "./functions"
+import { ObjectId } from "mongodb";
 
 export interface User {
     firstName: string,

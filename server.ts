@@ -3,44 +3,14 @@ import ejs from "ejs";
 import * as i from "./interfaces";
 import Magic = require("mtgsdk-ts");
 import * as f from "./functions";
-import { Rarity } from "mtgsdk-ts/out/IMagic";
+import * as db from "./db";
 
 
-let allCards: Magic.Card[] = [];
+export let allCards: Magic.Card[] = [];
 
-function generateRandomInteger(): number {
-  return Math.floor(Math.random() * 61); // Generates a random number between 0 and 60 (inclusive)
+async function getTempDecks() {
+  allDecks = await db.decksCollection.find({}).toArray();
 }
-
-async function getTempDecks(): Promise<any[]> {
-  let tempDecks: any = [];
-
-  // Simulate an asynchronous operation
-  await new Promise<void>((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 1000);
-  });
-
-  for (let i = 0; i < 9; i++) {
-    let tempCards = [];
-    let max = f.getRandomNumber(0, 60);
-    for (let index = 0; index < max; index++) {
-      tempCards.push(allCards[f.getRandomNumber(0, 60)]);
-    }
-    allDecks.push({
-      deckName: `Deck ${i + 1}`,
-      cards: tempCards,
-      deckImageUrl: `/assets/images/demoCards/card${i + 1}.jpg`,
-    });
-  }
-
-  return tempDecks;
-}
-
-const tempDecks: i.Deck[] = [];
-
-
 
 const app = express();
 
@@ -133,8 +103,6 @@ app.get("/decks", (req, res) => {
 
   let decksForPage = f.getDecksForPage(allDecks, pageData.page, pageSize);
 
-  console.log(allDecks);
-
   res.render("decks", {
     // HEADER
     user: i.tempUser,
@@ -198,12 +166,7 @@ let selectedDeck: i.Deck | undefined;
 let unpulledCards: Magic.Card[] | undefined = [];
 let pulledCards: Magic.Card[];
 
-app.get("/drawtest", (req, res) => {
-  // !!!!! BUG !!!!!
-  // - If page loads without action = pull set , error loading pulledCards
-  // - tempDeck making script causes cards to be undefined if page is loaded to fast after server restart
-
-
+app.get("/drawtest", async (req, res) => {
   // Query params
   // -- filter and sort
   let cardLookup = req.query.cardLookup;
@@ -218,6 +181,7 @@ app.get("/drawtest", (req, res) => {
   let sort = req.query.sort;
   let sortDirection = req.query.sortDirection;
   let deck = req.query.decks;
+  let cardLookupInDeck = req.query.cardLookupInDeck;
   // -- pagination
   let pageQueryParam = req.query.page;
   // -- other
@@ -227,7 +191,9 @@ app.get("/drawtest", (req, res) => {
   // Find What Deck is selected
   selectedDeck = allDecks.find(e => e.deckName == selectedDeckQuery)
 
-  // if deck is not found, set to deck nr. 1
+  // if deck is not found,
+  // set to deck nr. 1
+  // else set to lastDeck
   if (selectedDeck === undefined) {
     if (lastSelectedDeck == undefined) {
       selectedDeck = allDecks[0]
@@ -236,7 +202,8 @@ app.get("/drawtest", (req, res) => {
     }
   }
 
-
+  let cardLookupInDeckCard: Magic.Card | undefined = undefined
+  let cardLookupInDeckCardChance: number | undefined = undefined
   // if deck is diffrent from last load
   if (lastSelectedDeck !== selectedDeck) {
     // set unpulledCards to cards of new deck
@@ -246,17 +213,38 @@ app.get("/drawtest", (req, res) => {
     // clear pulledCards
     pulledCards = [];
   } else {
-    if (whatToDo == "pull") {
+    // if cardLookupInDeck is not defined
+    if (cardLookupInDeck != undefined) {
+      console.log("step 1");
 
+      // find the card they are looking for
+      cardLookupInDeckCard = selectedDeck.cards.find(e => e.name.toLowerCase().includes(`${cardLookupInDeck}`.toLowerCase()))
+      console.log("step 2" + cardLookupInDeckCard?.name);
+
+      // if card is found and there are cards in unpulledCards
+      if (cardLookupInDeckCard != undefined && unpulledCards != undefined) {
+        // calculate the chance u have to pull that card from the unpulledCards
+        cardLookupInDeckCardChance = f.getChance(unpulledCards, cardLookupInDeckCard).chance
+        console.log("step 3" + cardLookupInDeckCardChance);
+      }
+    }
+    // if clicked to pull a card
+    if (whatToDo == "pull") {
       if (pulledCards !== undefined && unpulledCards !== undefined) {
+        // get the last card from the unpulled cards
         let card = unpulledCards.pop()
         if (card !== undefined) {
+          // if it exists add it as the first card in pulledCards
           pulledCards.unshift(card);
         }
       }
+      // if clicked to reset
     } else if (whatToDo == "reset") {
+      // reset the unpulledcards to the cards of the selected deck
       unpulledCards = [...selectedDeck.cards]
+      // shuffle the cards
       unpulledCards = [...f.shuffleCards(unpulledCards)]
+      // empty the pulled cards
       pulledCards = [];
     }
   }
@@ -266,15 +254,21 @@ app.get("/drawtest", (req, res) => {
     filterAndSortedCards = [...f.filterAndSortCards(pulledCards, cardLookup, filterType, filterRarity, whiteManaChecked, blueManaChecked, blackManaChecked, greenManaChecked, redManaChecked, colorlessManaChecked, sort, sortDirection)]
   }
 
+  // get the cardToShow (always the first card in pulledCards)
   let cardToShow: Magic.Card = pulledCards[0];
-  let nextCard: Magic.Card = allCards[0];
+  // initialize nextCard
+  let nextCard: Magic.Card | undefined = undefined
+  // if there is still a card in unpulled cards
   if (unpulledCards !== undefined) {
-    nextCard = unpulledCards[unpulledCards?.length - 1]
+    // set nextCard to the last index of unpulledCards
+    nextCard = unpulledCards[unpulledCards.length - 1]
   }
 
+  // calculate the chanceData of the cardToSHow
   let chanceData = f.getChance(selectedDeck.cards, cardToShow)
-  // save selectedDeck to be used next load
+  // save selectedDeck to be used next load of page
   lastSelectedDeck = selectedDeck;
+
   // Pagination
   let pageSize: number = 6;
   let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, filterAndSortedCards);
@@ -288,7 +282,7 @@ app.get("/drawtest", (req, res) => {
     // -- The names of the js files you want to load on the page.
     jsFiles: ["submitOnChange", "cardsModal", "manaCheckbox", "tooltips", "drawCard"],
     // -- The title of the page
-    title: "Home page",
+    title: "Deck simuleren",
     // -- The Tab in the nav bar you want to have the orange color
     // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
     tabToColor: 2,
@@ -313,7 +307,11 @@ app.get("/drawtest", (req, res) => {
     page: pageData.page,
     totalPages: pageData.totalPages,
     filterUrl: pageData.filterUrl,
-    // -- unspecified
+    // -- cardlookupInDeck
+    cardLookupInDeck: cardLookupInDeck,
+    cardLookupInDeckCard: cardLookupInDeckCard,
+    cardLookupInDeckCardChance: cardLookupInDeckCardChance,
+    // -- other
     allDecks: allDecks,
     selectedDeck: selectedDeck,
     unpulledCards: unpulledCards,
@@ -322,7 +320,7 @@ app.get("/drawtest", (req, res) => {
     card: cardToShow,
     nextCard: nextCard,
     percentile: chanceData.chance,
-    amount: chanceData.amount
+    amount: chanceData.amount,
   });
 });
 app.get("/profile", (req, res) => {
@@ -388,4 +386,6 @@ app.listen(app.get("port"), async () => {
     .on("end", () => console.log("[ - SERVER - ] All cards gotten"))
     // If error while loading, display error
     .on("error", (e) => console.log("ERROR: " + e));
+
+  await db.connect()
 });

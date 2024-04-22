@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectedDeck = document.getElementById("decks")
     const allBtnPullCard = document.getElementsByClassName("btnPullCard");
     const allBtnResetCards = document.getElementsByClassName("btnResetCards");
+    const pulledCardsBtn = document.getElementById("pulledCardsBtn");
+    const cardLookupInDeckInput = document.getElementById("cardLookupInDeckInput")
     for (const btnPullCard of allBtnPullCard) {
         btnPullCard.addEventListener('click', (e) => {
             e.preventDefault();
@@ -31,7 +33,47 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
     }
+    pulledCardsBtn.addEventListener("click", () => {
+        const targetElement = document.getElementById('pulledCards');
+        // Scroll to the target element without modifying URL
+        targetElement.scrollIntoView();
+    })
+    let cardLookupInDeckInputValue = "";
+    cardLookupInDeckInput.addEventListener("input", (e) => {
+        cardLookupInDeckInputValue += e.data
+        const form = document.getElementById("cardLookupInDeckForm")
+        const hiddenField = document.getElementById("cardLookupInDeck")
+        const dropdown = document.getElementById("cardLookupInDeckDropdown")
 
+        let allChildren = dropdown.children;
+        // show and hide cards on input
+        // handle click on subelements
+        for (const cardBtn of allChildren) {
+            const cardName = cardBtn.getAttribute("data-cardName");
+            if (!cardName) {
+                // Handle the case where cardName is null
+                console.log("null :/");
+                continue;
+            }
+            console.log(cardLookupInDeckInput.value);
+            if (cardLookupInDeckInput.value == "") {
+                cardBtn.classList.add("d-none");
+                cardBtn.classList.remove("d-block");
+            } else if (cardName.toLowerCase().includes(cardLookupInDeckInput.value.toLowerCase())) {
+                cardBtn.classList.add("d-block");
+                cardBtn.classList.remove("d-none");
+            } else {
+                cardBtn.classList.add("d-none");
+                cardBtn.classList.remove("d-block");
+            }
+            cardBtn.addEventListener("click", () => {
+                hiddenField.value = cardName;
+                form.submit();
+            });
+        }
+
+
+    })
     function updateCSSVariables() {
         const animationElement = document.querySelector('.flip-card');
         const targetElement = document.querySelector('.pulledPile');

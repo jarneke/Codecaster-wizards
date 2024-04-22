@@ -188,7 +188,7 @@ export function getRandomNumber(min: number, max: number): number {
 export function getChance(cards: Magic.Card[], card: Magic.Card): { chance: number, amount: number } {
     let amountOfCard: number = cards.filter(e => e === card).length
     return {
-        chance: Math.floor((amountOfCard / cards.length) * 100),
+        chance: Math.round((amountOfCard / cards.length) * 10000) / 100,
         amount: amountOfCard
     }
 }

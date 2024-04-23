@@ -14,18 +14,17 @@
                 </select>
             </form>
             <form action="" class="col-12 col-sm-4 p-2" id="cardLookupInDeckForm">
-                <section class="form-control d-flex p-1">
-                    <!-- <button class="bg-white text-secondary p-1 border-0" type="submit" id="search">
-                        <i class="bi bi-search"></i>
-                    </button>
-                    <input aria-label="Search" placeholder="Zoek kaart in deck..." type="search" name="cardLookupInDeck" id="cardLookupInDeck" class="form-control border-0 p-0" value="<%= cardLookupInDeck %>" />
-                -->
+                <section class="">
                     <input type="hidden" name="cardLookupInDeck" id="cardLookupInDeck" value="">
-                    <div id="cardLookupInDeckDropdown" class="dropdown-content">
-                        <input type="text" placeholder="Zoek kaart in deck..." name="cardLookupInDeckInput" id="cardLookupInDeckInput">
-
+                    <div id="cardLookupInDeckDropdown" class="form-control dropdown-content d-flex flex-wrap">
+                        <div class="d-flex border-0 rounded-0 col-12" style="width: 100%;">
+                            <button class="bg-white text-secondary p-1 border-0" type="submit">
+                                <i class="pe-2 bi bi-search"></i>
+                            </button>
+                            <input class="form-control rounded-0 border-0 p-0" type="text" placeholder="Zoek kaart in deck..." name="cardLookupInDeckInput" id="cardLookupInDeckInput">
+                        </div>
                         <% for (let i=0; i < unpulledCards.length; i++) { %>
-                            <button type="button" class="d-none" data-cardName="<%= unpulledCards[i].name %>">
+                            <button type="button" class="d-flex justify-content-start col-12 bg-white border-0 border-top d-none" data-cardName="<%= unpulledCards[i].name %>">
                                 <%= unpulledCards[i].name %>
                             </button>
                             <% } %>

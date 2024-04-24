@@ -6,7 +6,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const allBtnPullCard = document.getElementsByClassName("btnPullCard");
     const allBtnResetCards = document.getElementsByClassName("btnResetCards");
     const pulledCardsBtn = document.getElementById("pulledCardsBtn");
-    const cardLookupInDeckInput = document.getElementById("cardLookupInDeckInput")
+    const cardLookupInDeckInput = document.getElementById("cardLookupInDeckInput");
+    const targetElement = document.getElementById('pulledCards');
+    const dropdown = document.getElementById("cardLookupInDeckDropdown")
+    const allChildren = dropdown.children;
+    const cardLookupInDeckForm = document.getElementById("cardLookupInDeckForm")
+    const hiddenField = document.getElementById("cardLookupInDeck")
+
+    for (let i = 1; i < allChildren.length; i++) {
+        const cardBtn = allChildren[i];
+        const cardName = cardBtn.getAttribute("data-cardName");
+        cardBtn.addEventListener("click", () => {
+            hiddenField.value = cardName;
+            console.log("submit");
+            cardLookupInDeckForm.submit();
+        });
+    }
     for (const btnPullCard of allBtnPullCard) {
         btnPullCard.addEventListener('click', (e) => {
             e.preventDefault();
@@ -34,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
     pulledCardsBtn.addEventListener("click", () => {
-        const targetElement = document.getElementById('pulledCards');
         // Scroll to the target element without modifying URL
         targetElement.scrollIntoView();
     })
@@ -42,32 +56,26 @@ document.addEventListener("DOMContentLoaded", () => {
     cardLookupInDeckInput.addEventListener("focusin", (e) => {
         e.preventDefault();
 
-        const dropdown = document.getElementById("cardLookupInDeckDropdown")
-        const allChildren = dropdown.children;
-
         for (let i = 1; i < allChildren.length; i++) {
             const cardBtn = allChildren[i];
-            cardBtn.classList.remove("d-none")
+            const cardName = cardBtn.getAttribute("data-cardName");
+            if (cardName.toLowerCase().includes(cardLookupInDeckInput.value.toLowerCase())) {
+                cardBtn.classList.remove("d-none")
+            }
         }
     })
-    cardLookupInDeckInput.addEventListener("focusout", (e) => {
-        e.preventDefault();
-
-        const dropdown = document.getElementById("cardLookupInDeckDropdown")
-        const allChildren = dropdown.children;
-
-        for (let i = 1; i < allChildren.length; i++) {
-            const cardBtn = allChildren[i];
-            cardBtn.classList.add("d-none")
+    document.addEventListener('mousedown', (e) => {
+        const isClickInsideInput = dropdown.contains(e.target);
+        if (!isClickInsideInput) {
+            for (let i = 1; i < allChildren.length; i++) {
+                const cardBtn = allChildren[i];
+                cardBtn.classList.add("d-none")
+            }
         }
-    })
+    });
+
     cardLookupInDeckInput.addEventListener("input", (e) => {
         cardLookupInDeckInputValue += e.data
-        const form = document.getElementById("cardLookupInDeckForm")
-        const hiddenField = document.getElementById("cardLookupInDeck")
-        const dropdown = document.getElementById("cardLookupInDeckDropdown")
-
-        const allChildren = dropdown.children;
         // show and hide cards on input
         // handle click on subelements
         for (let i = 1; i < allChildren.length; i++) {
@@ -89,13 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 cardBtn.classList.add("d-none");
                 cardBtn.classList.remove("d-block");
             }
-            cardBtn.addEventListener("click", () => {
-                hiddenField.value = cardName;
-                form.submit();
-            });
         }
-
-
     })
     function updateCSSVariables() {
         const animationElement = document.querySelector('.flip-card');

@@ -67,6 +67,8 @@ async function seed() {
                 if (loadedCardCount >= desiredCardCount) {
                     const mockDecks: i.Deck[] = generateMockDecks(allCards);
                     populateDatabase(mockDecks);
+                    console.log("seeded");
+
                     emitter.cancel();
                 }
             }
@@ -74,7 +76,6 @@ async function seed() {
         .on("error", (e) => console.log("ERROR: " + e));
 
     async function populateDatabase(mockDecks: i.Deck[]) {
-        await decksCollection.deleteMany({})
         if (await decksCollection.countDocuments() === 0) {
             await decksCollection.insertMany(mockDecks);
             console.log("Mock decks inserted into database");

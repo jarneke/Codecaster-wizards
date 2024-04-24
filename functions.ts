@@ -186,9 +186,16 @@ export function getRandomNumber(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 export function getChance(cards: Magic.Card[], card: Magic.Card): { chance: number, amount: number } {
-    let amountOfCard: number = cards.filter(e => e === card).length
+    console.log('Card object:', card); // Add this line for logging
+    let count = 0;
+    cards.forEach((arrCard, index) => {
+        if (arrCard && typeof arrCard === typeof card && arrCard.name === card.name) {
+            count++;
+        }
+    });
+    let amountOfCard: number = count;
     return {
         chance: Math.round((amountOfCard / cards.length) * 10000) / 100,
         amount: amountOfCard
-    }
+    };
 }

@@ -162,7 +162,7 @@ app.get("/deckdetails", (req, res) => {
 });
 
 let lastSelectedDeck: i.Deck;
-let selectedDeck: i.Deck | undefined;
+let selectedDeck: i.Deck | undefined = undefined;
 let unpulledCards: Magic.Card[] | undefined = [];
 let pulledCards: Magic.Card[];
 
@@ -213,21 +213,6 @@ app.get("/drawtest", async (req, res) => {
     // clear pulledCards
     pulledCards = [];
   } else {
-    // if cardLookupInDeck is not defined
-    if (cardLookupInDeck != undefined) {
-      console.log("step 1");
-
-      // find the card they are looking for
-      cardLookupInDeckCard = selectedDeck.cards.find(e => e.name.toLowerCase().includes(`${cardLookupInDeck}`.toLowerCase()))
-      console.log("step 2" + cardLookupInDeckCard?.name);
-
-      // if card is found and there are cards in unpulledCards
-      if (cardLookupInDeckCard != undefined && unpulledCards != undefined) {
-        // calculate the chance u have to pull that card from the unpulledCards
-        cardLookupInDeckCardChance = f.getChance(unpulledCards, cardLookupInDeckCard).chance
-        console.log("step 3" + cardLookupInDeckCardChance);
-      }
-    }
     // if clicked to pull a card
     if (whatToDo == "pull") {
       if (pulledCards !== undefined && unpulledCards !== undefined) {
@@ -247,6 +232,24 @@ app.get("/drawtest", async (req, res) => {
       // empty the pulled cards
       pulledCards = [];
     }
+    // if cardLookupInDeck is not defined
+    if (cardLookupInDeck != undefined && selectedDeck != undefined) {
+      console.log("step 1");
+
+      // find the card they are looking for
+      cardLookupInDeckCard = selectedDeck.cards.find(e => e.name.toLowerCase().includes(`${cardLookupInDeck}`.toLowerCase()))
+      console.log("step 2" + cardLookupInDeckCard?.name);
+
+      // if card is found and there are cards in unpulledCards
+      if (cardLookupInDeckCard != undefined && unpulledCards != undefined) {
+        console.log("cardLookupInDeckCard:", cardLookupInDeckCard);
+
+        // calculate the chance u have to pull that card from the unpulledCards
+        cardLookupInDeckCardChance = f.getChance(unpulledCards, cardLookupInDeckCard).chance
+        console.log("step 3" + cardLookupInDeckCardChance);
+      }
+    }
+
   }
   // --filter logic
   let filterAndSortedCards: Magic.Card[] = pulledCards;

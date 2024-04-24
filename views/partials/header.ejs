@@ -72,6 +72,7 @@
             <section class="offcanvas-body">
                 <form class="mb-5" action="/feedback" method="post">
                     <fieldset class="d-flex flex-column gap-1">
+                        <input type="hidden" name="toRedirectTo" id="toRedirectTo" value="<%= toRedirectTo %>">
                         <legend>Geef ons je feedback:</legend>
                         <label for="feedbackType">Welke soort feedback wil je geven?</label>
                         <select name="feedbackType" id="feedbackType" class="form-select p-2">

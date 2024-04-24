@@ -34,11 +34,15 @@ app.get("/", (req, res) => {
 app.post("/feedback", (req, res) => {
   const feedbackType = req.body.feedbackType;
   const feedback = req.body.feedback;
+  const redirectPage = req.body.toRedirectTo
 
   const feedBackItem: i.Feedback = {
     feedbackType: feedbackType,
     feedback: feedback,
   }
+
+  db.feedbacksCollection.insertOne(feedBackItem)
+  res.redirect(`/${redirectPage}`)
 })
 
 app.get("/home", async (req, res) => {
@@ -75,6 +79,8 @@ app.get("/home", async (req, res) => {
     // -- The Tab in the nav bar you want to have the orange color 
     // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
     tabToColor: 0,
+    // The page it should redirect to after feedback form is submitted
+    toRedirectTo: "home",
     // MAIN
     // -- filter system
     cardLookup: cardLookup,

@@ -20,6 +20,8 @@ async function exit() {
 }
 
 export const decksCollection: Collection<i.Deck> = client.db("Codecaster").collection<i.Deck>("Decks");
+export const feedbacksCollection: Collection<i.Feedback> = client.db("Codecaster").collection<i.Feedback>("Feedbacks");
+
 function getRandomNumber(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }

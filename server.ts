@@ -4,6 +4,7 @@ import * as i from "./interfaces";
 import Magic = require("mtgsdk-ts");
 import * as f from "./functions";
 import * as db from "./db";
+import bodyParser from "body-parser"
 
 
 export let allCards: Magic.Card[] = [];
@@ -24,10 +25,21 @@ app.set("port", 3000);
 app.set("view engine", "ejs");
 
 app.use(express.static("public"));
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.get("/", (req, res) => {
   res.render("landingspage");
 });
+
+app.post("/feedback", (req, res) => {
+  const feedbackType = req.body.feedbackType;
+  const feedback = req.body.feedback;
+
+  const feedBackItem: i.Feedback = {
+    feedbackType: feedbackType,
+    feedback: feedback,
+  }
+})
 
 app.get("/home", async (req, res) => {
   // params from route

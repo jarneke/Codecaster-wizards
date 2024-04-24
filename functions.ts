@@ -2,8 +2,6 @@ import Magic = require("mtgsdk-ts");
 import * as i from "./interfaces";
 import bcrypt from "bcrypt";
 
-const LocalStrategy = require('passport-local').Strategy
-
 /**
  * Function to get the cards u need to load the page
  * @param allItems The array of all the items
@@ -106,33 +104,4 @@ export function filterManaType(arrToFilter: Magic.Card[], manaReqQuery: any, col
         }
     }
     return arrToFilter;
-}
-
-export function initialize(passport: any, userEmail: any, userId: any) {
-    console.log("Initialize function called");
-    
-    const authenticateUser = async (email: string, password: string, done: any) => {
-        try {
-            const user: any = userEmail(email);
-            if (!user) {
-                return done(null, false, { message: "Deze e-mail heeft geen account" });
-            }
-    
-            const isMatch = await bcrypt.compare(password, user.password);
-            if (isMatch) {
-                return done(null, user);
-            } else {
-                return done(null, false, { message: 'Onjuist wachtwoord' });
-            }
-        } catch (error) {
-            console.error('Fout tijdens authenticatie:', error);
-            return done(error);
-        }
-    };
-
-    passport.use(new LocalStrategy({ usernameField: 'registerEmail' }, authenticateUser))
-    passport.serializeUser((user: any, done: any) => done(null, user.id))
-    passport.deserializeUser((id: string, done: any) => {
-        return done(null, userId(id))
-    })
 }

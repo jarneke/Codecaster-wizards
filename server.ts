@@ -6,20 +6,8 @@ import ejs from "ejs";
 import * as i from "./interfaces";
 import Magic = require("mtgsdk-ts");
 import * as f from "./functions";
-import passport from "passport";
 import bcrypt from "bcrypt";
-import flash from "express-flash";
-import session from "express-session";
-import methodOverride from "method-override";
 import { Rarity } from "mtgsdk-ts/out/IMagic";
-import { MongoUnexpectedServerResponseError, ObjectId } from "mongodb";
-
-
-
-f.initialize(passport,
-    (email: any) => users.find((user: any) => user.email === email),
-    (id: any) => users.find((user: any) => user._id === id)
-);
 
 const app = express();
 
@@ -30,18 +18,6 @@ app.set("port", 3000);
 app.set("view engine", "ejs");
 
 app.use(express.static("public"));
-app.use(express.urlencoded({ extended: false }))
-app.use(flash())
-
-app.use(session({
-    secret: process.env.SESSION_SECRET || 'default_secret',
-    resave: false,
-    saveUninitialized: false
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(methodOverride('_method'))
 
 app.get("/", (req, res) => {
     res.render("landingspage")
@@ -145,39 +121,6 @@ app.get("/drawtest", (req, res) => {
 })
 app.get("/profile", (req, res) => {
     res.render("profile")
-})
-
-app.post('/login', passport.authenticate('local', {
-    successRedirect: '/home',
-    failureRedirect: '/',
-    failureFlash: true
-}), (req, res) => {
-    res.redirect('/home');
-});
-
-app.post('/register', async (req, res) => {
-   try {
-        const hashedPassword = await bcrypt.hash(req.body.registerPassword, 10)
-        users.push({
-            firstName: req.body.registerFName,
-            lastName: req.body.registerName,
-            userName: req.body.registerUsername,
-            email: req.body.registerEmail,
-            description: "",
-            password: hashedPassword,
-            _id: new(ObjectId)
-        })
-        console.log(users);
-        
-        res.redirect('/')
-   } catch (error) {
-        console.log(error)
-        res.redirect('/error')
-   }
-})
-
-app.get('/error', (req, res) => {
-    res.render('error');
 })
 
 app.listen(app.get("port"), async () => {

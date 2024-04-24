@@ -1,5 +1,6 @@
 <section class="row d-flex justify-content-center mb-3">
     <form class="col-12 container d-flex justify-content-between flex-wrap">
+        <input type="hidden" name="decks" value="<%= deck %>">
         <fieldset class="col-12 mb-3">
             <section class="form-control d-flex">
                 <button class="bg-white text-secondary p-1 border-0" type="submit" id="search">
@@ -23,7 +24,7 @@
                         <% } %>
                 </select>
             </div>
-            <label class="ch1 col-12 ctext-white mt-2" for="manaCheckBoxes">Filter op mana kleur</label>
+            <label class="ch1 col-12 ctext-white mt-2" for="manaCheckBoxes">Filter op mana soort</label>
             <% if (whiteManaChecked=="true" ) {%>
                 <button type="button" class="rounded-circle border-0 mana-checkbox cbg-success" id="whiteMana" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="White mana (W)" style="width: 40px; height: 40px;" data-cbs-checked="true">
                     <img src="assets/images/mana_symbols/W.svg" alt="mana-symbol-W">
@@ -55,7 +56,7 @@
                                             <button class="rounded-circle border-0 cbg-danger mana-checkbox" id="blackMana" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Black mana (B)" style="width: 40px; height: 40px;" data-cbs-checked="false">
                                                 <img src="assets/images/mana_symbols/B.svg" alt="mana-symbol-B">
                                             </button>
-                                            <input type="hidden" name="blackManaChecked" id="blackManaChecked" value="true">
+                                            <input type="hidden" name="blackManaChecked" id="blackManaChecked" value="false">
                                             <% } %>
                                                 <% if (greenManaChecked=="true" ) {%>
                                                     <button class="rounded-circle border-0 cbg-success mana-checkbox" id="greenMana" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Green mana (G)" style="width: 40px; height: 40px;" data-cbs-checked="true">
@@ -107,55 +108,56 @@
             <div class="form-control d-flex ps-0">
                 <% if (sortDirection=="up" ) {%>
                     <button id="sortDirectionButton" class="border-0 btn cbg-transparent" data-cbs-direction="up"><i class="bi bi-sort-up" data-cbs-direction="up"></i></button>
-                    <input type="hidden" name="direction" id="sortDirection" value="up">
+                    <input type="hidden" name="sortDirection" id="sortDirection" value="up">
                     <% } else { %>
                         <button id="sortDirectionButton" class="border-0 btn cbg-transparent" data-cbs-direction="down"><i class="bi bi-sort-down" data-cbs-direction="down"></i></button>
                         <input type="hidden" name="sortDirection" id="sortDirection" value="down">
                         <% } %>
                             <select class="form-select border-0" name="sort" id="sort">
-                                <option <% if (type==="" ) { %>
+                                <option <% if (sort==="" ) { %>
                                     selected
                                     <% } %>
                                         value="">Sorteer op ...
                                 </option>
-                                <option <% if (type==="name" ) { %>
+                                <option <% if (sort==="name" ) { %>
                                     selected
                                     <% } %>
                                         value="name">naam
                                 </option>
-                                <option <% if (type==="cmc" ) { %>
+                                <option <% if (sort==="cmc" ) { %>
                                     selected
                                     <% } %>
                                         value="cmc">omgerekende manakost
                                 </option>
-                                <option <% if (type==="id" ) { %>
+                                <option <% if (sort==="id" ) { %>
                                     selected
                                     <% } %>
                                         value="id">id
                                 </option>
-                                <option <% if (type==="mId" ) { %>
+                                <option <% if (sort==="multiverseid" ) { %>
                                     selected
                                     <% } %>
-                                        value="mId">multiverse id
+                                        value="multiverseid">multiverse id
                                 </option>
-                                <option <% if (type==="artist" ) { %>
+                                <option <% if (sort==="artist" ) { %>
                                     selected
                                     <% } %>
                                         value="artist">artiest
                                 </option>
-                                <option <% if (type==="rarity" ) { %>
+                                <option <% if (sort==="rarity" ) { %>
                                     selected
                                     <% } %>
                                         value="rarity">zeldzaamheid
                                 </option>
-                                <option <% if (type==="type" ) { %>
+                                <option <% if (sort==="type" ) { %>
                                     selected
                                     <% } %>
                                         value="type">type
                                 </option>
                             </select>
             </div>
-            <button type="submit" class="mt-5 btn btn-dark col-12">Pas filter en sortering toe</button>
+            <button type="submit" class="mt-5 btn btn-dark col-12"><i class="bi bi-funnel-fill"></i> Pas filter en sortering toe</button>
+            <a href="/<%= pageLink %>" class="mt-2 col-5 btn btn-dark col-12"><i class="bi bi-arrow-clockwise"></i> Reset filter en sortering</a>
         </fieldset>
     </form>
 </section>

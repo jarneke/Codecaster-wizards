@@ -1,11 +1,10 @@
 <%- include("partials/header") %>
 
-<main
-  class="album py-5 bg-light"
-  style="
+<main class="album py-5 bg-light" style="
     background-image: url(assets/images/background/MTGBackground.jpg);
-    background-size: cover;
-  ">
+    background-size: cover;">
+  
+  
   
   <%- include("partials/paginationShort") %>
 
@@ -36,7 +35,7 @@
                 <section class="btn-group">
                   <a
                     href="/decks/<%= deck.deckName %>"
-                    class="btn btn-lg btn-outline-secondary ctext-white"
+                    class="btn btn-lg btn-dark ctext-white"
                     >bekijk</a
                   >
                 </section>
@@ -51,9 +50,13 @@
       </section>
     </section>
   </section>
-  
-  <%- include("partials/paginationShort") %>
 
+
+
+
+
+
+ <%- include("partials/paginationShort") %>
 
 </main>
 

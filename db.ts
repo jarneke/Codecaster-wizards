@@ -29,7 +29,7 @@ function generateMockDecks(allCards: Magic.Card[]): i.Deck[] {
     // Generate 9 mock decks
     for (let i = 1; i <= 9; i++) {
         const deckName = `Deck ${i}`;
-        const deckImageUrl = `https://example.com/deck${i}.jpg`;
+        const deckImageUrl = `/assets/images/decks/Deck${i}.jpg`;
         const cardsCount = getRandomNumber(5, 60);
         const cards: Magic.Card[] = [];
 
@@ -76,6 +76,7 @@ async function seed() {
         .on("error", (e) => console.log("ERROR: " + e));
 
     async function populateDatabase(mockDecks: i.Deck[]) {
+        // decksCollection.deleteMany({});
         if (await decksCollection.countDocuments() === 0) {
             await decksCollection.insertMany(mockDecks);
             console.log("Mock decks inserted into database");

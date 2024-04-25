@@ -121,6 +121,8 @@ app.get("/home", async (req, res) => {
 });
 
 app.get("/decks", (req, res) => {
+  allDecks = [];
+  getTempDecks();
   // params from route
   let pageQueryParam = req.query.page;
 
@@ -156,8 +158,11 @@ app.get("/decks", (req, res) => {
 });
 
 app.get("/decks/:deckName", (req, res) => {
-  // params from route
 
+  allDecks = [];
+  getTempDecks();
+
+  // params from route
   let cardLookup = req.query.cardLookup;
   let sort = req.query.sort;
   let sortDirection = req.query.sortDirection;

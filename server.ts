@@ -307,6 +307,8 @@ app.get("/drawtest", async (req, res) => {
     // -- The Tab in the nav bar you want to have the orange color
     // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
     tabToColor: 2,
+    // The page it should redirect to after feedback form is submitted
+    toRedirectTo: "drawtest",
     // MAIN
     // -- filter system
     cardLookup: cardLookup,
@@ -388,9 +390,6 @@ app.get("/editDeck", (req, res) => {
 });
 
 app.listen(app.get("port"), async () => {
-  console.log(
-    "[ - SERVER - ] Listening at http://localhost:" + app.get("port")
-  );
   // Get all the cards from the api, there are allot so takes a while before all cards get loaded
   // The SDK thankfully makes it so that we can load them in in batches, so the app will work and will graduatly load in more.
   Magic.Cards.all({ page: 1, pageSize: 100 })
@@ -409,4 +408,7 @@ app.listen(app.get("port"), async () => {
     .on("error", (e) => console.log("ERROR: " + e));
 
   await db.connect()
+  console.log(
+    "[ - SERVER - ] Listening at http://localhost:" + app.get("port")
+  );
 });

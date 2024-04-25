@@ -4,7 +4,7 @@ import * as i from "./interfaces";
 import Magic = require("mtgsdk-ts");
 import * as f from "./functions";
 import * as db from "./db";
-
+import bodyParser from "body-parser";
 
 export let allCards: Magic.Card[] = [];
 
@@ -12,7 +12,14 @@ async function getTempDecks() {
   allDecks = await db.decksCollection.find({}).toArray();
 }
 
+async function getTips() {
+  allTips = await db.tipsCollection.find({}).toArray();
+}
+
 const app = express();
+
+let allTips: i.Tips[] = [];
+getTips();
 
 let allDecks: i.Deck[] = [];
 getTempDecks();
@@ -24,11 +31,11 @@ app.set("port", 3000);
 app.set("view engine", "ejs");
 
 app.use(express.static("public"));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   res.render("landingspage");
 });
-
 
 app.get("/home", async (req, res) => {
   // params from route
@@ -47,12 +54,34 @@ app.get("/home", async (req, res) => {
   // -- pagination
   let pageQueryParam = req.query.page;
   // filter logic
-  let filteredAndSortedCards: Magic.Card[] = f.filterAndSortCards(allCards, cardLookup, filterType, filterRarity, whiteManaChecked, blueManaChecked, blackManaChecked, greenManaChecked, redManaChecked, colorlessManaChecked, sort, sortDirection)
+  let filteredAndSortedCards: Magic.Card[] = f.filterAndSortCards(
+    allCards,
+    cardLookup,
+    filterType,
+    filterRarity,
+    whiteManaChecked,
+    blueManaChecked,
+    blackManaChecked,
+    greenManaChecked,
+    redManaChecked,
+    colorlessManaChecked,
+    sort,
+    sortDirection
+  );
   // Pagination
   let pageSize: number = 12;
-  let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, filteredAndSortedCards);
+  let pageData: i.PageData = f.handlePageClickEvent(
+    req.query,
+    `${pageQueryParam}`,
+    pageSize,
+    filteredAndSortedCards
+  );
 
-  let cardsToLoad = f.getCardsForPage(filteredAndSortedCards, pageData.page, pageSize)
+  let cardsToLoad = f.getCardsForPage(
+    filteredAndSortedCards,
+    pageData.page,
+    pageSize
+  );
   // Render
   res.render("home", {
     // HEADER
@@ -61,7 +90,7 @@ app.get("/home", async (req, res) => {
     jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
     // -- The title of the page
     title: "Home page",
-    // -- The Tab in the nav bar you want to have the orange color 
+    // -- The Tab in the nav bar you want to have the orange color
     // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
     tabToColor: 0,
     // MAIN
@@ -76,7 +105,8 @@ app.get("/home", async (req, res) => {
     blackManaChecked: blackManaChecked == undefined ? "true" : blackManaChecked,
     greenManaChecked: greenManaChecked == undefined ? "true" : greenManaChecked,
     redManaChecked: redManaChecked == undefined ? "true" : redManaChecked,
-    colorlessManaChecked: colorlessManaChecked == undefined ? "true" : colorlessManaChecked,
+    colorlessManaChecked:
+      colorlessManaChecked == undefined ? "true" : colorlessManaChecked,
     sort: sort,
     sortDirection: sortDirection,
     deck: "",
@@ -86,10 +116,9 @@ app.get("/home", async (req, res) => {
     totalPages: pageData.totalPages,
     filterUrl: pageData.filterUrl,
     // -- cards
-    cards: cardsToLoad
-  })
-})
-
+    cards: cardsToLoad,
+  });
+});
 
 app.get("/decks", (req, res) => {
   // params from route
@@ -126,7 +155,6 @@ app.get("/decks", (req, res) => {
   });
 });
 
-
 app.get("/decks/:deckName", (req, res) => {
   // params from route
 
@@ -135,33 +163,64 @@ app.get("/decks/:deckName", (req, res) => {
   let sortDirection = req.query.sortDirection;
   let pageQueryParam = req.query.page;
 
-  let selectedDeck : i.Deck | undefined = allDecks.find(deck => {
+  let selectedDeck: i.Deck | undefined = allDecks.find((deck) => {
     return deck.deckName === req.params.deckName;
   });
+  let amountMap = new Map<Magic.Card, number>();
 
-  
+
+  for (const card of selectedDeck!.cards) {
+    const existingCard = Array.from(amountMap.keys()).find(c => c.name === card.name);
+    if (existingCard) {
+      amountMap.set(existingCard, amountMap.get(existingCard)! + 1);
+    } else {
+      amountMap.set(card, 1);
+    }
+  }
   // Pagination
   let pageSize: number = 6;
-  let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, selectedDeck?.cards);
+  let pageData: i.PageData = f.handlePageClickEvent(
+    req.query,
+    `${pageQueryParam}`,
+    pageSize,
+    Array.from(amountMap.keys())
+  );
 
-  let cardsToLoad = undefined;
+  let cardsToLoad: i.Card[] | undefined = undefined;
+
+  let amountLandcards: number | undefined = undefined;
+
+  let avgManaCost: number | undefined = undefined;
 
   if (selectedDeck?.cards !== undefined) {
-   cardsToLoad = f.getCardsForPage(selectedDeck?.cards, pageData.page, pageSize)
+   avgManaCost = f.getAvgManaCost(selectedDeck?.cards)
+    amountLandcards = selectedDeck.cards.filter((card) =>
+      card.types.includes("Land")
+    ).length;
+
+    amountMap = f.getCardWAmauntForPage(
+      amountMap,
+      pageData.page,
+      pageSize
+    );
   } else {
     console.log("selected deck cards = undefined");
-    
-  };
+  }
+
   
-  let modalCardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize / 2)
+  
+  for (const [card, amount] of amountMap) {
+      console.log(`${card.name}: ${amount}`); 
+    }
+  
 
   res.render("deckdetails", {
     // HEADER
     user: i.tempUser,
     // -- The names of the js files you want to load on the page.
-    jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
+    jsFiles: [],
     // -- The title of the page
-    title: "Home page",
+    title: selectedDeck?.deckName,
     // -- The Tab in the nav bar you want to have the orange color
     // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
     tabToColor: 1,
@@ -175,9 +234,26 @@ app.get("/decks/:deckName", (req, res) => {
     totalPages: pageData.totalPages,
     filterUrl: pageData.filterUrl,
     // -- cards
-    cards: cardsToLoad,
-    modalCards: modalCardsToLoad,
+    cards: amountMap,
+    selectedDeck: selectedDeck,
+    tip: allTips[f.getRandomNumber(0, allTips.length - 1)],
+    amountLandcards: amountLandcards,
+    avgManaCost: avgManaCost
   });
+});
+
+app.post("/changeDeckName", async (req, res) => {
+  const name = req.body.deckNameInput;
+  const oldName = req.body.oldDeckName;
+
+  const oldDeck = await db.decksCollection.findOne({ deckName: oldName });
+
+  db.decksCollection.updateOne(
+    { _id: oldDeck?._id },
+    { $set: { deckName: name } }
+  );
+
+  res.redirect(`/editDeck/${name}`);
 });
 
 let lastSelectedDeck: i.Deck;
@@ -208,27 +284,27 @@ app.get("/drawtest", async (req, res) => {
   let selectedDeckQuery = req.query.decks;
   // Logic
   // Find What Deck is selected
-  selectedDeck = allDecks.find(e => e.deckName == selectedDeckQuery)
+  selectedDeck = allDecks.find((e) => e.deckName == selectedDeckQuery);
 
   // if deck is not found,
   // set to deck nr. 1
   // else set to lastDeck
   if (selectedDeck === undefined) {
     if (lastSelectedDeck == undefined) {
-      selectedDeck = allDecks[0]
+      selectedDeck = allDecks[0];
     } else {
       selectedDeck = lastSelectedDeck;
     }
   }
 
-  let cardLookupInDeckCard: Magic.Card | undefined = undefined
-  let cardLookupInDeckCardChance: number | undefined = undefined
+  let cardLookupInDeckCard: Magic.Card | undefined = undefined;
+  let cardLookupInDeckCardChance: number | undefined = undefined;
   // if deck is diffrent from last load
   if (lastSelectedDeck !== selectedDeck) {
     // set unpulledCards to cards of new deck
     unpulledCards = [...selectedDeck.cards];
     // Shuffle cards
-    unpulledCards = [...f.shuffleCards(unpulledCards)]
+    unpulledCards = [...f.shuffleCards(unpulledCards)];
     // clear pulledCards
     pulledCards = [];
   } else {
@@ -236,7 +312,7 @@ app.get("/drawtest", async (req, res) => {
     if (whatToDo == "pull") {
       if (pulledCards !== undefined && unpulledCards !== undefined) {
         // get the last card from the unpulled cards
-        let card = unpulledCards.pop()
+        let card = unpulledCards.pop();
         if (card !== undefined) {
           // if it exists add it as the first card in pulledCards
           pulledCards.unshift(card);
@@ -245,9 +321,9 @@ app.get("/drawtest", async (req, res) => {
       // if clicked to reset
     } else if (whatToDo == "reset") {
       // reset the unpulledcards to the cards of the selected deck
-      unpulledCards = [...selectedDeck.cards]
+      unpulledCards = [...selectedDeck.cards];
       // shuffle the cards
-      unpulledCards = [...f.shuffleCards(unpulledCards)]
+      unpulledCards = [...f.shuffleCards(unpulledCards)];
       // empty the pulled cards
       pulledCards = [];
     }
@@ -256,7 +332,9 @@ app.get("/drawtest", async (req, res) => {
       console.log("step 1");
 
       // find the card they are looking for
-      cardLookupInDeckCard = selectedDeck.cards.find(e => e.name.toLowerCase().includes(`${cardLookupInDeck}`.toLowerCase()))
+      cardLookupInDeckCard = selectedDeck.cards.find((e) =>
+        e.name.toLowerCase().includes(`${cardLookupInDeck}`.toLowerCase())
+      );
       console.log("step 2" + cardLookupInDeckCard?.name);
 
       // if card is found and there are cards in unpulledCards
@@ -264,45 +342,76 @@ app.get("/drawtest", async (req, res) => {
         console.log("cardLookupInDeckCard:", cardLookupInDeckCard);
 
         // calculate the chance u have to pull that card from the unpulledCards
-        cardLookupInDeckCardChance = f.getChance(unpulledCards, cardLookupInDeckCard).chance
+        cardLookupInDeckCardChance = f.getChance(
+          unpulledCards,
+          cardLookupInDeckCard
+        ).chance;
         console.log("step 3" + cardLookupInDeckCardChance);
       }
     }
-
   }
   // --filter logic
   let filterAndSortedCards: Magic.Card[] = pulledCards;
   if (pulledCards !== undefined) {
-    filterAndSortedCards = [...f.filterAndSortCards(pulledCards, cardLookup, filterType, filterRarity, whiteManaChecked, blueManaChecked, blackManaChecked, greenManaChecked, redManaChecked, colorlessManaChecked, sort, sortDirection)]
+    filterAndSortedCards = [
+      ...f.filterAndSortCards(
+        pulledCards,
+        cardLookup,
+        filterType,
+        filterRarity,
+        whiteManaChecked,
+        blueManaChecked,
+        blackManaChecked,
+        greenManaChecked,
+        redManaChecked,
+        colorlessManaChecked,
+        sort,
+        sortDirection
+      ),
+    ];
   }
 
   // get the cardToShow (always the first card in pulledCards)
   let cardToShow: Magic.Card = pulledCards[0];
   // initialize nextCard
-  let nextCard: Magic.Card | undefined = undefined
+  let nextCard: Magic.Card | undefined = undefined;
   // if there is still a card in unpulled cards
   if (unpulledCards !== undefined) {
     // set nextCard to the last index of unpulledCards
-    nextCard = unpulledCards[unpulledCards.length - 1]
+    nextCard = unpulledCards[unpulledCards.length - 1];
   }
 
   // calculate the chanceData of the cardToSHow
-  let chanceData = f.getChance(selectedDeck.cards, cardToShow)
+  let chanceData = f.getChance(selectedDeck.cards, cardToShow);
   // save selectedDeck to be used next load of page
   lastSelectedDeck = selectedDeck;
 
   // Pagination
   let pageSize: number = 6;
-  let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, filterAndSortedCards);
+  let pageData: i.PageData = f.handlePageClickEvent(
+    req.query,
+    `${pageQueryParam}`,
+    pageSize,
+    filterAndSortedCards
+  );
 
-  let cardsToShow = f.getCardsForPage(filterAndSortedCards, pageData.page, pageSize)
-
+  let cardsToShow = f.getCardsForPage(
+    filterAndSortedCards,
+    pageData.page,
+    pageSize
+  );
 
   res.render("drawtest", {
     // HEADER
     user: i.tempUser,
     // -- The names of the js files you want to load on the page.
-    jsFiles: ["submitOnChange", "cardsModal", "manaCheckbox", "tooltips", "drawCard"],
+    jsFiles: [
+      "submitOnChange",
+      "cardsModal",
+      "manaCheckbox",
+      "tooltips",
+      "drawCard",
+    ],
     // -- The title of the page
     title: "Deck simuleren",
     // -- The Tab in the nav bar you want to have the orange color
@@ -320,7 +429,8 @@ app.get("/drawtest", async (req, res) => {
     blackManaChecked: blackManaChecked == undefined ? "true" : blackManaChecked,
     greenManaChecked: greenManaChecked == undefined ? "true" : greenManaChecked,
     redManaChecked: redManaChecked == undefined ? "true" : redManaChecked,
-    colorlessManaChecked: colorlessManaChecked == undefined ? "true" : colorlessManaChecked,
+    colorlessManaChecked:
+      colorlessManaChecked == undefined ? "true" : colorlessManaChecked,
     sort: sort,
     sortDirection: sortDirection,
     deck: deck,
@@ -350,34 +460,57 @@ app.get("/profile", (req, res) => {
   res.render("profile");
 });
 
-app.get("/editDeck", (req, res) => {
+app.get("/editDeck/:deckName", async (req, res) => {
+  allDecks = [];
+  await getTempDecks();
+  let selectedDeck: i.Deck | undefined = allDecks.find((deck) => {
+    return deck.deckName === req.params.deckName;
+  });
+
   // params from route
   let pageQueryParam = req.query.page;
 
   // Pagination
   let pageSize: number = 6;
-  let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, allCards);
+  let pageData: i.PageData | undefined = undefined;
+  if (selectedDeck !== undefined) {
+    pageData = f.handlePageClickEvent(
+      req.query,
+      `${pageQueryParam}`,
+      pageSize,
+      selectedDeck?.cards
+    );
+  }
 
-  let cardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize)
-  let modalCardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize / 2)
+  let cardsToLoad = undefined;
+
+  if (selectedDeck?.cards !== undefined && pageData !== undefined) {
+    cardsToLoad = f.getCardsForPage(
+      selectedDeck?.cards,
+      pageData.page,
+      pageSize / 2
+    );
+  } else {
+    console.log("selected deck cards = undefined");
+  }
 
   res.render("editDeck", {
     // HEADER
     user: i.tempUser,
     // -- The names of the js files you want to load on the page.
-    jsFiles: ["deckname"],
+    jsFiles: [],
     // -- The title of the page
     title: "Edit page",
     // -- The Tab in the nav bar you want to have the orange color
     // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
     tabToColor: 1,
     // -- pagination
-    page: pageData.page,
-    totalPages: pageData.totalPages,
-    filterUrl: pageData.filterUrl,
+    page: pageData?.page,
+    totalPages: pageData?.totalPages,
+    filterUrl: pageData?.filterUrl,
     // -- cards
     cards: cardsToLoad,
-    modalCards: modalCardsToLoad,
+    selectedDeck: selectedDeck,
   });
 });
 
@@ -394,7 +527,7 @@ app.listen(app.get("port"), async () => {
         allCards.push(card);
         allCardTypes = f.getAllCardTypes(allCards);
         allCardRarities = f.getAllRarities(allCards);
-        allCards[0].rarity
+        allCards[0].rarity;
       }
     })
     // If all cards are loaded display message
@@ -402,5 +535,5 @@ app.listen(app.get("port"), async () => {
     // If error while loading, display error
     .on("error", (e) => console.log("ERROR: " + e));
 
-  await db.connect()
+  await db.connect();
 });

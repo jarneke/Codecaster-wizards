@@ -7,21 +7,21 @@
         <section class="col-12 d-flex gap-3 flex-wrap">
           <img
             class="img-fluid rounded col-12 col-lg-5 mb-4 mb-lg-7"
-            src="/assets/images/decks/MTGDeck.jpg"
+            src="<%= selectedDeck.deckImageUrl %>"
             alt="deck placeholder"/>
           <section class="col-lg-5">
-            <h1 class="font-weight-light text-light ch1"> <%= cards.deckName %> </h1>
+            <h1 class="font-weight-light text-light ch1"> <%= selectedDeck.deckName %> </h1>
             <ul class="text-light">
-              <li>Aantal kaarten: 6/60</li>
+              <li>Aantal kaarten: <%= selectedDeck.cards.length %>/60</li>
               <br />
-              <li>Aantal landkaarten: 0</li>
+              <li>Aantal landkaarten: <%= amountLandcards %></li>
               <br />
-              <li>Gemiddelde manacost: 6</li>
+              <li>Gemiddelde manacost: <%= avgManaCost %>  </li>
             </ul>
-            
+
             <br />
 
-            <a href="/editDeck"
+            <a href="/editDeck/<%= selectedDeck.deckName %>"
               ><button
                 type="button"
                 class="btn btn-lg btn-dark ctext-white"
@@ -38,9 +38,8 @@
   <section class="tips">
     <article class="card text-white bg-secondary my-5 py-4 text-center mx-5">
       <article class="tip-body">
-        <p class="text-white m-0 ch1 fs-3">
-          Tip van de dag: Lees de kaartbeschrijving zeer grondig!
-        </p>
+        <p class="text-white m-0 ch1 fs-3">Tip van de developer:</p>
+        <p> <%= tip.tip %> </p>
       </article>
     </article>
   </section>
@@ -51,7 +50,7 @@
     <section
       class="container gx-4 gx-lg-5 mx-5 d-flex flex-wrap col-10 justify-content-center"
     >
-      <% for (const card of cards) { %>
+      <% for (const [card, amount] of cards) { %>
       <article class="col-12 col-md-6 col-lg-4 col-xxl-4 mb-5 px-2 px-2">
         <article
           class="card h-100 p-3"
@@ -65,14 +64,6 @@
           >
             <a
               href="#"
-              data-bs-toggle="modal"
-              data-bs-target="#cardModal"
-              data-bs-name="<%= card.name %>"
-              data-bs-manaCost="<%= card.manaCost %>"
-              data-bs-cmc="<%= card.cmc %>"
-              data-bs-colorId="<%= card.colorIdentity %>"
-              data-bs-rarity="<%= card.rarity %>"
-              data-bs-imageUrl="<%= card.imageUrl %>"
               class="p-0"
             >
               <img
@@ -83,7 +74,7 @@
               />
             </a>
           </article>
-          <h2 class="card-title text-white ch1 mt-2 text-center">aantal : 1</h2>
+          <h2 class="card-title text-white ch1 mt-2 text-center">aantal : <%= amount %> </h2>
         </article>
       </article>
       <% } %>

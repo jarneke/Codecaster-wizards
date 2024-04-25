@@ -13,6 +13,26 @@ export function getCardsForPage(allItems: Magic.Card[], page: number, pageSize: 
     const endIndex = startIndex + pageSize;
     return allItems.slice(startIndex, endIndex);
 }
+
+export function getCardWAmauntForPage(allItems: Map<Magic.Card, number>, page: number, pageSize: number): Map<Magic.Card, number> {
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const slicedItems = new Map<Magic.Card, number>();
+
+    let index = 0;
+    // Iterate over allItems and add items within the startIndex and endIndex range to slicedItems
+    for (const [card, quantity] of allItems) {
+        if (index >= startIndex && index < endIndex) {
+            slicedItems.set(card, quantity);
+        }
+        index++;
+        // If we've reached the endIndex, exit the loop
+        if (index === endIndex) break;
+    }
+
+    return slicedItems;
+}
+
 /**
  * Function to get The total amount of pages
  * @param allItems The array of all the items
@@ -198,4 +218,20 @@ export function getChance(cards: Magic.Card[], card: Magic.Card): { chance: numb
         chance: Math.round((amountOfCard / cards.length) * 10000) / 100,
         amount: amountOfCard
     };
+}
+
+export function getTotalManaCost(cardsArray : i.Card[]){
+    let totalManaCost: number = 0;
+
+    cardsArray.forEach(card => {
+        totalManaCost += card.cmc;
+    });
+
+    return totalManaCost;
+}
+
+export function getAvgManaCost(cardsArray : i.Card[]){
+    let totalManaCost = getTotalManaCost(cardsArray);
+
+    return Math.round((totalManaCost/ cardsArray.length) * 100 ) / 100;
 }

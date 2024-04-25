@@ -20,6 +20,8 @@ async function exit() {
 }
 
 export const decksCollection: Collection<i.Deck> = client.db("Codecaster").collection<i.Deck>("Decks");
+export const tipsCollection: Collection<i.Tips> = client.db("Codecaster").collection<i.Tips>("Tips");
+
 function getRandomNumber(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -67,6 +69,7 @@ async function seed() {
                 if (loadedCardCount >= desiredCardCount) {
                     const mockDecks: i.Deck[] = generateMockDecks(allCards);
                     populateDatabase(mockDecks);
+                    populateTips();
                     console.log("seeded");
 
                     emitter.cancel();
@@ -97,35 +100,38 @@ export async function connect() {
 }
 
 
-const mtgTips : i.Tips[] = [
-    {tip: "Pay attention to your mana curve - make sure you have a good distribution of low-cost, mid-cost, and high-cost spells."},
-    {tip: "Don't forget your land drops - playing a land each turn is crucial for hitting your mana requirements."},
-    {tip: "Know the stack - understand how the stack works and the implications of playing spells and abilities at different times."},
-    {tip: "Read the cards carefully - sometimes the wording can make a big difference in how a card functions."},
-    {tip: "Keep track of life totals - both yours and your opponent's. It's easy to forget, but it can be crucial for planning your strategy."},
-    {tip: "Plan your turns ahead - think about your plays during your opponent's turn to maximize efficiency."},
-    {tip: "Don't overextend - be cautious about committing too many resources to the board at once, as it can leave you vulnerable to board wipes."},
-    {tip: "Know when to attack and when to hold back - sometimes it's better to wait for a better opportunity to attack rather than rushing in."},
-    {tip: "Sideboard effectively - have a plan for dealing with common matchups and adjust your deck accordingly between games."},
-    {tip: "Practice, practice, practice - the more you play, the better you'll become at understanding the game's intricacies and improving your skills."},
-    {tip: "Don't get discouraged by losses - learning from your mistakes is an important part of becoming a better player."},
-    {tip: "Have fun! - Magic is a game, so make sure to enjoy yourself and appreciate the experience, win or lose."}
-];
+const mtgTips: i.Tips[] = [
+    { tip: "Let op je mana curve - zorg voor een goede verdeling van goedkope, mid-range en dure spreuken." },
+    { tip: "Vergeet je landdrops niet - het spelen van een land per beurt is cruciaal om aan je manavereisten te voldoen." },
+    { tip: "Ken de stack - begrijp hoe de stack werkt en de implicaties van het spelen van spreuken en vaardigheden op verschillende momenten." },
+    { tip: "Lees de kaarten zorgvuldig door - soms kan de bewoording een groot verschil maken in hoe een kaart functioneert." },
+    { tip: "Houd de levens totalen bij - zowel die van jou als van je tegenstander. Het is gemakkelijk te vergeten, maar het kan cruciaal zijn voor het plannen van je strategie." },
+    { tip: "Plan je beurten vooruit - denk na over je plays tijdens de beurt van je tegenstander om de efficiëntie te maximaliseren." },
+    { tip: "Breid niet te ver uit - wees voorzichtig met het inzetten van te veel middelen op het bord in één keer, want dit kan je kwetsbaar maken voor board wipes." },
+    { tip: "Weet wanneer je moet aanvallen en wanneer je je moet terugtrekken - soms is het beter om te wachten op een betere gelegenheid om aan te vallen dan je te haasten." },
+    { tip: "Sideboard effectief - heb een plan om met veelvoorkomende matchups om te gaan en pas je deck dienovereenkomstig aan tussen games." },
+    { tip: "Oefening, oefening, oefening - hoe meer je speelt, hoe beter je de complexiteit van het spel leert begrijpen en je vaardigheden verbetert." },
+    { tip: "Raak niet ontmoedigd door nederlagen - leren van je fouten is een belangrijk onderdeel om een betere speler te worden." },
+    { tip: "Veel plezier! - Magic is een spel, dus zorg ervoor dat je je amuseert en de ervaring waardeert, winnen of verliezen." },
+  ];
+  
 
 export async function populateTips(){
     try {
         client.connect();
 
         // Collectie leegmaken
-        const emptyTips = await client.db("Codecaster").collection("Tips").deleteMany({});
+        // const emptyTips = await client.db("Codecaster").collection("Tips").deleteMany({});
 
         // Array van tips toevoegen aan dbm
-        await client.db("Codecaster").collection("Tips").insertMany(mtgTips);
+        await tipsCollection.deleteMany({});
+        await tipsCollection.insertMany(mtgTips);
+
+        // Tips uitlezen
+        // const tips = await client.db("Codecaster").collection("Tips").find({}).toArray();
 
 
     } catch (e) {
         console.error(e);
-    } finally {
-        client.close();
     }
 }

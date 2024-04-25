@@ -36,3 +36,8 @@ export interface DeckCard {
     card: Magic.Card,
     amount: number,
 }
+
+export interface Tips {
+    _id?: ObjectId,
+    tip: string
+}

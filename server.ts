@@ -129,22 +129,30 @@ app.get("/decks", (req, res) => {
 
 app.get("/decks/:deckName", (req, res) => {
   // params from route
+
   let cardLookup = req.query.cardLookup;
   let sort = req.query.sort;
   let sortDirection = req.query.sortDirection;
   let pageQueryParam = req.query.page;
 
-  let deck: i.Deck | undefined = allDecks.find(e => e.deckName == req.params.deckName)
-  if (deck == undefined) {
-    console.log("No Deck Found");
-    
-    deck = allDecks[0]
-  }
+  let selectedDeck : i.Deck | undefined = allDecks.find(deck => {
+    return deck.deckName === req.params.deckName;
+  });
+
+  
   // Pagination
   let pageSize: number = 6;
-  let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, allCards);
+  let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, selectedDeck?.cards);
 
-  let cardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize)
+  let cardsToLoad = undefined;
+
+  if (selectedDeck?.cards !== undefined) {
+   cardsToLoad = f.getCardsForPage(selectedDeck?.cards, pageData.page, pageSize)
+  } else {
+    console.log("selected deck cards = undefined");
+    
+  };
+  
   let modalCardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize / 2)
 
   res.render("deckdetails", {
@@ -337,7 +345,6 @@ app.get("/drawtest", async (req, res) => {
     amount: chanceData.amount,
   });
 });
-
 
 app.get("/profile", (req, res) => {
   res.render("profile");

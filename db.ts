@@ -95,3 +95,37 @@ export async function connect() {
         console.error(error);
     }
 }
+
+
+const mtgTips : i.Tips[] = [
+    {tip: "Pay attention to your mana curve - make sure you have a good distribution of low-cost, mid-cost, and high-cost spells."},
+    {tip: "Don't forget your land drops - playing a land each turn is crucial for hitting your mana requirements."},
+    {tip: "Know the stack - understand how the stack works and the implications of playing spells and abilities at different times."},
+    {tip: "Read the cards carefully - sometimes the wording can make a big difference in how a card functions."},
+    {tip: "Keep track of life totals - both yours and your opponent's. It's easy to forget, but it can be crucial for planning your strategy."},
+    {tip: "Plan your turns ahead - think about your plays during your opponent's turn to maximize efficiency."},
+    {tip: "Don't overextend - be cautious about committing too many resources to the board at once, as it can leave you vulnerable to board wipes."},
+    {tip: "Know when to attack and when to hold back - sometimes it's better to wait for a better opportunity to attack rather than rushing in."},
+    {tip: "Sideboard effectively - have a plan for dealing with common matchups and adjust your deck accordingly between games."},
+    {tip: "Practice, practice, practice - the more you play, the better you'll become at understanding the game's intricacies and improving your skills."},
+    {tip: "Don't get discouraged by losses - learning from your mistakes is an important part of becoming a better player."},
+    {tip: "Have fun! - Magic is a game, so make sure to enjoy yourself and appreciate the experience, win or lose."}
+];
+
+export async function populateTips(){
+    try {
+        client.connect();
+
+        // Collectie leegmaken
+        const emptyTips = await client.db("Codecaster").collection("Tips").deleteMany({});
+
+        // Array van tips toevoegen aan dbm
+        await client.db("Codecaster").collection("Tips").insertMany(mtgTips);
+
+
+    } catch (e) {
+        console.error(e);
+    } finally {
+        client.close();
+    }
+}

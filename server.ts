@@ -37,6 +37,7 @@ app.get("/", (req, res) => {
   res.render("landingspage");
 });
 
+
 app.get("/home", async (req, res) => {
   // params from route
   // -- filter and sort
@@ -96,6 +97,8 @@ app.get("/home", async (req, res) => {
     cards: cardsToLoad
   })
 })
+
+
 app.get("/decks", (req, res) => {
   // params from route
   let pageQueryParam = req.query.page;
@@ -130,18 +133,34 @@ app.get("/decks", (req, res) => {
     decks: decksForPage,
   });
 });
-app.get("/deckdetails", (req, res) => {
+
+
+app.get("/decks/:deckName", (req, res) => {
   // params from route
+
   let cardLookup = req.query.cardLookup;
   let sort = req.query.sort;
   let sortDirection = req.query.sortDirection;
   let pageQueryParam = req.query.page;
 
+  let selectedDeck : i.Deck | undefined = allDecks.find(deck => {
+    return deck.deckName === req.params.deckName;
+  });
+
+  
   // Pagination
   let pageSize: number = 6;
-  let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, allCards);
+  let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, selectedDeck?.cards);
 
-  let cardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize)
+  let cardsToLoad = undefined;
+
+  if (selectedDeck?.cards !== undefined) {
+   cardsToLoad = f.getCardsForPage(selectedDeck?.cards, pageData.page, pageSize)
+  } else {
+    console.log("selected deck cards = undefined");
+    
+  };
+  
   let modalCardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize / 2)
 
   res.render("deckdetails", {
@@ -380,9 +399,6 @@ app.post("/profile",async (req,res) => {
 
 app.get("/editDeck", (req, res) => {
   // params from route
-  let cardLookup = req.query.cardLookup;
-  let sort = req.query.sort;
-  let sortDirection = req.query.sortDirection;
   let pageQueryParam = req.query.page;
 
   // Pagination
@@ -396,17 +412,12 @@ app.get("/editDeck", (req, res) => {
     // HEADER
     user: loggedInUser,
     // -- The names of the js files you want to load on the page.
-    jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
+    jsFiles: ["deckname"],
     // -- The title of the page
-    title: "Home page",
+    title: "Edit page",
     // -- The Tab in the nav bar you want to have the orange color
     // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
     tabToColor: 1,
-    // MAIN
-    // -- filter system
-    cardLookup: cardLookup,
-    sort: sort,
-    sortDirection: sortDirection,
     // -- pagination
     page: pageData.page,
     totalPages: pageData.totalPages,

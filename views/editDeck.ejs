@@ -2,12 +2,12 @@
 
 <section class="d-flex justify-content-center align-items-center">
   <section class="rounded ctext-white col-12 p-5 col-lg-10 col-md-6 my-5 col-sm-8" style="background-color: #00000099">
-    <h5 class="text-center ch1 fs-2">Deckname</h5>
+    <h5 id="deckName" class="text-center ch1 fs-2">Deckname</h5>
     <ul>
       <li>Decknaam veranderen</li>
       <br />
-      <form class="deckNameForm d-flex gap-1">
-        <input type="text" class="form-control w-75" name="deckname" placeholder="Mijn deck" />
+      <form id="deckNameForm" class="deckNameForm d-flex gap-1">
+        <input type="text" class="w-75" name="deckNameInput" id="deckNameInput" placeholder="Mijn deck" />
         <button type="submit" class="btn btn-danger cbg-secondary-d border-dark">Change name</button>
       </form>
       <br />
@@ -18,8 +18,7 @@
       <% for (const card of modalCards) { %>
       <article class="d-flex flex-wrap col-12 col-lg-4 p-1">
         <article
-          class="card mtg-card rounded-5 p-1 col-12 mb-3 <%= card.rarity == 'Common' ? 'cbg-white' : card.rarity == 'Uncommon' ? 'cbg-warning-l' : card.rarity == 'Rare' ? 'cbg-yellow' : card.rarity == 'Mythic' ? 'cbg-danger' : 'cbg-success' %>"
-        >
+          class="card mtg-card rounded-5 p-1 col-12 mb-3 <%= card.rarity == 'Common' ? 'cbg-white' : card.rarity == 'Uncommon' ? 'cbg-warning-l' : card.rarity == 'Rare' ? 'cbg-yellow' : card.rarity == 'Mythic' ? 'cbg-danger' : 'cbg-success' %>">
           <a
             href="#"
             data-bs-toggle="modal"
@@ -30,14 +29,12 @@
             data-bs-colorId="<%= card.colorIdentity %>"
             data-bs-rarity="<%= card.rarity %>"
             data-bs-imageUrl="<%= card.imageUrl %>"
-            class="p-0"
-          >
+            class="p-0">
             <img
               src="<%= card.imageUrl %>"
               class="rounded-5 col-4"
               style="width: 100%"
-              alt=""
-            />
+              alt=""/>
           </a>
         </article>
         <i class="bi bi-dash-circle-fill col-6 text-center fs-3"></i>

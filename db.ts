@@ -20,6 +20,8 @@ async function exit() {
 }
 
 export const decksCollection: Collection<i.Deck> = client.db("Codecaster").collection<i.Deck>("Decks");
+export const usersCollection: Collection<i.User> = client.db("Codecaster").collection<i.User>("Users");
+
 function getRandomNumber(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -54,6 +56,32 @@ function generateMockDecks(allCards: Magic.Card[]): i.Deck[] {
 }
 async function seed() {
     const allCards: Magic.Card[] = [];
+    const allUsers: i.User[] = [
+        {
+            firstName: "John",
+            lastName: "Doe",
+            userName: "John_Doe",
+            email: "John.Doe@mail.com",
+            description: "John Doe is a dynamic individual with a diverse skill set and a passion for excellence. With a background in [industry/field], he brings a unique blend of [skills/traits] to every project he undertakes. Whether he's [activity/task], [activity/task], or [activity/task], John approaches each endeavor with dedication and creativity. His ability to [skill/quality] and [skill/quality] make him a valuable asset to any team. Outside of work, John enjoys [hobbies/interests], [hobbies/interests], and [hobbies/interests]. With a commitment to continuous growth and a drive to succeed, John is poised to make a significant impact in [industry/field].",
+            password: "Passw0rd123"
+          },
+          {
+            firstName: "Jane",
+            lastName: "Smith",
+            userName: "Smiley_Jane",
+            email: "Jane.Smith@mail.com",
+            description: "Jane Smith is a highly motivated individual with a strong work ethic and a passion for [industry/field]. With a background in [industry/field], she brings extensive experience and a proven track record of success to every project she undertakes. Whether she's [activity/task], [activity/task], or [activity/task], Jane consistently delivers high-quality results with precision and efficiency. Her exceptional [skills/traits] and [skills/traits] make her a valuable asset to any team. Outside of work, Jane enjoys [hobbies/interests], [hobbies/interests], and [hobbies/interests]. With a dedication to continuous improvement and a focus on achieving her goals, Jane is well-positioned to excel in [industry/field].",
+            password: "Jane1234"
+          },
+          {
+            firstName: "Michael",
+            lastName: "Johnson",
+            userName: "Mighty_Mike",
+            email: "Michael.Johnson@mail.com",
+            description: "Michael Johnson is a results-oriented professional with a proven track record of success in [industry/field]. With a background in [industry/field], he brings a wealth of knowledge and expertise to every project he undertakes. Whether he's [activity/task], [activity/task], or [activity/task], Michael consistently exceeds expectations and delivers exceptional results. His strong [skills/traits] and [skills/traits] enable him to thrive in fast-paced environments and tackle challenges with confidence. Outside of work, Michael enjoys [hobbies/interests], [hobbies/interests], and [hobbies/interests]. With a commitment to excellence and a drive to succeed, Michael is well-equipped to make a significant impact in [industry/field].",
+            password: "Michael!23"
+          }
+    ];
     let loadedCardCount = 0;
     const desiredCardCount = 100; // Change this to the desired number of cards to load before generating mock decks
 
@@ -76,6 +104,12 @@ async function seed() {
         .on("error", (e) => console.log("ERROR: " + e));
 
     async function populateDatabase(mockDecks: i.Deck[]) {
+        if (await usersCollection.countDocuments() === 0) {
+            await usersCollection.insertMany(allUsers);
+            console.log("Mock users inserted into database");
+        }
+        
+        // decksCollection.deleteMany({})
         if (await decksCollection.countDocuments() === 0) {
             await decksCollection.insertMany(mockDecks);
             console.log("Mock decks inserted into database");

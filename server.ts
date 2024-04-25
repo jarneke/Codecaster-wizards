@@ -12,10 +12,17 @@ async function getTempDecks() {
   allDecks = await db.decksCollection.find({}).toArray();
 }
 
+async function getUsers() {
+  loggedInUser = await db.usersCollection.findOne({}); // wanneer we weten hoe login werkt, moet dit ingelogde user vinden.
+}
+
 const app = express();
 
 let allDecks: i.Deck[] = [];
 getTempDecks();
+
+let loggedInUser: i.User | null = null;
+getUsers();
 
 let allCardTypes: string[] = [];
 let allCardRarities: string[] = [];
@@ -24,6 +31,7 @@ app.set("port", 3000);
 app.set("view engine", "ejs");
 
 app.use(express.static("public"));
+app.use(express.urlencoded({ extended:true}))
 
 app.get("/", (req, res) => {
   res.render("landingspage");
@@ -55,7 +63,7 @@ app.get("/home", async (req, res) => {
   // Render
   res.render("home", {
     // HEADER
-    user: i.tempUser,
+    user: loggedInUser,
     // -- The names of the js files you want to load on the page.
     jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
     // -- The title of the page
@@ -105,7 +113,7 @@ app.get("/decks", (req, res) => {
 
   res.render("decks", {
     // HEADER
-    user: i.tempUser,
+    user: loggedInUser,
     // -- The names of the js files you want to load on the page.
     jsFiles: [],
     // -- The title of the page
@@ -138,7 +146,7 @@ app.get("/deckdetails", (req, res) => {
 
   res.render("deckdetails", {
     // HEADER
-    user: i.tempUser,
+    user: loggedInUser,
     // -- The names of the js files you want to load on the page.
     jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
     // -- The title of the page
@@ -281,7 +289,7 @@ app.get("/drawtest", async (req, res) => {
 
   res.render("drawtest", {
     // HEADER
-    user: i.tempUser,
+    user: loggedInUser,
     // -- The names of the js files you want to load on the page.
     jsFiles: ["submitOnChange", "cardsModal", "manaCheckbox", "tooltips", "drawCard"],
     // -- The title of the page
@@ -326,9 +334,49 @@ app.get("/drawtest", async (req, res) => {
     amount: chanceData.amount,
   });
 });
-app.get("/profile", (req, res) => {
-  res.render("profile");
+app.get("/profile",async (req, res) => {
+  loggedInUser = await db.usersCollection.findOne({_id: loggedInUser?._id});
+  console.log(loggedInUser);
+  
+  res.render("profile", {
+    // HEADER
+    user: loggedInUser,
+    // -- The names of the js files you want to load on the page.
+    jsFiles: ["editProfile"],
+    // -- The title of the page
+    title: "Profile Page",
+    // -- The Tab in the nav bar you want to have the orange color 
+    // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
+    tabToColor: 3,
+    favoriteDecks: allDecks,
+  });
+
 });
+
+app.post("/profile",async (req,res) => {
+  console.log(req.body);
+  
+  const firstName: string = req.body.firstName;
+  const lastName: string = req.body.lastName;
+  const userName: string = `${firstName === ""? loggedInUser?.firstName : firstName}_${lastName === ""? loggedInUser?.lastName : lastName}`;
+  const email: string = req.body.email;
+  const password: string = req.body.passwordFormLabel; //later encrypten
+  const description: string = req.body.description;
+  const newUserDetails : i.User = {
+    firstName: (firstName === "" && loggedInUser)? loggedInUser.firstName : firstName,
+    lastName: (lastName === "" && loggedInUser)? loggedInUser?.lastName : lastName,
+    userName: (userName === "" && loggedInUser)? loggedInUser?.userName : userName,
+    email: (email === "" && loggedInUser)? loggedInUser?.email : email,
+    description: (description === "" && loggedInUser)? loggedInUser.description : description,
+    password: (password === "" && loggedInUser)? loggedInUser.password : password
+  };
+  
+  await db.usersCollection.updateOne({_id: loggedInUser?._id}, {$set: newUserDetails});
+  res.redirect("/profile");
+
+
+ 
+})
 
 app.get("/editDeck", (req, res) => {
   // params from route
@@ -346,7 +394,7 @@ app.get("/editDeck", (req, res) => {
 
   res.render("editDeck", {
     // HEADER
-    user: i.tempUser,
+    user: loggedInUser,
     // -- The names of the js files you want to load on the page.
     jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
     // -- The title of the page

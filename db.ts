@@ -22,6 +22,8 @@ async function exit() {
 export const decksCollection: Collection<i.Deck> = client.db("Codecaster").collection<i.Deck>("Decks");
 export const feedbacksCollection: Collection<i.Feedback> = client.db("Codecaster").collection<i.Feedback>("Feedbacks");
 
+export const tipsCollection: Collection<i.Tips> = client.db("Codecaster").collection<i.Tips>("Tips");
+
 function getRandomNumber(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -31,7 +33,7 @@ function generateMockDecks(allCards: Magic.Card[]): i.Deck[] {
     // Generate 9 mock decks
     for (let i = 1; i <= 9; i++) {
         const deckName = `Deck ${i}`;
-        const deckImageUrl = `/assets/images/decks/Deck${i + 1}.jpg`;
+        const deckImageUrl = `/assets/images/decks/Deck${i}.jpg`;
         const cardsCount = getRandomNumber(5, 60);
         const cards: Magic.Card[] = [];
 
@@ -69,6 +71,7 @@ async function seed() {
                 if (loadedCardCount >= desiredCardCount) {
                     const mockDecks: i.Deck[] = generateMockDecks(allCards);
                     populateDatabase(mockDecks);
+                    populateTips();
                     console.log("seeded");
 
                     emitter.cancel();
@@ -95,5 +98,42 @@ export async function connect() {
         process.on("SIGINT", exit);
     } catch (error) {
         console.error(error);
+    }
+}
+
+
+const mtgTips: i.Tips[] = [
+    { tip: "Let op je mana curve - zorg voor een goede verdeling van goedkope, mid-range en dure spreuken." },
+    { tip: "Vergeet je landdrops niet - het spelen van een land per beurt is cruciaal om aan je manavereisten te voldoen." },
+    { tip: "Ken de stack - begrijp hoe de stack werkt en de implicaties van het spelen van spreuken en vaardigheden op verschillende momenten." },
+    { tip: "Lees de kaarten zorgvuldig door - soms kan de bewoording een groot verschil maken in hoe een kaart functioneert." },
+    { tip: "Houd de levens totalen bij - zowel die van jou als van je tegenstander. Het is gemakkelijk te vergeten, maar het kan cruciaal zijn voor het plannen van je strategie." },
+    { tip: "Plan je beurten vooruit - denk na over je plays tijdens de beurt van je tegenstander om de efficiëntie te maximaliseren." },
+    { tip: "Breid niet te ver uit - wees voorzichtig met het inzetten van te veel middelen op het bord in één keer, want dit kan je kwetsbaar maken voor board wipes." },
+    { tip: "Weet wanneer je moet aanvallen en wanneer je je moet terugtrekken - soms is het beter om te wachten op een betere gelegenheid om aan te vallen dan je te haasten." },
+    { tip: "Sideboard effectief - heb een plan om met veelvoorkomende matchups om te gaan en pas je deck dienovereenkomstig aan tussen games." },
+    { tip: "Oefening, oefening, oefening - hoe meer je speelt, hoe beter je de complexiteit van het spel leert begrijpen en je vaardigheden verbetert." },
+    { tip: "Raak niet ontmoedigd door nederlagen - leren van je fouten is een belangrijk onderdeel om een betere speler te worden." },
+    { tip: "Veel plezier! - Magic is een spel, dus zorg ervoor dat je je amuseert en de ervaring waardeert, winnen of verliezen." },
+];
+
+
+export async function populateTips() {
+    try {
+        client.connect();
+
+        // Collectie leegmaken
+        // const emptyTips = await client.db("Codecaster").collection("Tips").deleteMany({});
+
+        // Array van tips toevoegen aan dbm
+        await tipsCollection.deleteMany({});
+        await tipsCollection.insertMany(mtgTips);
+
+        // Tips uitlezen
+        // const tips = await client.db("Codecaster").collection("Tips").find({}).toArray();
+
+
+    } catch (e) {
+        console.error(e);
     }
 }

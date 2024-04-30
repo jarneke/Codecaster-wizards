@@ -46,6 +46,9 @@
 
   --yellow-color: #e6bb00; /* RARES */
   --transparent-color: #00000000;
+
+  --bs-pagination-active-bg: var(--danger-color);
+  --bs-pagination-active-border-color: var(--danger-color);
 }
 
 /* FONTS */

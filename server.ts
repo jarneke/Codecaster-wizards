@@ -174,10 +174,10 @@ app.get("/decks", (req, res) => {
   });
 });
 
-app.get("/decks/:deckName", (req, res) => {
+app.get("/decks/:deckName", async (req, res) => {
 
   allDecks = [];
-  getTempDecks();
+  await getTempDecks();
 
   // params from route
   let cardLookup = req.query.cardLookup;
@@ -381,6 +381,18 @@ app.get("/drawtest", async (req, res) => {
       ),
     ];
   }
+
+  let amountMap = new Map<Magic.Card, number>();
+
+
+  for (const card of filterAndSortedCards) {
+    const existingCard = Array.from(amountMap.keys()).find(c => c.name === card.name);
+    if (existingCard) {
+      amountMap.set(existingCard, amountMap.get(existingCard)! + 1);
+    } else {
+      amountMap.set(card, 1);
+    }
+  }
   // get the cardToShow (always the first card in pulledCards)
   let cardToShow: Magic.Card = pulledCards[0];
   // initialize nextCard
@@ -402,19 +414,15 @@ app.get("/drawtest", async (req, res) => {
     req.query,
     `${pageQueryParam}`,
     pageSize,
-    filterAndSortedCards
+    Array.from(amountMap.keys())
   );
 
   let cardsToShow = f.getCardsForPage(filterAndSortedCards, pageData.page, pageSize)
-
-  let uniqueCardsWithAmountToShow: Map<Magic.Card, number> = new Map<Magic.Card, number>();
-  cardsToShow.forEach(card => {
-    if (uniqueCardsWithAmountToShow.has(card)) {
-      uniqueCardsWithAmountToShow.set(card, uniqueCardsWithAmountToShow.get(card)! + 1)
-    } else {
-      uniqueCardsWithAmountToShow.set(card, 1);
-    }
-  })
+  amountMap = f.getCardWAmauntForPage(
+    amountMap,
+    pageData.page,
+    pageSize
+  );
 
   res.render("drawtest", {
     // HEADER
@@ -466,7 +474,7 @@ app.get("/drawtest", async (req, res) => {
     selectedDeck: selectedDeck,
     unpulledCards: unpulledCards,
     pulledCards: pulledCards,
-    cardsToShow: uniqueCardsWithAmountToShow,
+    cardsToShow: amountMap,
     card: cardToShow,
     nextCard: nextCard,
     percentile: chanceData.chance,

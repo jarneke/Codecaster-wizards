@@ -200,6 +200,7 @@ app.get("/drawtest", async (req, res) => {
   let sortDirection = req.query.sortDirection;
   let deck = req.query.decks;
   let cardLookupInDeck = req.query.cardLookupInDeck;
+  let cardLookupInDeckInput = req.query.cardLookupInDeckInput;
   // -- pagination
   let pageQueryParam = req.query.page;
   // -- other
@@ -252,29 +253,20 @@ app.get("/drawtest", async (req, res) => {
     }
     // if cardLookupInDeck is not defined
     if (cardLookupInDeck != undefined && selectedDeck != undefined) {
-      console.log("step 1");
-
       // find the card they are looking for
       cardLookupInDeckCard = selectedDeck.cards.find(e => e.name.toLowerCase().includes(`${cardLookupInDeck}`.toLowerCase()))
-      console.log("step 2" + cardLookupInDeckCard?.name);
-
       // if card is found and there are cards in unpulledCards
       if (cardLookupInDeckCard != undefined && unpulledCards != undefined) {
-        console.log("cardLookupInDeckCard:", cardLookupInDeckCard);
-
         // calculate the chance u have to pull that card from the unpulledCards
         cardLookupInDeckCardChance = f.getChance(unpulledCards, cardLookupInDeckCard).chance
-        console.log("step 3" + cardLookupInDeckCardChance);
       }
     }
-
   }
   // --filter logic
   let filterAndSortedCards: Magic.Card[] = pulledCards;
   if (pulledCards !== undefined) {
     filterAndSortedCards = [...f.filterAndSortCards(pulledCards, cardLookup, filterType, filterRarity, whiteManaChecked, blueManaChecked, blackManaChecked, greenManaChecked, redManaChecked, colorlessManaChecked, sort, sortDirection)]
   }
-
   // get the cardToShow (always the first card in pulledCards)
   let cardToShow: Magic.Card = pulledCards[0];
   // initialize nextCard
@@ -296,6 +288,14 @@ app.get("/drawtest", async (req, res) => {
 
   let cardsToShow = f.getCardsForPage(filterAndSortedCards, pageData.page, pageSize)
 
+  let uniqueCardsWithAmountToShow: Map<Magic.Card, number> = new Map<Magic.Card, number>();
+  cardsToShow.forEach(card => {
+    if (uniqueCardsWithAmountToShow.has(card)) {
+      uniqueCardsWithAmountToShow.set(card, uniqueCardsWithAmountToShow.get(card)! + 1)
+    } else {
+      uniqueCardsWithAmountToShow.set(card, 1);
+    }
+  })
 
   res.render("drawtest", {
     // HEADER
@@ -332,6 +332,7 @@ app.get("/drawtest", async (req, res) => {
     filterUrl: pageData.filterUrl,
     // -- cardlookupInDeck
     cardLookupInDeck: cardLookupInDeck,
+    cardLookupInDeckInput: cardLookupInDeckInput,
     cardLookupInDeckCard: cardLookupInDeckCard,
     cardLookupInDeckCardChance: cardLookupInDeckCardChance,
     // -- other
@@ -339,13 +340,14 @@ app.get("/drawtest", async (req, res) => {
     selectedDeck: selectedDeck,
     unpulledCards: unpulledCards,
     pulledCards: pulledCards,
-    cardsToShow: cardsToShow,
+    cardsToShow: uniqueCardsWithAmountToShow,
     card: cardToShow,
     nextCard: nextCard,
     percentile: chanceData.chance,
     amount: chanceData.amount,
   });
 });
+
 app.get("/profile", (req, res) => {
   res.render("profile");
 });

@@ -1,6 +1,6 @@
 <%- include("partials/header") %>
-    <main class="d-flex flex-wrap align-items-between justify-content-between ctext-white container" style="min-height: 100vh;">
-        <section class="d-flex flex-wrap col-12 col-md-10 col-lg-8 m-3">
+    <main class="d-flex flex-wrap align-items-center justify-content-center ctext-white container" style="min-height: 100vh;">
+        <section class="d-flex flex-wrap justify-content-between col-12 m-3">
             <form action="" class="col-12 col-sm-4 pt-2 p-2">
                 <select name="decks" id="decks" class="form-select p-2">
                     <% for (const deck of allDecks) { %>
@@ -21,13 +21,15 @@
                             <button class="bg-white text-secondary p-1 border-0" type="submit">
                                 <i class="pe-2 bi bi-search"></i>
                             </button>
-                            <input class="form-control rounded-0 border-0 p-0" type="text" placeholder="Zoek kaart in deck..." name="cardLookupInDeckInput" id="cardLookupInDeckInput">
+                            <input class="form-control rounded-0 border-0 p-0" type="text" placeholder="Zoek kaart in deck..." name="cardLookupInDeckInput" id="cardLookupInDeckInput" value="<%= cardLookupInDeckInput %>" autocomplete="off">
                         </div>
-                        <% for (let i=0; i < unpulledCards.length; i++) { %>
-                            <button type="button" class="d-flex justify-content-start col-12 bg-white border-0 border-top d-none" data-cardName="<%= unpulledCards[i].name %>">
-                                <%= unpulledCards[i].name %>
-                            </button>
-                            <% } %>
+                        <% const uniqueNames=Array.from(new Set(unpulledCards.map(card=> card.name))); // filter out all duplicate cardNames and make an array of it%>
+                            <% uniqueNames.sort((a, b)=> a.localeCompare(b)); // sort by name%>
+                                <% uniqueNames.forEach(name=> { // load all buttons%>
+                                    <button type="button" class="d-flex justify-content-start col-12 bg-white border-0 border-top d-none" data-cardName="<%= name %>">
+                                        <%= name %>
+                                    </button>
+                                    <% }) %>
                     </div>
                 </section>
             </form>
@@ -36,26 +38,29 @@
                     Getrokken kaarten
                 </button>
             </section>
-            <% if (cardLookupInDeck) { %>
-                <% if (cardLookupInDeckCard) {%>
-                    <div class="col-12 alert alert-success alert-dismissible fade show" role="alert">
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <% if (cardLookupInDeckCard && cardLookupInDeck !=="no-card-found" && cardLookupInDeck !=="multiple-cards-found" ) {%>
+                <div class="col-12 alert alert-success alert-dismissible fade show" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 
-                        <strong>Kaart gevonden</strong> Je hebt een <%= cardLookupInDeckCardChance %>% kans om <%= cardLookupInDeckCard.name %> te trekken als volgende kaart
+                    <strong>Kaart gevonden</strong> Je hebt een <%= cardLookupInDeckCardChance %>% kans om <%= cardLookupInDeckCard.name %> te trekken als volgende kaart
+                </div>
+                <% } else if (cardLookupInDeck==="no-card-found" ) { %>
+                    <div class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <strong>Geen overeenkomende kaart gevonden!</strong> Het lijkt erop dat deze kaart niet in dit deck voorkomt. Probeer een andere zoekterm.
                     </div>
-                    <% } else { %>
+                    <%} else if (cardLookupInDeck==="multiple-cards-found" ) { %>
                         <div class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            <strong>Geen kaart gevonden!</strong> Deze kaart werd niet gevonden in dit deck, probeer naar een andere kaart te zoeken
+                            <strong>Meerdere overeenkomende kaarten gevonden!</strong> Uw zoekopdracht heeft meerdere resultaten opgeleverd. Probeer een meer specifieke zoekterm om een specifieke kaart te vinden.
                         </div>
                         <% } %>
-                            <% } %>
         </section>
 
         <section class="d-flex align-items-between justify-content-center flex-wrap mb-3 col-12 col-sm-8 col-md-4">
             <a class="btn btnPullCard border-0 d-flex justify-content-center ctext-white col-9 col-md-12 col-lg-9 p-0">
                 <% if (unpulledCards.length==0 ){ %>
-                    <article class="p-2 col-12">
+                    <article class="col-12">
                         <article class="card rounded-5 p-1 border-5 border-light cbg-transparent">
                             <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=97066&type=card" class="rounded-5 invisible" style="width: 100%;" alt="">
                         </article>
@@ -63,13 +68,13 @@
                     <% } else {%>
                         <div class="positioning col-12">
                             <% if (unpulledCards.length !==1){%>
-                                <article class="p-2 col-12">
+                                <article class="col-12">
                                     <article class="card rounded-5 p-1 border-0 cbg-transparent">
                                         <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=97066&type=card" class="rounded-5" style="width: 100%;" alt="">
                                     </article>
                                 </article>
                                 <% } else { %>
-                                    <article class="p-2 col-12">
+                                    <article class="col-12">
                                         <article class="card rounded-5 p-1 border-5 border-light cbg-transparent">
                                             <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=97066&type=card" class="rounded-5 invisible" style="width: 100%;" alt="">
                                         </article>
@@ -77,12 +82,12 @@
                                     <% } %>
                                         <div class="flip-card" id="flip-card">
                                             <div class="flip-card-inner">
-                                                <article class="flip-card-front p-2 col-12">
+                                                <article class="flip-card-front col-12">
                                                     <article class="card rounded-5 p-1 border-0 cbg-transparent">
                                                         <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=97066&type=card" class="rounded-5" style="width: 100%;" alt="">
                                                     </article>
                                                 </article>
-                                                <article class="flip-card-back p-2 col-12" id="nextCard">
+                                                <article class="flip-card-back col-12" id="nextCard">
                                                     <article class="card rounded-5 p-1 border-0 <%= nextCard.rarity == 'Common' ? 'cbg-white' : nextCard.rarity == 'Uncommon' ? 'cbg-warning-l' : nextCard.rarity == 'Rare' ? 'cbg-yellow' : nextCard.rarity == 'Mythic' ? 'cbg-danger' : 'cbg-success' %>">
                                                         <img src="<%= nextCard.imageUrl %>" class="rounded-5" style="width: 100%;" alt="">
                                                     </article>
@@ -124,13 +129,13 @@
         <section class="d-flex align-items-between justify-content-center flex-wrap mb-3 col-12 col-sm-8 col-md-4">
             <a class="btn btnResetCards border-0 d-flex justify-content-center flex-wrap ctext-white col-9 col-md-12 col-lg-9 p-0">
                 <% if (pulledCards.length==0){ %>
-                    <article class="p-2 col-12 pulledPile">
+                    <article class="col-12 pulledPile">
                         <article class="card rounded-5 p-1 border-5 border-light cbg-transparent">
                             <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=97066&type=card" class="rounded-5 invisible" style="width: 100%;" alt="">
                         </article>
                     </article>
                     <% } else {%>
-                        <article class="p-2 col-12 pulledPile">
+                        <article class="col-12 pulledPile">
                             <article class="card mtg-card rounded-5 p-1 border-0 <%= card.rarity == 'Common' ? 'cbg-white' : card.rarity == 'Uncommon' ? 'cbg-warning-l' : card.rarity == 'Rare' ? 'cbg-yellow' : card.rarity == 'Mythic' ? 'cbg-danger' : 'cbg-success' %>">
                                 <img src="<%= card.imageUrl %>" class="rounded-5" style="width: 100%;" alt="">
                             </article>
@@ -147,19 +152,24 @@
             <%- include("partials/filterAndSortCards") %>
                 <%- include("partials/pagination") %>
                     <section class="d-flex flex-wrap justify-content-evenly">
-                        <% if (cardsToShow.length==0) { %>
+                        <% if (cardsToShow.size==0) { %>
                             <h1 class="ch1 ctext-secondary text-center col-12">!OOPS... Geen kaarten gevonden!</h1>
                             <h1 class="ch1 fs-3 ctext-secondary text-center col-12">Probeer je filter aan te passen</h1>
                             <% } else { %>
-                                <% for (const card of cardsToShow) {%>
-                                    <article class="p-2 col-12 col-md-6 col-lg-4">
-                                        <article class="card mtg-card rounded-5 p-1 <%= card.rarity == 'Common' ? 'cbg-white' : card.rarity == 'Uncommon' ? 'cbg-warning-l' : card.rarity == 'Rare' ? 'cbg-yellow' : card.rarity == 'Mythic' ? 'cbg-danger' : 'cbg-success' %>">
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#cardModal" data-bs-name="<%= card.name %>" data-bs-manaCost="<%= card.manaCost %>" data-bs-cmc="<%= card.cmc %>" data-bs-colorId="<%= card.colorIdentity %>" data-bs-rarity="<%= card.rarity %>" data-bs-imageUrl="<%= card.imageUrl %>" class="p-0">
-                                                <img src="<%= card.imageUrl %>" class="rounded-5" style="width: 100%;" alt="">
-                                            </a>
+                                <% cardsToShow.forEach((amount, card)=> { %>
+                                    <article class="col-12 col-md-6 col-lg-4 col-xxl-4 mb-5 px-2 px-2">
+                                        <article class="card h-100 p-3" style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
+                                            <article class="card mtg-card rounded-5 p-1 <%= card.rarity == 'Common' ? 'cbg-white' : card.rarity == 'Uncommon' ? 'cbg-warning-l' : card.rarity == 'Rare' ? 'cbg-yellow' : card.rarity == 'Mythic' ? 'cbg-danger' : 'cbg-success' %>">
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#cardModal" data-bs-name="<%= card.name %>" data-bs-manaCost="<%= card.manaCost %>" data-bs-cmc="<%= card.cmc %>" data-bs-colorId="<%= card.colorIdentity %>" data-bs-rarity="<%= card.rarity %>" data-bs-imageUrl="<%= card.imageUrl %>" class="p-0">
+                                                    <img src="<%= card.imageUrl %>" class="rounded-5 col-12" style="width: 100%" alt="" />
+                                                </a>
+                                            </article>
+                                            <h2 class="card-title text-white ch1 mt-2 text-center">
+                                                aantal: <%= amount %>
+                                            </h2>
                                         </article>
                                     </article>
-                                    <% } %>
+                                    <% }) %>
                                         <% } %>
                     </section>
                     <%- include("partials/pagination") %>

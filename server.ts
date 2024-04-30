@@ -417,7 +417,6 @@ app.get("/drawtest", async (req, res) => {
     Array.from(amountMap.keys())
   );
 
-  let cardsToShow = f.getCardsForPage(filterAndSortedCards, pageData.page, pageSize)
   amountMap = f.getCardWAmauntForPage(
     amountMap,
     pageData.page,

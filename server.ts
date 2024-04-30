@@ -137,9 +137,9 @@ app.get("/home", async (req, res) => {
   });
 });
 
-app.get("/decks", (req, res) => {
+app.get("/decks", async(req, res) => {
   allDecks = [];
-  getTempDecks();
+  await getTempDecks();
   // params from route
   let pageQueryParam = req.query.page;
 
@@ -164,6 +164,9 @@ app.get("/decks", (req, res) => {
     // -- The Tab in the nav bar you want to have the orange color
     // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
     tabToColor: 1,
+    // The page it should redirect to after feedback form is submitted
+    toRedirectTo: `decks`,
+    // MAIN
     // MAIN
     // -- pagination
     page: pageData.page,
@@ -246,6 +249,8 @@ app.get("/decks/:deckName", async (req, res) => {
     // -- The Tab in the nav bar you want to have the orange color
     // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
     tabToColor: 1,
+    // The page it should redirect to after feedback form is submitted
+    toRedirectTo: `deck/${selectedDeck!.deckName}`,
     // MAIN
     // -- filter system
     cardLookup: cardLookup,
@@ -529,6 +534,9 @@ app.get("/editDeck/:deckName", async (req, res) => {
     // -- The Tab in the nav bar you want to have the orange color
     // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
     tabToColor: 1,
+    // The page it should redirect to after feedback form is submitted
+    toRedirectTo: `editDeck/${selectedDeck!.deckName}`,
+    // MAIN
     // -- pagination
     page: pageData?.page,
     totalPages: pageData?.totalPages,

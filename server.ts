@@ -229,7 +229,7 @@ app.get("/decks/:deckName", async (req, res) => {
             pageSize
         );
     } else {
-        console.log("selected deck cards = undefined");
+        console.log("[ - SERVER - ]=> selected deck cards = undefined");
     }
 
 
@@ -521,7 +521,7 @@ app.get("/editDeck/:deckName", async (req, res) => {
             pageSize / 2
         );
     } else {
-        console.log("selected deck cards = undefined");
+        console.log("[ - SERVER - ]=> selected deck cards = undefined");
     }
 
     res.render("editDeck", {
@@ -563,10 +563,10 @@ app.listen(app.get("port"), async () => {
         // If all cards are loaded display message
         .on("end", () => console.log("[ - SERVER - ] All cards gotten"))
         // If error while loading, display error
-        .on("error", (e) => console.log("ERROR: " + e));
+        .on("error", (e) => console.log("[ - SERVER - ]=> ERROR: " + e));
 
     await db.connect()
     console.log(
-        "[ - SERVER - ] Listening at http://localhost:" + app.get("port")
+        "[ - SERVER - ]=> Listening at http://localhost:" + app.get("port")
     );
 });

@@ -33,7 +33,7 @@ async function exit() {
     try {
         // try to close connection
         await client.close();
-        console.log("Disconnected from database");
+        console.log("[ - SERVER - ]=> Disconnected from database");
     } catch (error) {
         // if errors, log it
         console.error(error);
@@ -50,7 +50,8 @@ export async function connect() {
         console.log("[ - SERVER - ]=> Connected to database");
         await seed();
         // if application is exited, close connection
-        process.on("SIGINT", exit);
+        process.on("SIGINT", exit); // For manually stopping the server
+        process.on("SIGUSR2", exit); // For nodemon restarting on save
     }
     // else log error 
     catch (error) {
@@ -69,9 +70,9 @@ async function seed() {
     const desiredCardCount = 100; // Change this to the desired number of cards to load before generating mock decks
 
     // initialize emitter to get cards
-    const emitter = Magic.Cards.all({})
+    const emitter = await Magic.Cards.all({})
         // on card recieved
-        .on("data", (card) => {
+        .on("data", async (card) => {
             // check if the card has a imageUrl
             if (card.imageUrl !== undefined) {
                 // push card to allCards array
@@ -84,13 +85,13 @@ async function seed() {
                     // cancel the emmit to stop getting cards
                     emitter.cancel();
                     // generate mockDecks
-                    const mockDecks: i.Deck[] = f.generateMockDecks(allCards);
+                    const mockDecks: i.Deck[] = await f.generateMockDecks(allCards);
                     // populate the database if need be with mockDecks
-                    populateDatabase(mockDecks);
+                    await populateDatabase(mockDecks);
                     // populate the database if need be with tips
-                    populateTips(mtgTips);
+                    await populateTips(mtgTips);
                     // log that the db is seeded
-                    console.log("[ - SERVER - ]=> Done seeding the database");
+                    await console.log("[ - SERVER - ]=> Done seeding the database");
                 }
             }
         })

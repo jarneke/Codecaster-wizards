@@ -19,7 +19,7 @@ async function getTips() {
 
 const app = express();
 
-let allTips: i.Tips[] = [];
+let allTips: i.Tip[] = [];
 getTips();
 
 let allDecks: i.Deck[] = [];
@@ -28,7 +28,7 @@ getTempDecks();
 let allCardTypes: string[] = [];
 let allCardRarities: string[] = [];
 
-app.set("port", 3000);
+app.set("port", process.env.PORT ?? 3000);
 app.set("view engine", "ejs");
 
 app.use(express.static("public"));

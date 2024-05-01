@@ -270,8 +270,12 @@ export function getChance(cards: Magic.Card[], card: Magic.Card): { chance: numb
         amount: amountOfCard
     };
 }
-
-export function getTotalManaCost(cardsArray : i.Card[]){
+/**
+ * 
+ * @param cardsArray 
+ * @returns 
+ */
+export function getTotalManaCost(cardsArray: i.Card[]) {
     let totalManaCost: number = 0;
 
     cardsArray.forEach(card => {
@@ -280,9 +284,47 @@ export function getTotalManaCost(cardsArray : i.Card[]){
 
     return totalManaCost;
 }
-
-export function getAvgManaCost(cardsArray : i.Card[]){
+/**
+ * 
+ * @param cardsArray 
+ * @returns 
+ */
+export function getAvgManaCost(cardsArray: i.Card[]) {
     let totalManaCost = getTotalManaCost(cardsArray);
 
-    return Math.round((totalManaCost/ cardsArray.length) * 100 ) / 100;
+    return Math.round((totalManaCost / cardsArray.length) * 100) / 100;
+}
+/**
+ * 
+ * @param allCards 
+ * @returns 
+ */
+export function generateMockDecks(allCards: Magic.Card[]): i.Deck[] {
+    const mockDecks: i.Deck[] = [];
+
+    // Generate 9 mock decks
+    for (let i = 1; i <= 9; i++) {
+        const deckName = `Deck ${i}`;
+        const deckImageUrl = `/assets/images/decks/Deck${i}.jpg`;
+        const cardsCount = getRandomNumber(5, 60);
+        const cards: Magic.Card[] = [];
+
+        // Add random cards to the deck
+        for (let j = 0; j < cardsCount; j++) {
+            const randomIndex = getRandomNumber(0, allCards.length - 1);
+            cards.push(allCards[randomIndex]);
+        }
+
+        // Create the deck object
+        const deck: i.Deck = {
+            deckName,
+            cards,
+            deckImageUrl
+        };
+
+        // Push the deck to the array of mock decks
+        mockDecks.push(deck);
+    }
+
+    return mockDecks;
 }

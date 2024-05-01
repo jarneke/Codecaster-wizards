@@ -1,4 +1,4 @@
-import { Collection, MongoClient } from "mongodb";
+import { Db, Collection, MongoClient } from "mongodb";
 import * as i from "./interfaces"
 import * as f from "./functions"
 import Magic = require("mtgsdk-ts");
@@ -6,103 +6,8 @@ import dotenv from "dotenv"
 
 dotenv.config();
 
-const uri: any = process.env.MONGO_URI || "mongodb://localhost:27017"
-export const client = new MongoClient(uri);
-
-async function exit() {
-    try {
-        await client.close();
-        console.log("Disconnected from database");
-    } catch (error) {
-        console.error(error);
-    }
-    process.exit(0);
-}
-
-export const decksCollection: Collection<i.Deck> = client.db("Codecaster").collection<i.Deck>("Decks");
-export const feedbacksCollection: Collection<i.Feedback> = client.db("Codecaster").collection<i.Feedback>("Feedbacks");
-
-export const tipsCollection: Collection<i.Tips> = client.db("Codecaster").collection<i.Tips>("Tips");
-
-function getRandomNumber(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-}
-function generateMockDecks(allCards: Magic.Card[]): i.Deck[] {
-    const mockDecks: i.Deck[] = [];
-
-    // Generate 9 mock decks
-    for (let i = 1; i <= 9; i++) {
-        const deckName = `Deck ${i}`;
-        const deckImageUrl = `/assets/images/decks/Deck${i}.jpg`;
-        const cardsCount = getRandomNumber(5, 60);
-        const cards: Magic.Card[] = [];
-
-        // Add random cards to the deck
-        for (let j = 0; j < cardsCount; j++) {
-            const randomIndex = getRandomNumber(0, allCards.length - 1);
-            cards.push(allCards[randomIndex]);
-        }
-
-        // Create the deck object
-        const deck: i.Deck = {
-            deckName,
-            cards,
-            deckImageUrl
-        };
-
-        // Push the deck to the array of mock decks
-        mockDecks.push(deck);
-    }
-
-    return mockDecks;
-}
-async function seed() {
-    const allCards: Magic.Card[] = [];
-    let loadedCardCount = 0;
-    const desiredCardCount = 100; // Change this to the desired number of cards to load before generating mock decks
-
-    const emitter = Magic.Cards.all({ page: 1, pageSize: desiredCardCount })
-        .on("data", (card) => {
-            if (card.imageUrl !== undefined) {
-                allCards.push(card);
-                loadedCardCount++;
-
-                // Check if desired number of cards have been loaded
-                if (loadedCardCount >= desiredCardCount) {
-                    const mockDecks: i.Deck[] = generateMockDecks(allCards);
-                    populateDatabase(mockDecks);
-                    populateTips();
-                    console.log("seeded");
-
-                    emitter.cancel();
-                }
-            }
-        })
-        .on("error", (e) => console.log("ERROR: " + e));
-
-    async function populateDatabase(mockDecks: i.Deck[]) {
-        // decksCollection.deleteMany({});
-        if (await decksCollection.countDocuments() === 0) {
-            await decksCollection.insertMany(mockDecks);
-            console.log("Mock decks inserted into database");
-        }
-    }
-}
-
-
-export async function connect() {
-    try {
-        await client.connect();
-        console.log("Connected to database");
-        await seed();
-        process.on("SIGINT", exit);
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-
-const mtgTips: i.Tips[] = [
+// all devTips
+const mtgTips: i.Tip[] = [
     { tip: "Let op je mana curve - zorg voor een goede verdeling van goedkope, mid-range en dure spreuken." },
     { tip: "Vergeet je landdrops niet - het spelen van een land per beurt is cruciaal om aan je manavereisten te voldoen." },
     { tip: "Ken de stack - begrijp hoe de stack werkt en de implicaties van het spelen van spreuken en vaardigheden op verschillende momenten." },
@@ -117,23 +22,108 @@ const mtgTips: i.Tips[] = [
     { tip: "Veel plezier! - Magic is een spel, dus zorg ervoor dat je je amuseert en de ervaring waardeert, winnen of verliezen." },
 ];
 
-
-export async function populateTips() {
+// get uri from enviroment variables
+const uri: any = process.env.MONGO_URI || "mongodb://localhost:27017"
+// initialize Mongoclient
+export const client = new MongoClient(uri);
+// initialize database
+const db: Db = client.db("Codecaster");
+// exit function
+async function exit() {
     try {
-        client.connect();
+        // try to close connection
+        await client.close();
+        console.log("Disconnected from database");
+    } catch (error) {
+        // if errors, log it
+        console.error(error);
+    }
+    process.exit(0);
+}
+/**
+ * A function to connect to the database
+ */
+export async function connect() {
+    // try to connect
+    try {
 
-        // Collectie leegmaken
-        // const emptyTips = await client.db("Codecaster").collection("Tips").deleteMany({});
-
-        // Array van tips toevoegen aan dbm
-        await tipsCollection.deleteMany({});
-        await tipsCollection.insertMany(mtgTips);
-
-        // Tips uitlezen
-        // const tips = await client.db("Codecaster").collection("Tips").find({}).toArray();
-
-
-    } catch (e) {
-        console.error(e);
+        await client.connect();
+        console.log("[ - SERVER - ]=> Connected to database");
+        await seed();
+        // if application is exited, close connection
+        process.on("SIGINT", exit);
+    }
+    // else log error 
+    catch (error) {
+        console.error(error);
     }
 }
+/**
+ * A function to seed the database if needed
+ */
+async function seed() {
+    // initialize allCards
+    const allCards: Magic.Card[] = [];
+    // variable to store amount of loadedcards
+    let loadedCardCount = 0;
+    // The amount of cards we want to load
+    const desiredCardCount = 100; // Change this to the desired number of cards to load before generating mock decks
+
+    // initialize emitter to get cards
+    const emitter = Magic.Cards.all({})
+        // on card recieved
+        .on("data", (card) => {
+            // check if the card has a imageUrl
+            if (card.imageUrl !== undefined) {
+                // push card to allCards array
+                allCards.push(card);
+                // and update counter
+                loadedCardCount++;
+
+                // Check if desired number of cards have been loaded
+                if (loadedCardCount >= desiredCardCount) {
+                    // cancel the emmit to stop getting cards
+                    emitter.cancel();
+                    // generate mockDecks
+                    const mockDecks: i.Deck[] = f.generateMockDecks(allCards);
+                    // populate the database if need be with mockDecks
+                    populateDatabase(mockDecks);
+                    // populate the database if need be with tips
+                    populateTips(mtgTips);
+                    // log that the db is seeded
+                    console.log("[ - SERVER - ]=> Done seeding the database");
+                }
+            }
+        })
+        // if error occurs with loading cards, log it
+        .on("error", (e) => console.error("ERROR: " + e));
+}
+/**
+ * a function to insert mock decks into database if needed
+ * @param mockDecks array of mockDecks
+ */
+async function populateDatabase(mockDecks: i.Deck[]) {
+    // uncomment line beneath if you want to refresh decks in database
+    // decksCollection.deleteMany({});
+    if (await decksCollection.countDocuments() === 0) {
+        await decksCollection.insertMany(mockDecks);
+        console.log("[ - SERVER - ]=> Mock decks inserted into database");
+    }
+}
+/**
+ * A function to populate the database with tips if need be
+ */
+export async function populateTips(allTips: i.Tip[]) {
+    // uncomment line beneath if you want to refresh tips in database
+    //await tipsCollection.deleteMany({});
+    if (await tipsCollection.countDocuments() === 0) {
+        await tipsCollection.insertMany(allTips);
+    }
+}
+
+// initialize decksCollection and export it to be used outside of db setup
+export const decksCollection: Collection<i.Deck> = db.collection<i.Deck>("Decks");
+// initialize feedbacksCollection and export it to be used outside of db setup
+export const feedbacksCollection: Collection<i.Feedback> = db.collection<i.Feedback>("Feedbacks");
+// initialize tipsCollection and export it to be used outside of db setup
+export const tipsCollection: Collection<i.Tip> = db.collection<i.Tip>("Tips");

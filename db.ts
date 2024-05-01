@@ -46,7 +46,6 @@ async function exit() {
 export async function connect() {
     // try to connect
     try {
-
         await client.connect();
         console.log("[ - SERVER - ]=> Connected to database");
         await seed();
@@ -105,17 +104,22 @@ async function seed() {
 async function populateDatabase(mockDecks: i.Deck[]) {
     // uncomment line beneath if you want to refresh decks in database
     // decksCollection.deleteMany({});
+
+    // if decksCollection is empty insert and log that its added
     if (await decksCollection.countDocuments() === 0) {
         await decksCollection.insertMany(mockDecks);
         console.log("[ - SERVER - ]=> Mock decks inserted into database");
     }
 }
+
 /**
  * A function to populate the database with tips if need be
  */
 export async function populateTips(allTips: i.Tip[]) {
     // uncomment line beneath if you want to refresh tips in database
     //await tipsCollection.deleteMany({});
+
+    // if decksCollection is empty insert and log that its added
     if (await tipsCollection.countDocuments() === 0) {
         await tipsCollection.insertMany(allTips);
     }

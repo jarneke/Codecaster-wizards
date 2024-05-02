@@ -37,6 +37,10 @@ app.get("/", (req, res) => {
   res.render("landingspage");
 });
 
+app.get("/login", (req, res) => {
+  res.render("loginspage");
+})
+
 
 app.get("/home", async (req, res) => {
   // params from route
@@ -354,7 +358,7 @@ app.get("/drawtest", async (req, res) => {
   });
 });
 app.get("/profile",async (req, res) => {
-  loggedInUser = await db.usersCollection.findOne({_id: loggedInUser?._id});
+  await getUsers()
   console.log(loggedInUser);
   
   res.render("profile", {
@@ -392,10 +396,12 @@ app.post("/profile",async (req,res) => {
   
   await db.usersCollection.updateOne({_id: loggedInUser?._id}, {$set: newUserDetails});
   res.redirect("/profile");
-
-
- 
 })
+
+app.post("/delete",async (req,res) => {
+  await db.usersCollection.deleteOne({_id: loggedInUser?._id});
+  res.redirect("/");
+});
 
 app.get("/editDeck", (req, res) => {
   // params from route

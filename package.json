@@ -19,6 +19,7 @@
     "@types/node": "^20.12.7"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
     "mtgsdk-ts": "^1.1.2",

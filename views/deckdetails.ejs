@@ -1,412 +1,96 @@
 <%- include("partials/header") %>
 
-  <main>
-    <section class="mainDeck">
-      <section class="container px-4 px-lg-5">
-        <section class="row gx-4 gx-lg-5 align-items-center py-5">
-          <section class="col-12 d-flex gap-3 flex-wrap">
-            <img class="img-fluid rounded col-12 col-lg-5 mb-4 mb-lg-7" src="assets/images/decks/MTGDeck.jpg"
-              alt="deck placeholder" />
-            <section class="col-lg-5">
-              <h1 class="font-weight-light text-light ch1">
-                Decknaam
-              </h1>
-              <ul class="text-light">
-                <li>Aantal kaarten: 6/60</li>
-                <br>
-                <li>Aantal landkaarten: 0</li>
-                <br>
-                <li>Gemiddelde manacost: 6</li>
-              </ul>
-              <br>
-              <!-- Button trigger modal -->
-              <button type="button" class="btn btn-danger cbg-secondary-d border-dark" data-bs-toggle="modal"
-                data-bs-target="#exampleModal">
+<main>
+  <section class="mainDeck">
+    <section class="container px-4 px-lg-5">
+      <section class="row gx-4 gx-lg-5 align-items-center py-5">
+        <section class="col-12 d-flex gap-3 flex-wrap">
+          <img
+            class="img-fluid rounded col-12 col-lg-5 mb-4 mb-lg-7"
+            src="/assets/images/decks/MTGDeck.jpg"
+            alt="deck placeholder"/>
+          <section class="col-lg-5">
+            <h1 class="font-weight-light text-light ch1"> <%= cards.deckName %> </h1>
+            <ul class="text-light">
+              <li>Aantal kaarten: 6/60</li>
+              <br />
+              <li>Aantal landkaarten: 0</li>
+              <br />
+              <li>Gemiddelde manacost: 6</li>
+            </ul>
+            
+            <br />
+
+            <a href="/editDeck"
+              ><button
+                type="button"
+                class="btn btn-lg btn-dark ctext-white"
+              >
                 Wijzig deck
-              </button>
-            </section>
+              </button></a
+            >
           </section>
         </section>
       </section>
     </section>
-    <section class="tips">
-      <article class="card text-white bg-secondary my-5 py-4 text-center mx-5">
-        <article class="tip-body">
-          <p class="text-white m-0 ch1 fs-3">
-            Tip van de dag: Lees de kaartbeschrijving zeer grondig!
-          </p>
+  </section>
+
+  <section class="tips">
+    <article class="card text-white bg-secondary my-5 py-4 text-center mx-5">
+      <article class="tip-body">
+        <p class="text-white m-0 ch1 fs-3">
+          Tip van de dag: Lees de kaartbeschrijving zeer grondig!
+        </p>
+      </article>
+    </article>
+  </section>
+
+  <%- include("partials/pagination") %>
+
+  <section class="cardsInDeck d-flex justify-content-center">
+    <section
+      class="container gx-4 gx-lg-5 mx-5 d-flex flex-wrap col-10 justify-content-center"
+    >
+      <% for (const card of cards) { %>
+      <article class="col-12 col-md-6 col-lg-4 col-xxl-4 mb-5 px-2 px-2">
+        <article
+          class="card h-100 p-3"
+          style="
+            background-image: url(/assets/images/background/MTGTest.jpg);
+            background-size: cover;
+          "
+        >
+          <article
+            class="card mtg-card rounded-5 p-1 <%= card.rarity == 'Common' ? 'cbg-white' : card.rarity == 'Uncommon' ? 'cbg-warning-l' : card.rarity == 'Rare' ? 'cbg-yellow' : card.rarity == 'Mythic' ? 'cbg-danger' : 'cbg-success' %>"
+          >
+            <a
+              href="#"
+              data-bs-toggle="modal"
+              data-bs-target="#cardModal"
+              data-bs-name="<%= card.name %>"
+              data-bs-manaCost="<%= card.manaCost %>"
+              data-bs-cmc="<%= card.cmc %>"
+              data-bs-colorId="<%= card.colorIdentity %>"
+              data-bs-rarity="<%= card.rarity %>"
+              data-bs-imageUrl="<%= card.imageUrl %>"
+              class="p-0"
+            >
+              <img
+                src="<%= card.imageUrl %>"
+                class="rounded-5 col-12"
+                style="width: 100%"
+                alt=""
+              />
+            </a>
+          </article>
+          <h2 class="card-title text-white ch1 mt-2 text-center">aantal : 1</h2>
         </article>
       </article>
+      <% } %>
     </section>
-    <nav aria-label="Page navigation" class="d-flex align-items-center justify-content-center">
-      <ul class="pagination">
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#" aria-label="Previous">
-            <svg height="1rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-              <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-              <path
-                d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
-            </svg>
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#">
-            <svg height="1rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-              <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-              <path
-                d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
-            </svg>
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#">
-            ...
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#">
-            4
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#">
-            5
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#">
-            6
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#">
-            7
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#">
-            8
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#">
-            ...
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#">
-            <svg height="1rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-              <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-              <path
-                d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z" />
-            </svg>
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#" aria-label="Next">
-            <svg height="1rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-              <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-              <path
-                d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
-            </svg>
-          </a>
-        </li>
-      </ul>
-    </nav>
-    <section class="cardsInDeck d-flex justify-content-center">
-      <section class="container gx-4 gx-lg-5 mx-5 d-flex flex-wrap col-10 justify-content-center">
-        <article class="col-12 col-md-6 col-lg-4 col-xxl-4 mb-5 px-2 px-2">
-          <article class="card h-100"
-            style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
-            <article class="card-body purplebg text-center">
-              <img class="col-12" src="assets/images/demoCards/card1.jpg" alt="Demo card">
-              <h2 class="card-title text-white ch1 mt-2">aantal : 1</h2>
-            </article>
-          </article>
-        </article>
+  </section>
 
-        <article class="col-12 col-md-6 col-lg-4 col-xxl-4 mb-5 px-2">
-          <article class="card h-100"
-            style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
-            <article class="card-body purplebg text-center">
-              <img class="col-12" src="assets/images/demoCards/card2.jpg" alt="Demo card">
-              <h2 class="card-title text-white ch1 mt-2">aantal : 1</h2>
-            </article>
-          </article>
-        </article>
-
-        <article class="col-12 col-md-6 col-lg-4 col-xxl-4 mb-5 px-2">
-          <article class="card h-100"
-            style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
-            <article class="card-body purplebg text-center">
-              <img class="col-12" src="assets/images/demoCards/card3.jpg" alt="Demo card">
-              <h2 class="card-title text-white ch1 mt-2">aantal : 1</h2>
-            </article>
-          </article>
-        </article>
-
-        <article class="col-12 col-md-6 col-lg-4 col-xxl-4 mb-5 px-2">
-          <article class="card h-100"
-            style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
-            <article class="card-body purplebg text-center">
-              <img class="col-12" src="assets/images/demoCards/card4.jpg" alt="Demo card">
-              <h2 class="card-title text-white ch1 mt-2">aantal : 1</h2>
-            </article>
-          </article>
-        </article>
-
-        <article class="col-12 col-md-6 col-lg-4 col-xxl-4 mb-5 px-2">
-          <article class="card h-100"
-            style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
-            <article class="card-body purplebg text-center">
-              <img class="col-12" src="assets/images/demoCards/card5.jpg" alt="Demo card">
-              <h2 class="card-title text-white ch1 mt-2">aantal : 1</h2>
-            </article>
-          </article>
-        </article>
-
-        <article class="col-12 col-md-6 col-lg-4 col-xxl-4 mb-5 px-2">
-          <article class="card h-100"
-            style="background-image: url(assets/images/background/MTGTest.jpg); background-size: cover;">
-            <article class="card-body purplebg text-center">
-              <img class="col-12" src="assets/images/demoCards/card8.jpeg" alt="Demo card">
-              <h2 class="card-title text-white ch1 mt-2">aantal : 1</h2>
-            </article>
-          </article>
-        </article>
-
-      </section>
-    </section>
-    <section class="Modal ctext-white fs-3 ch1">
-      <!-- Modal -->
-      <section class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <section class="modal-dialog modal-xl">
-          <section class="modal-content">
-            <article class="modal-header d-flex cbg-dark ctext-white">
-              <h5 class="modal-title ch1" id="exampleModalLabel">Decknaam</h5>
-              <button type="button" class="btn-close cbg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </article>
-            <div class="modal-body d-flex flex-wrap"
-              style="background-image: url(assets/images/decks/MTGDeck.jpg); background-repeat: no-repeat; background-size: cover;">
-              <!-- Modal Body -->
-              <section class="rounded" style="background-color: #00000099;">
-                <ul>
-                  <li>Decknaam veranderen</li>
-                  <br />
-                  <input type="text" class="form-control" id="" placeholder="Mijn deck" />
-                  <br />
-                  <li>Kaarten wijzigen</li>
-                </ul>
-                <br />
-                <section class="SelectionCards d-flex">
-                  <article class="d-flex flex-wrap col-4 p-1">
-                    <img class="img-fluid rounded col-12 my-1" src="assets/images/demoCards/card1.jpg" alt="democard" />
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" class="col-6" height="20"
-                      viewBox="0 0 512 512">
-                      <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                      <path
-                        d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM184 232H328c13.3 0 24 10.7 24 24s-10.7 24-24 24H184c-13.3 0-24-10.7-24-24s10.7-24 24-24z" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" class="col-6" height="20"
-                      viewBox="0 0 512 512">
-                      <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                      <path
-                        d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
-                    </svg>
-                  </article>
-                  <article class="d-flex flex-wrap col-4 p-1">
-                    <img class="img-fluid rounded col-12 my-1" src="assets/images/demoCards/card2.jpg" alt="democard" />
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" class="col-6" height="20"
-                      viewBox="0 0 512 512">
-                      <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                      <path
-                        d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM184 232H328c13.3 0 24 10.7 24 24s-10.7 24-24 24H184c-13.3 0-24-10.7-24-24s10.7-24 24-24z" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" class="col-6" height="20"
-                      viewBox="0 0 512 512">
-                      <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                      <path
-                        d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
-                    </svg>
-                  </article>
-                  <article class="d-flex flex-wrap col-4 p-1">
-                    <img class="img-fluid rounded col-12 my-1" src="assets/images/demoCards/card3.jpg" alt="democard" />
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" class="col-6" height="20"
-                      viewBox="0 0 512 512">
-                      <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                      <path
-                        d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM184 232H328c13.3 0 24 10.7 24 24s-10.7 24-24 24H184c-13.3 0-24-10.7-24-24s10.7-24 24-24z" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" class="col-6" height="20"
-                      viewBox="0 0 512 512">
-                      <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                      <path
-                        d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
-                    </svg>
-                  </article>
-                </section>
-                <nav aria-label="Page navigation" class="d-flex align-items-center justify-content-center mt-5">
-                  <ul class="pagination">
-                    <li class="page-item">
-                      <a class="page-link cbg-white ctext-dark" href="#" aria-label="Previous">
-                        <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                          <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                          <path
-                            d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
-                        </svg>
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link cbg-white ctext-dark" href="#">
-                        <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                          <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                          <path
-                            d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
-                        </svg>
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link cbg-white ctext-dark" href="#">
-                        ...
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link cbg-white ctext-dark" href="#">
-                        4
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link cbg-white ctext-dark" href="#">
-                        5
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link cbg-white ctext-dark" href="#">
-                        6
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link cbg-white ctext-dark" href="#">
-                        7
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link cbg-white ctext-dark" href="#">
-                        8
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link cbg-white ctext-dark" href="#">
-                        ...
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link cbg-white ctext-dark" href="#">
-                        <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                          <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                          <path
-                            d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z" />
-                        </svg>
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link cbg-white ctext-dark" href="#" aria-label="Next">
-                        <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                          <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                          <path
-                            d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
-                        </svg>
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
-            </div>
-            </article>
-            <article class="modal-footer cbg-primary">
-              <button type="button" class="btn btn-danger cbg-secondary">
-                Wijzigingen opslaan
-              </button>
-            </article>
-          </section>
-        </section>
-      </section>
-    </section>
-    <nav aria-label="Page navigation" class="d-flex align-items-center justify-content-center">
-      <ul class="pagination">
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#" aria-label="Previous">
-            <svg height="1rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-              <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-              <path
-                d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
-            </svg>
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#">
-            <svg height="1rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-              <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-              <path
-                d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
-            </svg>
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#">
-            ...
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#">
-            4
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#">
-            5
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#">
-            6
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#">
-            7
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#">
-            8
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#">
-            ...
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#">
-            <svg height="1rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-              <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-              <path
-                d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z" />
-            </svg>
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cbg-dark ctext-white" href="#" aria-label="Next">
-            <svg height="1rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-              <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-              <path
-                d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
-            </svg>
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </main>
+  <%- include("partials/pagination") %>
+</main>
 
 <%- include("partials/footer") %>

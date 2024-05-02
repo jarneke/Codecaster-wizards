@@ -11,130 +11,442 @@ import { Rarity } from "mtgsdk-ts/out/IMagic";
 
 const app = express();
 
-const allCards: Magic.Card[] = [];
-const users: i.User[] = [];
+let allDecks: i.Deck[] = [];
+getTempDecks();
+
+let loggedInUser: i.User | null = null;
+getUsers();
+
+let allCardTypes: string[] = [];
+let allCardRarities: string[] = [];
 
 app.set("port", 3000);
 app.set("view engine", "ejs");
 
 app.use(express.static("public"));
+app.use(express.urlencoded({ extended:true}))
 
 app.get("/", (req, res) => {
-    res.render("landingspage")
+  res.render("landingspage");
+});
+
+app.get("/login", (req, res) => {
+  res.render("loginspage");
 })
+
+
 app.get("/home", async (req, res) => {
-    
-    // params from route
-    let cardLookup = req.query.cardLookup
-    let filterType = req.query.filterType
-    let filterRarity = req.query.filterRarity
-    let whiteManaChecked = req.query.whiteManaChecked
-    let blueManaChecked = req.query.blueManaChecked
-    let blackManaChecked = req.query.blackManaChecked
-    let greenManaChecked = req.query.greenManaChecked
-    let redManaChecked = req.query.redManaChecked
-    let colorlessManaChecked = req.query.colorlessManaChecked
-    let sort = req.query.sort
-    let sortDirection = req.query.sortDirection
-    let pageQueryParam = req.query.page;
+  // params from route
+  // -- filter and sort
+  let cardLookup = req.query.cardLookup;
+  let filterType = req.query.filterType;
+  let filterRarity = req.query.filterRarity;
+  let whiteManaChecked = req.query.whiteManaChecked;
+  let blueManaChecked = req.query.blueManaChecked;
+  let blackManaChecked = req.query.blackManaChecked;
+  let greenManaChecked = req.query.greenManaChecked;
+  let redManaChecked = req.query.redManaChecked;
+  let colorlessManaChecked = req.query.colorlessManaChecked;
+  let sort = req.query.sort;
+  let sortDirection = req.query.sortDirection;
+  // -- pagination
+  let pageQueryParam = req.query.page;
+  // filter logic
+  let filteredAndSortedCards: Magic.Card[] = f.filterAndSortCards(allCards, cardLookup, filterType, filterRarity, whiteManaChecked, blueManaChecked, blackManaChecked, greenManaChecked, redManaChecked, colorlessManaChecked, sort, sortDirection)
+  // Pagination
+  let pageSize: number = 12;
+  let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, filteredAndSortedCards);
 
-    // filter logic
-    // -- initialize filtered cards
-    let filteredCards: Magic.Card[] = [...allCards];
-    // check if there was a search param specified
-    if (cardLookup != undefined && cardLookup != "") {
-        // filter the cards
-        filteredCards = filteredCards.filter(e => `${e.name}${e.id}`.toLowerCase().includes(`${cardLookup}`.toLowerCase()))
-    }
-    // check if type param was specified
-    if (filterType != undefined && filterType != "") {
-        // filter the cards
-        filteredCards = filteredCards.filter(e => e.types.includes(`${filterType}`))
-    }
-    // check if rarity param was specified
-    if (filterRarity != undefined && filterRarity != "") {
-        filteredCards = filteredCards.filter(e => e.rarity.includes(`${filterRarity}`))
-    }
-    // check if checkboxes are checked
-    // filter White mana
-    filteredCards = f.filterManaType(filteredCards, whiteManaChecked, "W")
-    filteredCards = f.filterManaType(filteredCards, blueManaChecked, "U")
-    filteredCards = f.filterManaType(filteredCards, blackManaChecked, "B")
-    filteredCards = f.filterManaType(filteredCards, greenManaChecked, "G")
-    filteredCards = f.filterManaType(filteredCards, redManaChecked, "R")
-    filteredCards = f.filterManaType(filteredCards, colorlessManaChecked, "C")
-    // sort logic
-    let sortedCards: Magic.Card[] = [...filteredCards]
-    if (sort != undefined) {
-        // TODO: make sort logic
-    }
-    // Pagination
-    let pageSize: number = 12;
-    let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, filteredCards);
-
-    let cardsToLoad = f.getCardsForPage(filteredCards, pageData.page, pageSize)
-    // all Card Types
-    let types: string[] = f.getAllCardTypes(filteredCards);
-    let rarities: string[] = f.getAllRarities(filteredCards);
-    // Render
-    res.render("home", {
-        // HEADER
-        user: i.tempUser,
-        // -- The names of the js files you want to load on the page.
-        jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
-        // -- The title of the page
-        title: "Home page",
-        // -- The Tab in the nav bar you want to have the orange color 
-        // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
-        tabToColor: 0,
-        // MAIN
-        // -- filter system
-        cardLookup: cardLookup,
-        type: filterType,
-        types: types,
-        rarity: filterRarity,
-        rarities: rarities,
-        whiteManaChecked: whiteManaChecked == undefined ? "true" : whiteManaChecked,
-        blueManaChecked: blueManaChecked == undefined ? "true" : blueManaChecked,
-        blackManaChecked: blackManaChecked == undefined ? "true" : blackManaChecked,
-        greenManaChecked: greenManaChecked == undefined ? "true" : greenManaChecked,
-        redManaChecked: redManaChecked == undefined ? "true" : redManaChecked,
-        colorlessManaChecked: colorlessManaChecked == undefined ? "true" : colorlessManaChecked,
-        sort: sort,
-        sortDirection: sortDirection,
-        // -- pagination
-        page: pageData.page,
-        totalPages: pageData.totalPages,
-        filterUrl: pageData.filterUrl,
-        // -- cards
-        cards: cardsToLoad
-    })
+  let cardsToLoad = f.getCardsForPage(filteredAndSortedCards, pageData.page, pageSize)
+  // Render
+  res.render("home", {
+    // HEADER
+    user: loggedInUser,
+    // -- The names of the js files you want to load on the page.
+    jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
+    // -- The title of the page
+    title: "Home page",
+    // -- The Tab in the nav bar you want to have the orange color 
+    // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
+    tabToColor: 0,
+    // MAIN
+    // -- filter system
+    cardLookup: cardLookup,
+    type: filterType,
+    types: allCardTypes,
+    rarity: filterRarity,
+    rarities: allCardRarities,
+    whiteManaChecked: whiteManaChecked == undefined ? "true" : whiteManaChecked,
+    blueManaChecked: blueManaChecked == undefined ? "true" : blueManaChecked,
+    blackManaChecked: blackManaChecked == undefined ? "true" : blackManaChecked,
+    greenManaChecked: greenManaChecked == undefined ? "true" : greenManaChecked,
+    redManaChecked: redManaChecked == undefined ? "true" : redManaChecked,
+    colorlessManaChecked: colorlessManaChecked == undefined ? "true" : colorlessManaChecked,
+    sort: sort,
+    sortDirection: sortDirection,
+    deck: "",
+    pageLink: "home",
+    // -- pagination
+    page: pageData.page,
+    totalPages: pageData.totalPages,
+    filterUrl: pageData.filterUrl,
+    // -- cards
+    cards: cardsToLoad
+  })
 })
+
+
 app.get("/decks", (req, res) => {
-    res.render("decks")
+  // params from route
+  let pageQueryParam = req.query.page;
+
+  // Pagination
+  let pageSize: number = 9;
+  let pageData: i.PageData = f.handlePageClickEvent(
+    req.query,
+    `${pageQueryParam}`,
+    pageSize,
+    allDecks
+  );
+
+  let decksForPage = f.getDecksForPage(allDecks, pageData.page, pageSize);
+
+  res.render("decks", {
+    // HEADER
+    user: loggedInUser,
+    // -- The names of the js files you want to load on the page.
+    jsFiles: [],
+    // -- The title of the page
+    title: "Deck page",
+    // -- The Tab in the nav bar you want to have the orange color
+    // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
+    tabToColor: 1,
+    // MAIN
+    // -- pagination
+    page: pageData.page,
+    totalPages: pageData.totalPages,
+    filterUrl: pageData.filterUrl,
+    // -- cards
+    decks: decksForPage,
+  });
+});
+
+
+app.get("/decks/:deckName", (req, res) => {
+  // params from route
+
+  let cardLookup = req.query.cardLookup;
+  let sort = req.query.sort;
+  let sortDirection = req.query.sortDirection;
+  let pageQueryParam = req.query.page;
+
+  let selectedDeck : i.Deck | undefined = allDecks.find(deck => {
+    return deck.deckName === req.params.deckName;
+  });
+
+  
+  // Pagination
+  let pageSize: number = 6;
+  let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, selectedDeck?.cards);
+
+  let cardsToLoad = undefined;
+
+  if (selectedDeck?.cards !== undefined) {
+   cardsToLoad = f.getCardsForPage(selectedDeck?.cards, pageData.page, pageSize)
+  } else {
+    console.log("selected deck cards = undefined");
+    
+  };
+  
+  let modalCardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize / 2)
+
+  res.render("deckdetails", {
+    // HEADER
+    user: loggedInUser,
+    // -- The names of the js files you want to load on the page.
+    jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
+    // -- The title of the page
+    title: "Home page",
+    // -- The Tab in the nav bar you want to have the orange color
+    // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
+    tabToColor: 1,
+    // MAIN
+    // -- filter system
+    cardLookup: cardLookup,
+    sort: sort,
+    sortDirection: sortDirection,
+    // -- pagination
+    page: pageData.page,
+    totalPages: pageData.totalPages,
+    filterUrl: pageData.filterUrl,
+    // -- cards
+    cards: cardsToLoad,
+    modalCards: modalCardsToLoad,
+  });
+});
+
+let lastSelectedDeck: i.Deck;
+let selectedDeck: i.Deck | undefined = undefined;
+let unpulledCards: Magic.Card[] | undefined = [];
+let pulledCards: Magic.Card[];
+
+app.get("/drawtest", async (req, res) => {
+  // Query params
+  // -- filter and sort
+  let cardLookup = req.query.cardLookup;
+  let filterType = req.query.filterType;
+  let filterRarity = req.query.filterRarity;
+  let whiteManaChecked = req.query.whiteManaChecked;
+  let blueManaChecked = req.query.blueManaChecked;
+  let blackManaChecked = req.query.blackManaChecked;
+  let greenManaChecked = req.query.greenManaChecked;
+  let redManaChecked = req.query.redManaChecked;
+  let colorlessManaChecked = req.query.colorlessManaChecked;
+  let sort = req.query.sort;
+  let sortDirection = req.query.sortDirection;
+  let deck = req.query.decks;
+  let cardLookupInDeck = req.query.cardLookupInDeck;
+  // -- pagination
+  let pageQueryParam = req.query.page;
+  // -- other
+  let whatToDo = req.query.action;
+  let selectedDeckQuery = req.query.decks;
+  // Logic
+  // Find What Deck is selected
+  selectedDeck = allDecks.find(e => e.deckName == selectedDeckQuery)
+
+  // if deck is not found,
+  // set to deck nr. 1
+  // else set to lastDeck
+  if (selectedDeck === undefined) {
+    if (lastSelectedDeck == undefined) {
+      selectedDeck = allDecks[0]
+    } else {
+      selectedDeck = lastSelectedDeck;
+    }
+  }
+
+  let cardLookupInDeckCard: Magic.Card | undefined = undefined
+  let cardLookupInDeckCardChance: number | undefined = undefined
+  // if deck is diffrent from last load
+  if (lastSelectedDeck !== selectedDeck) {
+    // set unpulledCards to cards of new deck
+    unpulledCards = [...selectedDeck.cards];
+    // Shuffle cards
+    unpulledCards = [...f.shuffleCards(unpulledCards)]
+    // clear pulledCards
+    pulledCards = [];
+  } else {
+    // if clicked to pull a card
+    if (whatToDo == "pull") {
+      if (pulledCards !== undefined && unpulledCards !== undefined) {
+        // get the last card from the unpulled cards
+        let card = unpulledCards.pop()
+        if (card !== undefined) {
+          // if it exists add it as the first card in pulledCards
+          pulledCards.unshift(card);
+        }
+      }
+      // if clicked to reset
+    } else if (whatToDo == "reset") {
+      // reset the unpulledcards to the cards of the selected deck
+      unpulledCards = [...selectedDeck.cards]
+      // shuffle the cards
+      unpulledCards = [...f.shuffleCards(unpulledCards)]
+      // empty the pulled cards
+      pulledCards = [];
+    }
+    // if cardLookupInDeck is not defined
+    if (cardLookupInDeck != undefined && selectedDeck != undefined) {
+      console.log("step 1");
+
+      // find the card they are looking for
+      cardLookupInDeckCard = selectedDeck.cards.find(e => e.name.toLowerCase().includes(`${cardLookupInDeck}`.toLowerCase()))
+      console.log("step 2" + cardLookupInDeckCard?.name);
+
+      // if card is found and there are cards in unpulledCards
+      if (cardLookupInDeckCard != undefined && unpulledCards != undefined) {
+        console.log("cardLookupInDeckCard:", cardLookupInDeckCard);
+
+        // calculate the chance u have to pull that card from the unpulledCards
+        cardLookupInDeckCardChance = f.getChance(unpulledCards, cardLookupInDeckCard).chance
+        console.log("step 3" + cardLookupInDeckCardChance);
+      }
+    }
+
+  }
+  // --filter logic
+  let filterAndSortedCards: Magic.Card[] = pulledCards;
+  if (pulledCards !== undefined) {
+    filterAndSortedCards = [...f.filterAndSortCards(pulledCards, cardLookup, filterType, filterRarity, whiteManaChecked, blueManaChecked, blackManaChecked, greenManaChecked, redManaChecked, colorlessManaChecked, sort, sortDirection)]
+  }
+
+  // get the cardToShow (always the first card in pulledCards)
+  let cardToShow: Magic.Card = pulledCards[0];
+  // initialize nextCard
+  let nextCard: Magic.Card | undefined = undefined
+  // if there is still a card in unpulled cards
+  if (unpulledCards !== undefined) {
+    // set nextCard to the last index of unpulledCards
+    nextCard = unpulledCards[unpulledCards.length - 1]
+  }
+
+  // calculate the chanceData of the cardToSHow
+  let chanceData = f.getChance(selectedDeck.cards, cardToShow)
+  // save selectedDeck to be used next load of page
+  lastSelectedDeck = selectedDeck;
+
+  // Pagination
+  let pageSize: number = 6;
+  let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, filterAndSortedCards);
+
+  let cardsToShow = f.getCardsForPage(filterAndSortedCards, pageData.page, pageSize)
+
+
+  res.render("drawtest", {
+    // HEADER
+    user: loggedInUser,
+    // -- The names of the js files you want to load on the page.
+    jsFiles: ["submitOnChange", "cardsModal", "manaCheckbox", "tooltips", "drawCard"],
+    // -- The title of the page
+    title: "Deck simuleren",
+    // -- The Tab in the nav bar you want to have the orange color
+    // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
+    tabToColor: 2,
+    // MAIN
+    // -- filter system
+    cardLookup: cardLookup,
+    type: filterType,
+    types: allCardTypes,
+    rarity: filterRarity,
+    rarities: allCardRarities,
+    whiteManaChecked: whiteManaChecked == undefined ? "true" : whiteManaChecked,
+    blueManaChecked: blueManaChecked == undefined ? "true" : blueManaChecked,
+    blackManaChecked: blackManaChecked == undefined ? "true" : blackManaChecked,
+    greenManaChecked: greenManaChecked == undefined ? "true" : greenManaChecked,
+    redManaChecked: redManaChecked == undefined ? "true" : redManaChecked,
+    colorlessManaChecked: colorlessManaChecked == undefined ? "true" : colorlessManaChecked,
+    sort: sort,
+    sortDirection: sortDirection,
+    deck: deck,
+    pageLink: "drawtest",
+    // -- pagination
+    page: pageData.page,
+    totalPages: pageData.totalPages,
+    filterUrl: pageData.filterUrl,
+    // -- cardlookupInDeck
+    cardLookupInDeck: cardLookupInDeck,
+    cardLookupInDeckCard: cardLookupInDeckCard,
+    cardLookupInDeckCardChance: cardLookupInDeckCardChance,
+    // -- other
+    allDecks: allDecks,
+    selectedDeck: selectedDeck,
+    unpulledCards: unpulledCards,
+    pulledCards: pulledCards,
+    cardsToShow: cardsToShow,
+    card: cardToShow,
+    nextCard: nextCard,
+    percentile: chanceData.chance,
+    amount: chanceData.amount,
+  });
+});
+app.get("/profile",async (req, res) => {
+  await getUsers()
+  console.log(loggedInUser);
+  
+  res.render("profile", {
+    // HEADER
+    user: loggedInUser,
+    // -- The names of the js files you want to load on the page.
+    jsFiles: ["editProfile"],
+    // -- The title of the page
+    title: "Profile Page",
+    // -- The Tab in the nav bar you want to have the orange color 
+    // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
+    tabToColor: 3,
+    favoriteDecks: allDecks,
+  });
+
+});
+
+app.post("/profile",async (req,res) => {
+  console.log(req.body);
+  
+  const firstName: string = req.body.firstName;
+  const lastName: string = req.body.lastName;
+  const userName: string = `${firstName === ""? loggedInUser?.firstName : firstName}_${lastName === ""? loggedInUser?.lastName : lastName}`;
+  const email: string = req.body.email;
+  const password: string = req.body.passwordFormLabel; //later encrypten
+  const description: string = req.body.description;
+  const newUserDetails : i.User = {
+    firstName: (firstName === "" && loggedInUser)? loggedInUser.firstName : firstName,
+    lastName: (lastName === "" && loggedInUser)? loggedInUser?.lastName : lastName,
+    userName: (userName === "" && loggedInUser)? loggedInUser?.userName : userName,
+    email: (email === "" && loggedInUser)? loggedInUser?.email : email,
+    description: (description === "" && loggedInUser)? loggedInUser.description : description,
+    password: (password === "" && loggedInUser)? loggedInUser.password : password
+  };
+  
+  await db.usersCollection.updateOne({_id: loggedInUser?._id}, {$set: newUserDetails});
+  res.redirect("/profile");
 })
-app.get("/deckdetails", (req, res) => {
-    res.render("deckdetails")
-})
-app.get("/drawtest", (req, res) => {
-    res.render("drawtest")
-})
-app.get("/profile", (req, res) => {
-    res.render("profile")
-})
+
+app.post("/delete",async (req,res) => {
+  await db.usersCollection.deleteOne({_id: loggedInUser?._id});
+  res.redirect("/");
+});
+
+app.get("/editDeck", (req, res) => {
+  // params from route
+  let pageQueryParam = req.query.page;
+
+  // Pagination
+  let pageSize: number = 6;
+  let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, allCards);
+
+  let cardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize)
+  let modalCardsToLoad = f.getCardsForPage(allCards, pageData.page, pageSize / 2)
+
+  res.render("editDeck", {
+    // HEADER
+    user: loggedInUser,
+    // -- The names of the js files you want to load on the page.
+    jsFiles: ["deckname"],
+    // -- The title of the page
+    title: "Edit page",
+    // -- The Tab in the nav bar you want to have the orange color
+    // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
+    tabToColor: 1,
+    // -- pagination
+    page: pageData.page,
+    totalPages: pageData.totalPages,
+    filterUrl: pageData.filterUrl,
+    // -- cards
+    cards: cardsToLoad,
+    modalCards: modalCardsToLoad,
+  });
+});
 
 app.listen(app.get("port"), async () => {
-    console.log("[ - SERVER - ] Listening at http://localhost:" + app.get("port"));
-    // Get all the cards from the api, there are allot so takes a while before all cards get loaded
-    // The SDK thankfully makes it so that we can load them in in batches, so the app will work and will graduatly load in more.
-    Magic.Cards.all({ page: 1, pageSize: 100 }).on("data", card => {
-        // filter out cards without images ==> Usually these cards in the api are duplicates so we dont add them, this makes it also so that we dont need to worry about improperly displaying the crads.
-        if (card.imageUrl !== undefined) {
-            allCards.push(card)
-        }
+  console.log(
+    "[ - SERVER - ] Listening at http://localhost:" + app.get("port")
+  );
+  // Get all the cards from the api, there are allot so takes a while before all cards get loaded
+  // The SDK thankfully makes it so that we can load them in in batches, so the app will work and will graduatly load in more.
+  Magic.Cards.all({ page: 1, pageSize: 100 })
+    .on("data", (card) => {
+      // filter out cards without images ==> Usually these cards in the api are duplicates so we dont add them, this makes it also so that we dont need to worry about improperly displaying the crads.
+      if (card.imageUrl !== undefined) {
+        allCards.push(card);
+        allCardTypes = f.getAllCardTypes(allCards);
+        allCardRarities = f.getAllRarities(allCards);
+        allCards[0].rarity
+      }
     })
-        // If all cards are loaded display message
-        .on("end", () => console.log("[ - SERVER - ] All cards gotten"))
-        // If error while loading, display error
-        .on("error", e => console.log("ERROR: " + e))
-})
+    // If all cards are loaded display message
+    .on("end", () => console.log("[ - SERVER - ] All cards gotten"))
+    // If error while loading, display error
+    .on("error", (e) => console.log("ERROR: " + e));
+
+  await db.connect()
+});

@@ -43,7 +43,7 @@ export function handlePageClickEvent(reqQuery: any, pageQueryParam: string, page
     // if true => add to filterUrl
     // if false => skip
     for (const [key, value] of Object.entries(reqQuery)) {
-        if (key !== "page" && value) {
+        if (key !== "page" && value && key !== "action") {
             filterUrl += `${key}=${value}&`;
         }
     }
@@ -67,9 +67,10 @@ export function getAllCardTypes(allCards: Magic.Card[]): string[] {
     for (const card of allCards) {
         let cardTypes = card.types
         if (cardTypes && Array.isArray(cardTypes)) {
-            const type = cardTypes.join(" ");
-            if (!types.includes(type)) {
-                types.push(type);
+            for (const type of cardTypes) {
+                if (!types.includes(type)) {
+                    types.push(type);
+                }
             }
         }
     }
@@ -81,14 +82,14 @@ export function getAllCardTypes(allCards: Magic.Card[]): string[] {
  * @returns array of all types
  */
 export function getAllRarities(allCards: Magic.Card[]): string[] {
-    let rarities: string[] = []
+    let types: string[] = []
     for (const card of allCards) {
-        let rarity: string = card.rarity
-        if (!rarities.includes(rarity)) {
-            rarities.push(rarity);
+        let cardTypes = card.rarity
+        if (!types.includes(cardTypes)) {
+            types.push(cardTypes);
         }
     }
-    return rarities;
+    return types;
 }
 /**
  * A function to filter cards by a specified mana color
@@ -100,8 +101,102 @@ export function getAllRarities(allCards: Magic.Card[]): string[] {
 export function filterManaType(arrToFilter: Magic.Card[], manaReqQuery: any, colorCode: string): Magic.Card[] {
     if (manaReqQuery != undefined && manaReqQuery != "") {
         if (manaReqQuery == "false") {
-            arrToFilter = arrToFilter.filter(e => e && e.manaCost && !e.manaCost.includes(colorCode))
+            arrToFilter = arrToFilter.filter(e => e.manaCost && !e.manaCost.includes(colorCode))
         }
     }
     return arrToFilter;
+}
+/**
+ * A function to filter cards by colorless mana color
+ * @param arrToFilter The array to filter
+ * @param manaReqQuery the req.query.<mana>ManaColor
+ * @returns filtered array
+ */
+export function filterColorlessManaType(arrToFilter: Magic.Card[], manaReqQuery: any): Magic.Card[] {
+    if (manaReqQuery !== undefined && manaReqQuery !== "") {
+        if (manaReqQuery == "false") {
+            arrToFilter = arrToFilter.filter(e => {
+                const hasNumber = /\d/.test(e.manaCost);
+                return !hasNumber;
+            })
+        }
+    }
+    return arrToFilter;
+}
+export function sortBy(a: i.Card, b: i.Card, sortParam: string): number {
+    if (typeof a[`${sortParam}`] === "string" && typeof b[`${sortParam}`] === "string") {
+        return a[`${sortParam}`].localeCompare(b[`${sortParam}`])
+    } else if (typeof a[`${sortParam}`] === "number" && typeof b[`${sortParam}`] === "number") {
+        return b[`${sortParam}`] - a[`${sortParam}`]
+    } else {
+        console.log(typeof a[`${sortParam}`]);
+        return 0;
+    }
+}
+export function getDecksForPage(allItems: i.Deck[], page: number, pageSize: number): i.Deck[] {
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return allItems.slice(startIndex, endIndex);
+}
+export function filterAndSortCards(allCards: Magic.Card[], cardLookup: any, filterType: any, filterRarity: any, whiteManaChecked: any, blueManaChecked: any, blackManaChecked: any, greenManaChecked: any, redManaChecked: any, colorlessManaChecked: any, sort: any, sortDirection: any): Magic.Card[] {
+    let filteredCards: Magic.Card[] = [...allCards];
+    // check if there was a search param specified
+    if (cardLookup != undefined && cardLookup != "") {
+        // filter the cards
+        filteredCards = filteredCards.filter(e => `${e.name}${e.id}${e.multiverseid}`.toLowerCase().includes(`${cardLookup}`.toLowerCase()))
+    }
+    // check if type param was specified
+    if (filterType != undefined && filterType != "") {
+        // filter the cards
+        filteredCards = filteredCards.filter(e => e.types.includes(`${filterType}`))
+    }
+    // check if rarity param was specified
+    if (filterRarity != undefined && filterRarity != "") {
+        filteredCards = filteredCards.filter(e => e.rarity.includes(`${filterRarity}`))
+    }
+    // check if checkboxes are checked
+    // filter White mana
+    filteredCards = filterManaType(filteredCards, whiteManaChecked, "W")
+    filteredCards = filterManaType(filteredCards, blueManaChecked, "U")
+    filteredCards = filterManaType(filteredCards, blackManaChecked, "B")
+    filteredCards = filterManaType(filteredCards, greenManaChecked, "G")
+    filteredCards = filterManaType(filteredCards, redManaChecked, "R")
+    filteredCards = filterColorlessManaType(filteredCards, colorlessManaChecked)
+    // sort logic
+    let sortedCards: Magic.Card[] = [...filteredCards]
+    if (sort != undefined && sort != "" && sortDirection != undefined && sortDirection != "") {
+        if (`${sortDirection}` === "down") {
+            sortedCards = [...sortedCards.sort((a: Magic.Card, b: Magic.Card) => sortBy(a, b, `${sort}`))]
+        } else {
+            sortedCards = [...sortedCards.sort((a: Magic.Card, b: Magic.Card) => sortBy(a, b, `${sort}`) * -1)]
+        }
+    }
+
+    return sortedCards
+}
+export function shuffleCards(cards: Magic.Card[]): Magic.Card[] {
+    for (let i = cards.length - 1; i > 0; i--) {
+        const j: number = Math.floor(Math.random() * (i + 1))
+        const temp = cards[i];
+        cards[i] = cards[j];
+        cards[j] = temp
+    }
+    return cards;
+}
+export function getRandomNumber(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+export function getChance(cards: Magic.Card[], card: Magic.Card): { chance: number, amount: number } {
+    console.log('Card object:', card); // Add this line for logging
+    let count = 0;
+    cards.forEach((arrCard, index) => {
+        if (arrCard && typeof arrCard === typeof card && arrCard.name === card.name) {
+            count++;
+        }
+    });
+    let amountOfCard: number = count;
+    return {
+        chance: Math.round((amountOfCard / cards.length) * 10000) / 100,
+        amount: amountOfCard
+    };
 }

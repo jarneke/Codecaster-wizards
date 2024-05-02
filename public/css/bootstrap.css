@@ -394,8 +394,14 @@ body,
 .flip-card-back {
   transform: rotateY(180deg);
 }
-
-
+#dropdownContainer {
+  position: relative;
+  height: 2.6rem;
+}
+#cardLookupInDeckDropdown {
+  position: absolute;
+  z-index: 1000;
+}
 @keyframes card-flip {
   0% {
     transform: scale(1);

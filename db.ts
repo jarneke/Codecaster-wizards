@@ -1,4 +1,4 @@
-import { Collection, MongoClient } from "mongodb";
+import { Db, Collection, MongoClient } from "mongodb";
 import * as i from "./interfaces"
 import * as f from "./functions"
 import Magic = require("mtgsdk-ts");
@@ -6,55 +6,63 @@ import dotenv from "dotenv"
 
 dotenv.config();
 
-const uri: any = process.env.MONGO_URI || "mongodb://localhost:27017"
-export const client = new MongoClient(uri);
+// all devTips
+const mtgTips: i.Tip[] = [
+    { tip: "Let op je mana curve - zorg voor een goede verdeling van goedkope, mid-range en dure spreuken." },
+    { tip: "Vergeet je landdrops niet - het spelen van een land per beurt is cruciaal om aan je manavereisten te voldoen." },
+    { tip: "Ken de stack - begrijp hoe de stack werkt en de implicaties van het spelen van spreuken en vaardigheden op verschillende momenten." },
+    { tip: "Lees de kaarten zorgvuldig door - soms kan de bewoording een groot verschil maken in hoe een kaart functioneert." },
+    { tip: "Houd de levens totalen bij - zowel die van jou als van je tegenstander. Het is gemakkelijk te vergeten, maar het kan cruciaal zijn voor het plannen van je strategie." },
+    { tip: "Plan je beurten vooruit - denk na over je plays tijdens de beurt van je tegenstander om de efficiëntie te maximaliseren." },
+    { tip: "Breid niet te ver uit - wees voorzichtig met het inzetten van te veel middelen op het bord in één keer, want dit kan je kwetsbaar maken voor board wipes." },
+    { tip: "Weet wanneer je moet aanvallen en wanneer je je moet terugtrekken - soms is het beter om te wachten op een betere gelegenheid om aan te vallen dan je te haasten." },
+    { tip: "Sideboard effectief - heb een plan om met veelvoorkomende matchups om te gaan en pas je deck dienovereenkomstig aan tussen games." },
+    { tip: "Oefening, oefening, oefening - hoe meer je speelt, hoe beter je de complexiteit van het spel leert begrijpen en je vaardigheden verbetert." },
+    { tip: "Raak niet ontmoedigd door nederlagen - leren van je fouten is een belangrijk onderdeel om een betere speler te worden." },
+    { tip: "Veel plezier! - Magic is een spel, dus zorg ervoor dat je je amuseert en de ervaring waardeert, winnen of verliezen." },
+];
 
+// get uri from enviroment variables
+const uri: any = process.env.MONGO_URI || "mongodb://localhost:27017"
+// initialize Mongoclient
+export const client = new MongoClient(uri);
+// initialize database
+const db: Db = client.db("Codecaster");
+// exit function
 async function exit() {
     try {
+        // try to close connection
         await client.close();
-        console.log("Disconnected from database");
+        console.log("[ - SERVER - ]=> Disconnected from database");
     } catch (error) {
+        // if errors, log it
         console.error(error);
     }
     process.exit(0);
 }
-
-export const decksCollection: Collection<i.Deck> = client.db("Codecaster").collection<i.Deck>("Decks");
-export const usersCollection: Collection<i.User> = client.db("Codecaster").collection<i.User>("Users");
-
-function getRandomNumber(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-}
-function generateMockDecks(allCards: Magic.Card[]): i.Deck[] {
-    const mockDecks: i.Deck[] = [];
-
-    // Generate 9 mock decks
-    for (let i = 1; i <= 9; i++) {
-        const deckName = `Deck ${i}`;
-        const deckImageUrl = `/assets/images/decks/Deck${i}.jpg`;
-        const cardsCount = getRandomNumber(5, 60);
-        const cards: Magic.Card[] = [];
-
-        // Add random cards to the deck
-        for (let j = 0; j < cardsCount; j++) {
-            const randomIndex = getRandomNumber(0, allCards.length - 1);
-            cards.push(allCards[randomIndex]);
-        }
-
-        // Create the deck object
-        const deck: i.Deck = {
-            deckName,
-            cards,
-            deckImageUrl
-        };
-
-        // Push the deck to the array of mock decks
-        mockDecks.push(deck);
+/**
+ * A function to connect to the database
+ */
+export async function connect() {
+    // try to connect
+    try {
+        await client.connect();
+        console.log("[ - SERVER - ]=> Connected to database");
+        await seed();
+        // if application is exited, close connection
+        process.on("SIGINT", exit); // For manually stopping the server
+        process.on("SIGUSR2", exit); // For nodemon restarting on save
     }
-
-    return mockDecks;
+    // else log error 
+    catch (error) {
+        console.error(error);
+    }
 }
+/**
+ * A function to seed the database if needed
+ */
 async function seed() {
+    // initialize allCards
     const allCards: Magic.Card[] = [];
     const allUsers: i.User[] = [
         {
@@ -82,83 +90,71 @@ async function seed() {
             password: "Michael!23"
           }
     ];
+    // variable to store amount of loadedcards
     let loadedCardCount = 0;
+    // The amount of cards we want to load
     const desiredCardCount = 100; // Change this to the desired number of cards to load before generating mock decks
 
-    const emitter = Magic.Cards.all({ page: 1, pageSize: desiredCardCount })
-        .on("data", (card) => {
+    // initialize emitter to get cards
+    const emitter = await Magic.Cards.all({})
+        // on card recieved
+        .on("data", async (card) => {
+            // check if the card has a imageUrl
             if (card.imageUrl !== undefined) {
+                // push card to allCards array
                 allCards.push(card);
+                // and update counter
                 loadedCardCount++;
 
                 // Check if desired number of cards have been loaded
                 if (loadedCardCount >= desiredCardCount) {
-                    const mockDecks: i.Deck[] = generateMockDecks(allCards);
-                    populateDatabase(mockDecks);
-                    console.log("seeded");
-
+                    // cancel the emmit to stop getting cards
                     emitter.cancel();
+                    // generate mockDecks
+                    const mockDecks: i.Deck[] = await f.generateMockDecks(allCards);
+                    // populate the database if need be with mockDecks
+                    await populateDatabase(mockDecks);
+                    // populate the database if need be with tips
+                    await populateTips(mtgTips);
+                    // log that the db is seeded
+                    await console.log("[ - SERVER - ]=> Done seeding the database");
                 }
             }
         })
-        .on("error", (e) => console.log("ERROR: " + e));
+        // if error occurs with loading cards, log it
+        .on("error", (e) => console.error("ERROR: " + e));
+}
+/**
+ * a function to insert mock decks into database if needed
+ * @param mockDecks array of mockDecks
+ */
+async function populateDatabase(mockDecks: i.Deck[]) {
+    // uncomment line beneath if you want to refresh decks in database
+    // decksCollection.deleteMany({});
 
-    async function populateDatabase(mockDecks: i.Deck[]) {
-        if (await usersCollection.countDocuments() === 0) {
-            await usersCollection.insertMany(allUsers);
-            console.log("Mock users inserted into database");
-        }
-        
-        // decksCollection.deleteMany({})
-        if (await decksCollection.countDocuments() === 0) {
-            await decksCollection.insertMany(mockDecks);
-            console.log("Mock decks inserted into database");
-        }
+    // if decksCollection is empty insert and log that its added
+    if (await decksCollection.countDocuments() === 0) {
+        await decksCollection.insertMany(mockDecks);
+        console.log("[ - SERVER - ]=> Mock decks inserted into database");
     }
 }
 
+/**
+ * A function to populate the database with tips if need be
+ */
+export async function populateTips(allTips: i.Tip[]) {
+    // uncomment line beneath if you want to refresh tips in database
+    //await tipsCollection.deleteMany({});
 
-export async function connect() {
-    try {
-        await client.connect();
-        console.log("Connected to database");
-        await seed();
-        process.on("SIGINT", exit);
-    } catch (error) {
-        console.error(error);
+    // if decksCollection is empty insert and log that its added
+    if (await tipsCollection.countDocuments() === 0) {
+        await tipsCollection.insertMany(allTips);
     }
 }
 
-
-const mtgTips : i.Tips[] = [
-    {tip: "Pay attention to your mana curve - make sure you have a good distribution of low-cost, mid-cost, and high-cost spells."},
-    {tip: "Don't forget your land drops - playing a land each turn is crucial for hitting your mana requirements."},
-    {tip: "Know the stack - understand how the stack works and the implications of playing spells and abilities at different times."},
-    {tip: "Read the cards carefully - sometimes the wording can make a big difference in how a card functions."},
-    {tip: "Keep track of life totals - both yours and your opponent's. It's easy to forget, but it can be crucial for planning your strategy."},
-    {tip: "Plan your turns ahead - think about your plays during your opponent's turn to maximize efficiency."},
-    {tip: "Don't overextend - be cautious about committing too many resources to the board at once, as it can leave you vulnerable to board wipes."},
-    {tip: "Know when to attack and when to hold back - sometimes it's better to wait for a better opportunity to attack rather than rushing in."},
-    {tip: "Sideboard effectively - have a plan for dealing with common matchups and adjust your deck accordingly between games."},
-    {tip: "Practice, practice, practice - the more you play, the better you'll become at understanding the game's intricacies and improving your skills."},
-    {tip: "Don't get discouraged by losses - learning from your mistakes is an important part of becoming a better player."},
-    {tip: "Have fun! - Magic is a game, so make sure to enjoy yourself and appreciate the experience, win or lose."}
-];
-
-export async function populateTips(){
-    try {
-        client.connect();
-
-        // Collectie leegmaken
-        const emptyTips = await client.db("Codecaster").collection("Tips").deleteMany({});
-
-        // Array van tips toevoegen aan dbm
-        await client.db("Codecaster").collection("Tips").insertMany(mtgTips);
-
-
-    } catch (e) {
-        console.error(e);
-    } finally {
-        client.close();
-    }
-}
+// initialize decksCollection and export it to be used outside of db setup
+export const decksCollection: Collection<i.Deck> = db.collection<i.Deck>("Decks");
+// initialize feedbacksCollection and export it to be used outside of db setup
+export const feedbacksCollection: Collection<i.Feedback> = db.collection<i.Feedback>("Feedbacks");
+// initialize tipsCollection and export it to be used outside of db setup
+export const tipsCollection: Collection<i.Tip> = db.collection<i.Tip>("Tips");

@@ -11,13 +11,14 @@ export interface User {
     description: string,
     Password: string,
 }
+// used for testing while log in and user registration is not done yet
 export const tempUser: User = {
     firstName: "John",
-    lastName: "",
-    userName: "",
-    email: "",
-    description: "",
-    Password: ""
+    lastName: "Doe",
+    userName: "John_Doe",
+    email: "John.Doe@example.com",
+    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur aliquid excepturi ducimus provident temporibus vero error sed distinctio, ab ut.",
+    Password: "Password123"
 }
 // interface for pageData
 export interface PageData {

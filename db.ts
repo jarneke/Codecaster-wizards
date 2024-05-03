@@ -63,40 +63,50 @@ export async function connect() {
  */
 async function seed() {
     // initialize allCards
-    const allCards: Magic.Card[] = [];
-    // variable to store amount of loadedcards
-    let loadedCardCount = 0;
-    // The amount of cards we want to load
-    const desiredCardCount = 100; // Change this to the desired number of cards to load before generating mock decks
-
-    // initialize emitter to get cards
-    const emitter = await Magic.Cards.all({})
-        // on card recieved
-        .on("data", async (card) => {
-            // check if the card has a imageUrl
-            if (card.imageUrl !== undefined) {
-                // push card to allCards array
-                allCards.push(card);
-                // and update counter
-                loadedCardCount++;
-
-                // Check if desired number of cards have been loaded
-                if (loadedCardCount >= desiredCardCount) {
-                    // cancel the emmit to stop getting cards
-                    emitter.cancel();
-                    // generate mockDecks
-                    const mockDecks: i.Deck[] = await f.generateMockDecks(allCards);
-                    // populate the database if need be with mockDecks
-                    await populateDatabase(mockDecks);
-                    // populate the database if need be with tips
-                    await populateTips(mtgTips);
-                    // log that the db is seeded
-                    await console.log("[ - SERVER - ]=> Done seeding the database");
+    let allCards: Magic.Card[] = [];
+    // rough estimate of total cards to make loadingbar
+    const allCardsCount: number = 26023;
+    // if there are no cards in database pull them from API, else pull them from database
+    if (!await cardsCollection.findOne({})) {
+        console.log("[ - SERVER - ]=> Fetching all cards from API");
+        // initialize emitter to get cards
+        Magic.Cards.all({})
+            // on card recieved
+            .on("data", async (card) => {
+                // check if the card has a imageUrl
+                if (card.imageUrl !== undefined) {
+                    // display loading screen
+                    console.clear();
+                    // generate loadingbar and display it
+                    console.log(f.updateLoadingBar(allCards.length / allCardsCount));
+                    console.log();
+                    const isInArray: boolean = !allCards.some((e) => e.name == card.name)
+                    // log if card is already in allCard or not and show the amount of cards
+                    console.log("Adding card..\t" + isInArray + `\t=>\tCount: ${allCards.length}`);
+                    // if card doesnt have a duplicate in allCards array
+                    if (isInArray) {
+                        // push card to allCards array
+                        allCards.push(card);
+                    }
                 }
-            }
-        })
-        // if error occurs with loading cards, log it
-        .on("error", (e) => console.error("ERROR: " + e));
+            })
+            .on("end", async () => {
+                await cardsCollection.insertMany(allCards)
+                // generate mockDecks
+                const mockDecks: i.Deck[] = f.generateMockDecks(allCards);
+                // populate the database if need be with mockDecks
+                await populateDatabase(mockDecks);
+                // populate the database if need be with tips
+                await populateTips(mtgTips);
+                // log that the db is seeded
+                console.log("[ - SERVER - ]=> Done seeding the database");
+            })
+            // if error occurs with loading cards, log it
+            .on("error", (e) => console.error("ERROR: " + e));
+    } else {
+        console.log("[ - SERVER - ]=> Fetching all cards from database");
+        allCards = await cardsCollection.find({}).toArray();
+    }
 }
 /**
  * a function to insert mock decks into database if needed
@@ -132,3 +142,5 @@ export const decksCollection: Collection<i.Deck> = db.collection<i.Deck>("Decks"
 export const feedbacksCollection: Collection<i.Feedback> = db.collection<i.Feedback>("Feedbacks");
 // initialize tipsCollection and export it to be used outside of db setup
 export const tipsCollection: Collection<i.Tip> = db.collection<i.Tip>("Tips");
+// initialize cardsCollection and export it to be used outside of db setup
+export const cardsCollection: Collection<Magic.Card> = db.collection<Magic.Card>("Cards");

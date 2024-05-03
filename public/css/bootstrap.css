@@ -402,6 +402,10 @@ body,
   position: absolute;
   z-index: 1000;
 }
+#cardNames {
+  max-height: 50vh;
+  overflow-y: scroll;
+}
 @keyframes card-flip {
   0% {
     transform: scale(1);

@@ -4,10 +4,22 @@ import * as i from "./interfaces";
 import Magic = require("mtgsdk-ts");
 import * as f from "./functions";
 import * as db from "./db";
-import bodyParser from "body-parser"
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 
+async function getAllCards() {
+    try {
+        console.log("[ - SERVER - ]=> Getting all cards");
+        allCards = await db.cardsCollection.find({
 
-export let allCards: Magic.Card[] = [];
+        }).toArray();
+        console.log("[ - SERVER - ]=> Done getting cards");
+
+    } catch (error) {
+        console.error(error);
+
+    }
+}
 
 async function getTempDecks() {
     allDecks = await db.decksCollection.find({}).toArray();
@@ -20,10 +32,10 @@ async function getTips() {
 const app = express();
 
 let allTips: i.Tip[] = [];
-getTips();
 
 let allDecks: i.Deck[] = [];
-getTempDecks();
+
+let allCards: Magic.Card[] = [];
 
 let allCardTypes: string[] = [];
 let allCardRarities: string[] = [];
@@ -32,11 +44,16 @@ app.set("port", process.env.PORT ?? 3000);
 app.set("view engine", "ejs");
 
 app.use(express.static("public"));
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
     res.render("landingspage");
 });
+
+app.post("/dontShowPopup", async (req, res) => {
+    res.redirect("/home")
+})
 
 app.post("/feedback", (req, res) => {
     const feedbackType = req.body.feedbackType;
@@ -548,24 +565,14 @@ app.get("/editDeck/:deckName", async (req, res) => {
 });
 
 app.listen(app.get("port"), async () => {
-    // Get all the cards from the api, there are allot so takes a while before all cards get loaded
-    // The SDK thankfully makes it so that we can load them in in batches, so the app will work and will graduatly load in more.
-    Magic.Cards.all({ page: 1, pageSize: 100 })
-        .on("data", (card) => {
-            // filter out cards without images ==> Usually these cards in the api are duplicates so we dont add them, this makes it also so that we dont need to worry about improperly displaying the crads.
-            if (card.imageUrl !== undefined) {
-                allCards.push(card);
-                allCardTypes = f.getAllCardTypes(allCards);
-                allCardRarities = f.getAllRarities(allCards);
-                allCards[0].rarity;
-            }
-        })
-        // If all cards are loaded display message
-        .on("end", () => console.log("[ - SERVER - ] All cards gotten"))
-        // If error while loading, display error
-        .on("error", (e) => console.log("[ - SERVER - ]=> ERROR: " + e));
-
     await db.connect()
+
+    // Get all the cards from the api, there are allot so takes a while before all cards get loaded
+    await getAllCards();
+    await getTempDecks();
+    await getTips();
+    allCardTypes = f.getAllCardTypes(allCards);
+    allCardRarities = f.getAllRarities(allCards);
     console.log(
         "[ - SERVER - ]=> Listening at http://localhost:" + app.get("port")
     );

@@ -8,19 +8,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const pulledCardsBtn = document.getElementById("pulledCardsBtn");
     const cardLookupInDeckInput = document.getElementById("cardLookupInDeckInput");
     const targetElement = document.getElementById('pulledCards');
-    const dropdown = document.getElementById("cardLookupInDeckDropdown")
-    const allChildren = dropdown.children;
-    const cardLookupInDeckForm = document.getElementById("cardLookupInDeckForm")
+    const dropdown = document.getElementById("cardLookupInDeckDropdown");
+    const dropdownItems = document.getElementById("cardNames");
+    const allChildren = dropdownItems.children;
+    const cardLookupInDeckForm = document.getElementById("cardLookupInDeckForm");
     const hiddenField = document.getElementById("cardLookupInDeck")
     const allCardNames = []
 
-    for (let i = 1; i < allChildren.length; i++) {
+    for (let i = 0; i < allChildren.length; i++) {
         const cardBtn = allChildren[i];
         const cardName = cardBtn.getAttribute("data-cardName");
         allCardNames.push(cardName)
     }
     // for each childelement of the dropdown add a clicklistener to submit the form with correct hidden value
-    for (let i = 1; i < allChildren.length; i++) {
+    for (let i = 0; i < allChildren.length; i++) {
         const cardBtn = allChildren[i];
         const cardName = cardBtn.getAttribute("data-cardName");
         cardBtn.addEventListener("click", () => {
@@ -93,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cardLookupInDeckInput.addEventListener("focusin", (e) => {
         e.preventDefault();
 
-        for (let i = 1; i < allChildren.length; i++) {
+        for (let i = 0; i < allChildren.length; i++) {
             const cardBtn = allChildren[i];
             const cardName = cardBtn.getAttribute("data-cardName");
             // only display the ones where a match is found in the input box
@@ -106,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener('mousedown', (e) => {
         const isClickInsideInput = dropdown.contains(e.target);
         if (!isClickInsideInput) {
-            for (let i = 1; i < allChildren.length; i++) {
+            for (let i = 0; i < allChildren.length; i++) {
                 const cardBtn = allChildren[i];
                 cardBtn.classList.add("d-none")
             }
@@ -117,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // update lookup value field
         cardLookupInDeckInputValue += e.data
         // for evry child element
-        for (let i = 1; i < allChildren.length; i++) {
+        for (let i = 0; i < allChildren.length; i++) {
             const cardBtn = allChildren[i];
             // get the card name
             const cardName = cardBtn.getAttribute("data-cardName");

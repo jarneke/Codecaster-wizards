@@ -61,6 +61,8 @@ function convertCmcToImage(cmc) {
     return `<img style="width: 1.5rem" src="/assets/images/mana_symbols/${cmc}.svg" alt="${cmc}">`
 }
 function convertColorIdToImages(manaList) {
+    if (manaList === "") return `<img style="width: 1.5rem" src="/assets/images/mana_symbols/C.svg" alt="C">`
+
     const symbols = manaList.split(',');
     const all = tryAll(symbols);
 

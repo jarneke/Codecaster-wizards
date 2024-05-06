@@ -329,3 +329,10 @@ export function generateMockDecks(allCards: Magic.Card[]): i.Deck[] {
 
     return mockDecks;
 }
+export function updateLoadingBar(progress: number): string {
+    const barLength = 100;
+    const filledLength = Math.round(progress * barLength);
+    const emptyLength = barLength - filledLength;
+    return "[" + "=".repeat(filledLength) + " ".repeat(emptyLength) + "]";
+
+}

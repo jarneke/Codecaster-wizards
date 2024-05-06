@@ -45,7 +45,8 @@ const mtgTips: i.Tip[] = [
     tip: "Veel plezier! - Magic is een spel, dus zorg ervoor dat je je amuseert en de ervaring waardeert, winnen of verliezen.",
   },
 ];
-
+// initialize allCards
+let allCards: Magic.Card[] = [];
 // get uri from enviroment variables
 const uri: any = process.env.MONGO_URI || "mongodb://localhost:27017";
 // initialize Mongoclient
@@ -85,6 +86,46 @@ export async function connect() {
  * A function to seed the database if needed
  */
 async function seed() {
+    // if there are no cards in database pull them from API, else pull them from database
+    if (!await cardsCollection.findOne({})) {
+        console.log("[ - SERVER - ]=> Fetching all cards from API");
+        // rough estimate of total cards to make loadingbar
+        const allCardsCount: number = 26023;
+        // initialize emitter to get cards
+        Magic.Cards.all({})
+            // on card recieved
+            .on("data", async (card) => {
+                // check if the card has a imageUrl
+                if (card.imageUrl !== undefined) {
+                    // display loading screen
+                    console.clear();
+                    // generate loadingbar and display it
+                    console.log(f.updateLoadingBar(allCards.length / allCardsCount));
+                    console.log();
+                    const isInArray: boolean = !allCards.some((e) => e.name == card.name)
+                    // log if card is already in allCard or not and show the amount of cards
+                    console.log("Adding card..\t" + isInArray + `\t=>\tCount: ${allCards.length}`);
+                    // if card doesnt have a duplicate in allCards array
+                    if (isInArray) {
+                        // push card to allCards array
+                        allCards.push(card);
+                    }
+                }
+            })
+            .on("end", async () => {
+                await cardsCollection.insertMany(allCards)
+            })
+            // if error occurs with loading cards, log it
+            .on("error", (e) => console.error("[ - ERROR - ]=> " + e));
+    }
+    // generate mockDecks
+
+    // populate the database if need be with mockDecks
+    await populateDecks();
+    // populate the database if need be with tips
+    await populateTips(mtgTips);
+    // log that the db is seeded
+    console.log("[ - SERVER - ]=> Done seeding the database");
   // initialize allCards
   const allCards: Magic.Card[] = [];
   const allUsers: i.User[] = [
@@ -157,15 +198,19 @@ async function seed() {
  * a function to insert mock decks into database if needed
  * @param mockDecks array of mockDecks
  */
-async function populateDatabase(mockDecks: i.Deck[]) {
-  // uncomment line beneath if you want to refresh decks in database
-  // decksCollection.deleteMany({});
+async function populateDecks() {
+    // uncomment line beneath if you want to refresh decks in database
+    // decksCollection.deleteMany({});
 
-  // if decksCollection is empty insert and log that its added
-  if ((await decksCollection.countDocuments()) === 0) {
-    await decksCollection.insertMany(mockDecks);
-    console.log("[ - SERVER - ]=> Mock decks inserted into database");
-  }
+    // if decksCollection is empty insert and log that its added
+    if (await decksCollection.countDocuments() === 0) {
+        if (allCards.length === 0) {
+            allCards = await cardsCollection.find({}).toArray()
+        }
+        const mockDecks: i.Deck[] = f.generateMockDecks(allCards);
+        await decksCollection.insertMany(mockDecks);
+        console.log("[ - SERVER - ]=> Mock decks inserted into database");
+    }
 }
 
 /**
@@ -192,3 +237,5 @@ export const feedbacksCollection: Collection<i.Feedback> =
   db.collection<i.Feedback>("Feedbacks");
 // initialize tipsCollection and export it to be used outside of db setup
 export const tipsCollection: Collection<i.Tip> = db.collection<i.Tip>("Tips");
+// initialize cardsCollection and export it to be used outside of db setup
+export const cardsCollection: Collection<Magic.Card> = db.collection<Magic.Card>("Cards");

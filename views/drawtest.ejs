@@ -23,13 +23,15 @@
                             </button>
                             <input class="form-control rounded-0 border-0 p-0" type="text" placeholder="Zoek kaart in deck..." name="cardLookupInDeckInput" id="cardLookupInDeckInput" value="<%= cardLookupInDeckInput %>" autocomplete="off">
                         </div>
-                        <% const uniqueNames=Array.from(new Set(unpulledCards.map(card=> card.name))); // filter out all duplicate cardNames and make an array of it%>
-                            <% uniqueNames.sort((a, b)=> a.localeCompare(b)); // sort by name%>
-                                <% uniqueNames.forEach(name=> { // load all buttons%>
-                                    <button type="button" class="d-flex justify-content-start col-12 bg-white border-0 border-top d-none" data-cardName="<%= name %>">
-                                        <%= name %>
-                                    </button>
-                                    <% }) %>
+                        <div id="cardNames" class="d-flex flex-wrap">
+                            <% const uniqueNames=Array.from(new Set(unpulledCards.map(card=> card.name))); // filter out all duplicate cardNames and make an array of it%>
+                                <% uniqueNames.sort((a, b)=> a.localeCompare(b)); // sort by name%>
+                                    <% uniqueNames.forEach(name=> { // load all buttons%>
+                                        <button type="button" class="d-flex justify-content-start col-12 bg-white border-0 border-top d-none" data-cardName="<%= name %>">
+                                            <%= name %>
+                                        </button>
+                                        <% }) %>
+                        </div>
                     </div>
                 </section>
             </form>

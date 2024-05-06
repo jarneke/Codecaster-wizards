@@ -21,7 +21,8 @@ const mtgTips: i.Tip[] = [
     { tip: "Raak niet ontmoedigd door nederlagen - leren van je fouten is een belangrijk onderdeel om een betere speler te worden." },
     { tip: "Veel plezier! - Magic is een spel, dus zorg ervoor dat je je amuseert en de ervaring waardeert, winnen of verliezen." },
 ];
-
+// initialize allCards
+let allCards: Magic.Card[] = [];
 // get uri from enviroment variables
 const uri: any = process.env.MONGO_URI || "mongodb://localhost:27017"
 // initialize Mongoclient
@@ -62,13 +63,11 @@ export async function connect() {
  * A function to seed the database if needed
  */
 async function seed() {
-    // initialize allCards
-    let allCards: Magic.Card[] = [];
-    // rough estimate of total cards to make loadingbar
-    const allCardsCount: number = 26023;
     // if there are no cards in database pull them from API, else pull them from database
     if (!await cardsCollection.findOne({})) {
         console.log("[ - SERVER - ]=> Fetching all cards from API");
+        // rough estimate of total cards to make loadingbar
+        const allCardsCount: number = 26023;
         // initialize emitter to get cards
         Magic.Cards.all({})
             // on card recieved
@@ -92,32 +91,33 @@ async function seed() {
             })
             .on("end", async () => {
                 await cardsCollection.insertMany(allCards)
-                // generate mockDecks
-                const mockDecks: i.Deck[] = f.generateMockDecks(allCards);
-                // populate the database if need be with mockDecks
-                await populateDatabase(mockDecks);
-                // populate the database if need be with tips
-                await populateTips(mtgTips);
-                // log that the db is seeded
-                console.log("[ - SERVER - ]=> Done seeding the database");
             })
             // if error occurs with loading cards, log it
-            .on("error", (e) => console.error("ERROR: " + e));
-    } else {
-        console.log("[ - SERVER - ]=> Fetching all cards from database");
-        allCards = await cardsCollection.find({}).toArray();
+            .on("error", (e) => console.error("[ - ERROR - ]=> " + e));
     }
+    // generate mockDecks
+
+    // populate the database if need be with mockDecks
+    await populateDecks();
+    // populate the database if need be with tips
+    await populateTips(mtgTips);
+    // log that the db is seeded
+    console.log("[ - SERVER - ]=> Done seeding the database");
 }
 /**
  * a function to insert mock decks into database if needed
  * @param mockDecks array of mockDecks
  */
-async function populateDatabase(mockDecks: i.Deck[]) {
+async function populateDecks() {
     // uncomment line beneath if you want to refresh decks in database
     // decksCollection.deleteMany({});
 
     // if decksCollection is empty insert and log that its added
     if (await decksCollection.countDocuments() === 0) {
+        if (allCards.length === 0) {
+            allCards = await cardsCollection.find({}).toArray()
+        }
+        const mockDecks: i.Deck[] = f.generateMockDecks(allCards);
         await decksCollection.insertMany(mockDecks);
         console.log("[ - SERVER - ]=> Mock decks inserted into database");
     }

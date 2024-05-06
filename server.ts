@@ -10,14 +10,23 @@ import cookieParser from "cookie-parser";
 async function getAllCards() {
     try {
         console.log("[ - SERVER - ]=> Getting all cards");
-        allCards = await db.cardsCollection.find({
-
-        }).toArray();
+        const spinner = ['|', '/', '-', '\\'];
+        let spinnerIndex = 0;
+        function updateSpinner() {
+            process.stdout.write(`\r[ - SERVER - ]=> Loading ${spinner[spinnerIndex]}`);
+            spinnerIndex = (spinnerIndex + 1) % spinner.length;
+        }
+        const spinnerInterval = setInterval(updateSpinner, 100);
+        const start = Date.now();
+        allCards = await db.cardsCollection.find({}).toArray();
+        const end = Date.now();
+        clearInterval(spinnerInterval);
+        process.stdout.write('\r');
         console.log("[ - SERVER - ]=> Done getting cards");
-
+        console.log(`[ - SERVER - ]=> size: ${Math.round(JSON.stringify(allCards).length / 1024 / 1024)} MB`);
+        console.log(`[ - SERVER - ]=> Took ${end - start} milliseconds to load`);
     } catch (error) {
         console.error(error);
-
     }
 }
 

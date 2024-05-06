@@ -1,6 +1,10 @@
 <%- include("partials/landingsheader") %>
 <main class="d-flex w-100 justify-content-center" style="min-height: 72vh">
-  <form class="px-4 py-3 col-12 col-md-9 col-lg-4">
+  <form
+    action="/login"
+    method="post"
+    class="px-4 py-3 col-12 col-md-9 col-lg-4"
+  >
     <fieldset class="text-center mb-3 d-flex justify-content-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -19,11 +23,12 @@
       </svg>
     </fieldset>
     <fieldset class="mb-3">
-      <label for="loginE-mail" class="form-label ctext-white">E-mail</label>
+      <label for="loginEmail" class="form-label ctext-white">E-mail</label>
       <input
         type="e-mail"
         class="form-control"
-        id="loginE-mail"
+        name="loginEmail"
+        id="loginEmail"
         placeholder="e-mail@voorbeeld.com"
       />
     </fieldset>
@@ -34,6 +39,7 @@
       <input
         type="password"
         class="form-control"
+        name="loginPassword"
         id="loginPassword"
         placeholder="Wachtwoord"
       />

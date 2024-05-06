@@ -3,8 +3,11 @@ import * as i from "./interfaces";
 import * as f from "./functions";
 import Magic = require("mtgsdk-ts");
 import dotenv from "dotenv";
+import bcrypt from "bcrypt";
 
 dotenv.config();
+
+const saltRounds: number = 2;
 
 // all devTips
 const mtgTips: i.Tip[] = [
@@ -45,6 +48,40 @@ const mtgTips: i.Tip[] = [
     tip: "Veel plezier! - Magic is een spel, dus zorg ervoor dat je je amuseert en de ervaring waardeert, winnen of verliezen.",
   },
 ];
+
+const allUsers: i.User[] = [
+  {
+    firstName: "John",
+    lastName: "Doe",
+    userName: "John_Doe",
+    email: "John.Doe@mail.com",
+    description:
+      "John Doe is a dynamic individual with a diverse skill set and a passion for excellence. With a background in [industry/field], he brings a unique blend of [skills/traits] to every project he undertakes. Whether he's [activity/task], [activity/task], or [activity/task], John approaches each endeavor with dedication and creativity. His ability to [skill/quality] and [skill/quality] make him a valuable asset to any team. Outside of work, John enjoys [hobbies/interests], [hobbies/interests], and [hobbies/interests]. With a commitment to continuous growth and a drive to succeed, John is poised to make a significant impact in [industry/field].",
+    password: "Passw0rd123",
+    role: "ADMIN",
+  },
+  {
+    firstName: "Jane",
+    lastName: "Smith",
+    userName: "Smiley_Jane",
+    email: "Jane.Smith@mail.com",
+    description:
+      "Jane Smith is a highly motivated individual with a strong work ethic and a passion for [industry/field]. With a background in [industry/field], she brings extensive experience and a proven track record of success to every project she undertakes. Whether she's [activity/task], [activity/task], or [activity/task], Jane consistently delivers high-quality results with precision and efficiency. Her exceptional [skills/traits] and [skills/traits] make her a valuable asset to any team. Outside of work, Jane enjoys [hobbies/interests], [hobbies/interests], and [hobbies/interests]. With a dedication to continuous improvement and a focus on achieving her goals, Jane is well-positioned to excel in [industry/field].",
+    password: "Jane1234",
+    role: "USER",
+  },
+  {
+    firstName: "Michael",
+    lastName: "Johnson",
+    userName: "Mighty_Mike",
+    email: "Michael.Johnson@mail.com",
+    description:
+      "Michael Johnson is a results-oriented professional with a proven track record of success in [industry/field]. With a background in [industry/field], he brings a wealth of knowledge and expertise to every project he undertakes. Whether he's [activity/task], [activity/task], or [activity/task], Michael consistently exceeds expectations and delivers exceptional results. His strong [skills/traits] and [skills/traits] enable him to thrive in fast-paced environments and tackle challenges with confidence. Outside of work, Michael enjoys [hobbies/interests], [hobbies/interests], and [hobbies/interests]. With a commitment to excellence and a drive to succeed, Michael is well-equipped to make a significant impact in [industry/field].",
+    password: "Michael!23",
+    role: "USER",
+  },
+];
+
 // initialize allCards
 let allCards: Magic.Card[] = [];
 // get uri from enviroment variables
@@ -73,6 +110,7 @@ export async function connect() {
   try {
     await client.connect();
     console.log("[ - SERVER - ]=> Connected to database");
+    await createInitialUser();
     await seed();
     // if application is exited, close connection
     process.on("SIGINT", exit); // For manually stopping the server
@@ -86,39 +124,52 @@ export async function connect() {
  * A function to seed the database if needed
  */
 async function seed() {
-    // if there are no cards in database pull them from API, else pull them from database
-    if (!await cardsCollection.findOne({})) {
-        console.log("[ - SERVER - ]=> Fetching all cards from API");
-        // rough estimate of total cards to make loadingbar
-        const allCardsCount: number = 26023;
-        // initialize emitter to get cards
-        Magic.Cards.all({})
-            // on card recieved
-            .on("data", async (card) => {
-                // check if the card has a imageUrl
-                if (card.imageUrl !== undefined) {
-                    // display loading screen
-                    console.clear();
-                    // generate loadingbar and display it
-                    console.log(f.updateLoadingBar(allCards.length / allCardsCount));
-                    console.log();
-                    const isInArray: boolean = !allCards.some((e) => e.name == card.name)
-                    // log if card is already in allCard or not and show the amount of cards
-                    console.log("Adding card..\t" + isInArray + `\t=>\tCount: ${allCards.length}`);
-                    // if card doesnt have a duplicate in allCards array
-                    if (isInArray) {
-                        // push card to allCards array
-                        allCards.push(card);
-                    }
-                }
-            })
-            .on("end", async () => {
-                await cardsCollection.insertMany(allCards)
-            })
-            // if error occurs with loading cards, log it
-            .on("error", (e) => console.error("[ - ERROR - ]=> " + e));
+  // if there are no cards in database pull them from API, else pull them from database
+  if (!(await cardsCollection.findOne({}))) {
+    console.log("[ - SERVER - ]=> Fetching all cards from API");
+    // rough estimate of total cards to make loadingbar
+    const allCardsCount: number = 26023;
+
+    // populate the database if need be with mockDecks
+    await populateDecks();
+    // populate the database if need be with tips
+    await populateTips(mtgTips);
+    // initialize emitter to get cards
+    if (!(await cardsCollection.findOne({}))) {
+      console.log("[ - SERVER - ]=> Fetching all cards from API");
+      // rough estimate of total cards to make loadingbar
+      const allCardsCount: number = 26023;
+      // initialize emitter to get cards
+      Magic.Cards.all({})
+        // on card recieved
+        .on("data", async (card) => {
+          // check if the card has a imageUrl
+          if (card.imageUrl !== undefined) {
+            // display loading screen
+            console.clear();
+            // generate loadingbar and display it
+            console.log(f.updateLoadingBar(allCards.length / allCardsCount));
+            console.log();
+            const isInArray: boolean = !allCards.some(
+              (e) => e.name == card.name
+            );
+            // log if card is already in allCard or not and show the amount of cards
+            console.log(
+              "Adding card..\t" + isInArray + `\t=>\tCount: ${allCards.length}`
+            );
+            // if card doesnt have a duplicate in allCards array
+            if (isInArray) {
+              // push card to allCards array
+              allCards.push(card);
+            }
+          }
+        })
+        .on("end", async () => {
+          await cardsCollection.insertMany(allCards);
+        })
+        // if error occurs with loading cards, log it
+        .on("error", (e) => console.error("[ - ERROR - ]=> " + e));
     }
-    // generate mockDecks
 
     // populate the database if need be with mockDecks
     await populateDecks();
@@ -126,91 +177,25 @@ async function seed() {
     await populateTips(mtgTips);
     // log that the db is seeded
     console.log("[ - SERVER - ]=> Done seeding the database");
-  // initialize allCards
-  const allCards: Magic.Card[] = [];
-  const allUsers: i.User[] = [
-    {
-      firstName: "John",
-      lastName: "Doe",
-      userName: "John_Doe",
-      email: "John.Doe@mail.com",
-      description:
-        "John Doe is a dynamic individual with a diverse skill set and a passion for excellence. With a background in [industry/field], he brings a unique blend of [skills/traits] to every project he undertakes. Whether he's [activity/task], [activity/task], or [activity/task], John approaches each endeavor with dedication and creativity. His ability to [skill/quality] and [skill/quality] make him a valuable asset to any team. Outside of work, John enjoys [hobbies/interests], [hobbies/interests], and [hobbies/interests]. With a commitment to continuous growth and a drive to succeed, John is poised to make a significant impact in [industry/field].",
-      password: "Passw0rd123",
-      role: "ADMIN",
-    },
-    {
-      firstName: "Jane",
-      lastName: "Smith",
-      userName: "Smiley_Jane",
-      email: "Jane.Smith@mail.com",
-      description:
-        "Jane Smith is a highly motivated individual with a strong work ethic and a passion for [industry/field]. With a background in [industry/field], she brings extensive experience and a proven track record of success to every project she undertakes. Whether she's [activity/task], [activity/task], or [activity/task], Jane consistently delivers high-quality results with precision and efficiency. Her exceptional [skills/traits] and [skills/traits] make her a valuable asset to any team. Outside of work, Jane enjoys [hobbies/interests], [hobbies/interests], and [hobbies/interests]. With a dedication to continuous improvement and a focus on achieving her goals, Jane is well-positioned to excel in [industry/field].",
-      password: "Jane1234",
-      role: "USER",
-    },
-    {
-      firstName: "Michael",
-      lastName: "Johnson",
-      userName: "Mighty_Mike",
-      email: "Michael.Johnson@mail.com",
-      description:
-        "Michael Johnson is a results-oriented professional with a proven track record of success in [industry/field]. With a background in [industry/field], he brings a wealth of knowledge and expertise to every project he undertakes. Whether he's [activity/task], [activity/task], or [activity/task], Michael consistently exceeds expectations and delivers exceptional results. His strong [skills/traits] and [skills/traits] enable him to thrive in fast-paced environments and tackle challenges with confidence. Outside of work, Michael enjoys [hobbies/interests], [hobbies/interests], and [hobbies/interests]. With a commitment to excellence and a drive to succeed, Michael is well-equipped to make a significant impact in [industry/field].",
-      password: "Michael!23",
-      role: "USER",
-    },
-  ];
-  // variable to store amount of loadedcards
-  let loadedCardCount = 0;
-  // The amount of cards we want to load
-  const desiredCardCount = 100; // Change this to the desired number of cards to load before generating mock decks
-
-  // initialize emitter to get cards
-  const emitter = await Magic.Cards.all({})
-    // on card recieved
-    .on("data", async (card) => {
-      // check if the card has a imageUrl
-      if (card.imageUrl !== undefined) {
-        // push card to allCards array
-        allCards.push(card);
-        // and update counter
-        loadedCardCount++;
-
-        // Check if desired number of cards have been loaded
-        if (loadedCardCount >= desiredCardCount) {
-          // cancel the emmit to stop getting cards
-          emitter.cancel();
-          // generate mockDecks
-          const mockDecks: i.Deck[] = await f.generateMockDecks(allCards);
-          // populate the database if need be with mockDecks
-          await populateDatabase(mockDecks);
-          // populate the database if need be with tips
-          await populateTips(mtgTips);
-          // log that the db is seeded
-          await console.log("[ - SERVER - ]=> Done seeding the database");
-        }
-      }
-    })
-    // if error occurs with loading cards, log it
-    .on("error", (e) => console.error("ERROR: " + e));
+  }
 }
 /**
  * a function to insert mock decks into database if needed
  * @param mockDecks array of mockDecks
  */
 async function populateDecks() {
-    // uncomment line beneath if you want to refresh decks in database
-    // decksCollection.deleteMany({});
+  // uncomment line beneath if you want to refresh decks in database
+  // decksCollection.deleteMany({});
 
-    // if decksCollection is empty insert and log that its added
-    if (await decksCollection.countDocuments() === 0) {
-        if (allCards.length === 0) {
-            allCards = await cardsCollection.find({}).toArray()
-        }
-        const mockDecks: i.Deck[] = f.generateMockDecks(allCards);
-        await decksCollection.insertMany(mockDecks);
-        console.log("[ - SERVER - ]=> Mock decks inserted into database");
+  // if decksCollection is empty insert and log that its added
+  if ((await decksCollection.countDocuments()) === 0) {
+    if (allCards.length === 0) {
+      allCards = await cardsCollection.find({}).toArray();
     }
+    const mockDecks: i.Deck[] = f.generateMockDecks(allCards);
+    await decksCollection.insertMany(mockDecks);
+    console.log("[ - SERVER - ]=> Mock decks inserted into database");
+  }
 }
 
 /**
@@ -226,9 +211,56 @@ export async function populateTips(allTips: i.Tip[]) {
   }
 }
 
+async function createInitialUser() {
+  await usersCollection.deleteMany({});
+  if ((await usersCollection.countDocuments()) > 0) {
+    return;
+  }
+  let email: string | undefined = process.env.ADMIN_EMAIL;
+  let password: string | undefined = process.env.ADMIN_PASSWORD;
+  if (email === undefined || password === undefined) {
+    throw new Error(
+      "ADMIN_EMAIL and ADMIN_PASSWORD must be set in environment"
+    );
+  }
+  await usersCollection.insertOne({
+    firstName: "admin",
+    lastName: "admin",
+    userName: "admin",
+    email: email,
+    description: "admin account",
+    role: "ADMIN",
+    password: await bcrypt.hash(password, saltRounds),
+  });
+}
+
+export async function login(email: string, password: string) {
+  if (email === "" || password === "") {
+    console.log(email + password);
+
+    //throw new Error("Email and password required");
+  }
+  let user: i.User | null = await usersCollection.findOne<i.User>({
+    email: email,
+  });
+  if (user) {
+    if (await bcrypt.compare(password, user.password!)) {
+      return user;
+    } else {
+      console.log("passwors incorrect");
+
+      //throw new Error("Password incorrect");
+    }
+  } else {
+    console.log("User not found");
+
+    //throw new Error("User not found");
+  }
+}
 // initialize usersCollection and export it to be used outside of db setup
 export const usersCollection: Collection<i.User> =
   db.collection<i.User>("Users");
+
 // initialize decksCollection and export it to be used outside of db setup
 export const decksCollection: Collection<i.Deck> =
   db.collection<i.Deck>("Decks");
@@ -238,4 +270,5 @@ export const feedbacksCollection: Collection<i.Feedback> =
 // initialize tipsCollection and export it to be used outside of db setup
 export const tipsCollection: Collection<i.Tip> = db.collection<i.Tip>("Tips");
 // initialize cardsCollection and export it to be used outside of db setup
-export const cardsCollection: Collection<Magic.Card> = db.collection<Magic.Card>("Cards");
+export const cardsCollection: Collection<Magic.Card> =
+  db.collection<Magic.Card>("Cards");

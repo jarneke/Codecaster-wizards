@@ -11,28 +11,36 @@ import { Rarity } from "mtgsdk-ts/out/IMagic";
 import * as db from "./db";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import { mainModule } from "process";
+import session from "./session";
 
 async function getAllCards() {
-    try {
-        console.log("[ - SERVER - ]=> Getting all cards");
-        const spinner = ['|', '/', '-', '\\'];
-        let spinnerIndex = 0;
-        function updateSpinner() {
-            process.stdout.write(`\r[ - SERVER - ]=> Loading ${spinner[spinnerIndex]}`);
-            spinnerIndex = (spinnerIndex + 1) % spinner.length;
-        }
-        const spinnerInterval = setInterval(updateSpinner, 100);
-        const start = Date.now();
-        allCards = await db.cardsCollection.find({}).toArray();
-        const end = Date.now();
-        clearInterval(spinnerInterval);
-        process.stdout.write('\r');
-        console.log("[ - SERVER - ]=> Done getting cards");
-        console.log(`[ - SERVER - ]=> size: ${Math.round(JSON.stringify(allCards).length / 1024 / 1024)} MB`);
-        console.log(`[ - SERVER - ]=> Took ${end - start} milliseconds to load`);
-    } catch (error) {
-        console.error(error);
+  try {
+    console.log("[ - SERVER - ]=> Getting all cards");
+    const spinner = ["|", "/", "-", "\\"];
+    let spinnerIndex = 0;
+    function updateSpinner() {
+      process.stdout.write(
+        `\r[ - SERVER - ]=> Loading ${spinner[spinnerIndex]}`
+      );
+      spinnerIndex = (spinnerIndex + 1) % spinner.length;
     }
+    const spinnerInterval = setInterval(updateSpinner, 100);
+    const start = Date.now();
+    allCards = await db.cardsCollection.find({}).toArray();
+    const end = Date.now();
+    clearInterval(spinnerInterval);
+    process.stdout.write("\r");
+    console.log("[ - SERVER - ]=> Done getting cards");
+    console.log(
+      `[ - SERVER - ]=> size: ${Math.round(
+        JSON.stringify(allCards).length / 1024 / 1024
+      )} MB`
+    );
+    console.log(`[ - SERVER - ]=> Took ${end - start} milliseconds to load`);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function getTempDecks() {
@@ -49,10 +57,11 @@ async function getTips() {
 
 const app = express();
 
+let allCards: Magic.Card[] = [];
+
 let allTips: i.Tip[] = [];
 
 let allDecks: i.Deck[] = [];
-getTempDecks();
 
 let loggedInUser: i.User | null = null;
 getUsers();
@@ -66,21 +75,38 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(session);
 
 app.get("/", (req, res) => {
   res.render("landingspage");
 });
 
 app.post("/dontShowPopup", async (req, res) => {
-    res.redirect("/home")
-})
+  res.redirect("/home");
+});
 
 app.post("/dontShowPopup", async (req, res) => {
-    res.redirect("/home")
-})
+  res.redirect("/home");
+});
 
 app.get("/login", (req, res) => {
   res.render("loginspage");
+});
+
+app.post("/login", async (req, res) => {
+  const { loginEmail, loginPassword } = req.body;
+  console.log(req.body);
+
+  try {
+    let user: i.User | undefined = await db.login(loginEmail, loginPassword);
+    delete user!.password;
+    console.log(req.session.user);
+
+    req.session.user = user;
+    res.redirect("/home");
+  } catch (e: any) {
+    res.redirect("/login");
+  }
 });
 
 app.get("/register", (req, res) => {
@@ -88,11 +114,14 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  const fName: string = req.body.registerFName;
-  const name: string = req.body.registerName;
-  const username: string = req.body.registerUsername;
-
-  const email: string = req.body.email;
+  const {
+    registerFName,
+    registerName,
+    registerUsername,
+    registerEmail,
+    registerPassword,
+    registerConfirmPassword,
+  } = req.body;
 
   res.redirect("/login");
 });
@@ -654,15 +683,15 @@ app.get("/editDeck/:deckName", async (req, res) => {
 });
 
 app.listen(app.get("port"), async () => {
-    await db.connect()
+  await db.connect();
 
-    // Get all the cards from the api, there are allot so takes a while before all cards get loaded
-    await getAllCards();
-    await getTempDecks();
-    await getTips();
-    allCardTypes = f.getAllCardTypes(allCards);
-    allCardRarities = f.getAllRarities(allCards);
-    console.log(
-        "[ - SERVER - ]=> Listening at http://localhost:" + app.get("port")
-    );
+  // Get all the cards from the api, there are allot so takes a while before all cards get loaded
+  // await getAllCards();
+  await getTempDecks();
+  await getTips();
+  allCardTypes = f.getAllCardTypes(allCards);
+  allCardRarities = f.getAllRarities(allCards);
+  console.log(
+    "[ - SERVER - ]=> Listening at http://localhost:" + app.get("port")
+  );
 });

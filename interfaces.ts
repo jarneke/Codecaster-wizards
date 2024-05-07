@@ -23,7 +23,6 @@ export const tempUser: User = {
 // interface for pageData
 export interface PageData {
     page: number,
-    totalPages: number,
     filterUrl: string
 }
 // enum for feedbackType
@@ -52,6 +51,7 @@ export interface Card {
 }
 // interface for decks
 export interface Deck {
+    _id?: ObjectId,
     deckName: string,
     cards: Card[],
     deckImageUrl: string

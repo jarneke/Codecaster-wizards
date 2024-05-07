@@ -7,67 +7,13 @@ import * as db from "./db";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 
-/*async function getAllCards(allCards: i.Card[]) {
-    try {
-        console.log("[ - SERVER - ]=> Getting all cards");
-        const spinner = ['|', '/', '-', '\\'];
-        let spinnerIndex = 0;
-
-        const loadingbarLength: number = 25;
-        const collectionLength: number = await db.cardsCollection.countDocuments()
-
-        let totalTimeSpent = 0;
-        let loadedElements = 0;
-
-
-
-        function updateSpinner() {
-            totalTimeSpent = (Date.now() - start) / 1000
-
-            const remaining = collectionLength - allCards.length;
-            const avgPerElem = totalTimeSpent / allCards.length;
-            const estimatedTime = avgPerElem * remaining
-            const percentile: number = (allCards.length / collectionLength)
-            const filledBarlen = Math.round(percentile * loadingbarLength)
-            const emptyBarlen = loadingbarLength - filledBarlen;
-            process.stdout.clearLine(1)
-            process.stdout.write(`\r[ - SERVER - ]=> Loading ${spinner[spinnerIndex]}\t [${'='.repeat(filledBarlen)}${' '.repeat(emptyBarlen)}]\tEst. ${(estimatedTime).toFixed(2)} seconds left `);
-            spinnerIndex = (spinnerIndex + 1) % spinner.length;
-        }
-        const batchSize = 100;
-        const cursor = db.cardsCollection.find({}).batchSize(batchSize);
-        const start = Date.now();
-        const spinnerInterval = setInterval(updateSpinner, 100);
-        while (await cursor.hasNext()) {
-            const batch = await cursor.next()
-            allCards.push(batch!)
-        }
-        const end = Date.now();
-        clearInterval(spinnerInterval);
-        process.stdout.write('\r');
-        console.log("[ - SERVER - ]=> Done getting cards");
-        console.log(`[ - SERVER - ]=> size: ${Math.round(JSON.stringify(allCards).length / 1024 / 1024)} MB`);
-        console.log(`[ - SERVER - ]=> Took ${((end - start) / 1000).toFixed(2)} seconds to load`);
-    } catch (error) {
-        console.error(error);
-    }
-}*/
-
-async function getTempDecks() {
-    allDecks = await db.decksCollection.find({}).toArray();
-}
-
 async function getTips() {
     allTips = await db.tipsCollection.find({}).toArray();
 }
 
 const app = express();
 
-let allCardsLength: number = 0;
-
 let allTips: i.Tip[] = [];
-
-let allDecks: i.Deck[] = [];
 
 app.set("port", process.env.PORT ?? 3000);
 app.set("view engine", "ejs");
@@ -118,7 +64,7 @@ app.get("/home", async (req, res) => {
 
     // Pagination
     let pageSize: number = 12;
-    let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, allCardsLength);
+    let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`);
 
     const filterParam: i.Filter = {
         cardLookup: cardLookup,
@@ -133,7 +79,7 @@ app.get("/home", async (req, res) => {
         sort: sort,
         sortDirection: sortDirection
     }
-    let cardsToLoad = await f.getCardsForPage(filterParam, pageData.page, pageSize);
+    let cardsToLoadAndTotalPages = await f.getCardsForPage(filterParam, pageData.page, pageSize);
     // Render
     res.render("home", {
         // HEADER
@@ -167,29 +113,23 @@ app.get("/home", async (req, res) => {
         pageLink: "home",
         // -- pagination
         page: pageData.page,
-        totalPages: pageData.totalPages,
+        totalPages: cardsToLoadAndTotalPages.totalPages,
         filterUrl: pageData.filterUrl,
         // -- cards
-        cards: cardsToLoad,
+        cards: cardsToLoadAndTotalPages.cards,
     });
 });
 
 app.get("/decks", async (req, res) => {
-    allDecks = [];
-    await getTempDecks();
+    let decksForPage: i.Deck[] = await db.decksCollection.find({}).toArray()
     // params from route
     let pageQueryParam = req.query.page;
 
     // Pagination
     let pageSize: number = 9;
-    let pageData: i.PageData = f.handlePageClickEvent(
-        req.query,
-        `${pageQueryParam}`,
-        pageSize,
-        allDecks.length
-    );
+    let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`);
 
-    let decksForPage = f.getDecksForPage(allDecks, pageData.page, pageSize);
+    let totalPages = f.getTotalPages(decksForPage.length, pageSize)
 
     res.render("decks", {
         // HEADER
@@ -207,7 +147,7 @@ app.get("/decks", async (req, res) => {
         // MAIN
         // -- pagination
         page: pageData.page,
-        totalPages: pageData.totalPages,
+        totalPages: totalPages,
         filterUrl: pageData.filterUrl,
         // -- cards
         decks: decksForPage,
@@ -215,22 +155,18 @@ app.get("/decks", async (req, res) => {
 });
 
 app.get("/decks/:deckName", async (req, res) => {
-
-    allDecks = [];
-    await getTempDecks();
-
     // params from route
     let cardLookup = req.query.cardLookup;
     let sort = req.query.sort;
     let sortDirection = req.query.sortDirection;
     let pageQueryParam = req.query.page;
 
-    let selectedDeck: i.Deck | undefined = allDecks.find((deck) => {
-        return deck.deckName === req.params.deckName;
-    });
+    const selectedDeck: i.Deck | null = await db.decksCollection.findOne({ deckName: req.params.deckName })
+    if (selectedDeck == null) {
+        res.redirect("/404");
+    }
+
     let amountMap = new Map<i.Card, number>();
-
-
     for (const card of selectedDeck!.cards) {
         const existingCard = Array.from(amountMap.keys()).find(c => c.name === card.name);
         if (existingCard) {
@@ -241,25 +177,16 @@ app.get("/decks/:deckName", async (req, res) => {
     }
     // Pagination
     let pageSize: number = 6;
-    let pageData: i.PageData = f.handlePageClickEvent(
-        req.query,
-        `${pageQueryParam}`,
-        pageSize,
-        Array.from(amountMap.keys()).length
-    );
-
-    let cardsToLoad: i.Card[] | undefined = undefined;
+    let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`);
+    let totalPages: number = f.getTotalPages(selectedDeck!.cards.length, pageSize)
 
     let amountLandcards: number | undefined = undefined;
 
     let avgManaCost: number | undefined = undefined;
 
-    if (selectedDeck?.cards !== undefined) {
-        avgManaCost = f.getAvgManaCost(selectedDeck?.cards)
-        amountLandcards = selectedDeck.cards.filter((card) =>
-            card.types.includes("Land")
-        ).length;
-
+    if (selectedDeck!.cards !== undefined) {
+        avgManaCost = f.getAvgManaCost(selectedDeck!.cards)
+        amountLandcards = selectedDeck!.cards.filter((card) => card.types.includes("Land")).length;
         amountMap = f.getCardWAmauntForPage(
             amountMap,
             pageData.page,
@@ -269,12 +196,9 @@ app.get("/decks/:deckName", async (req, res) => {
         console.log("[ - SERVER - ]=> selected deck cards = undefined");
     }
 
-
-
     for (const [card, amount] of amountMap) {
         console.log(`${card.name}: ${amount}`);
     }
-
 
     res.render("deckdetails", {
         // HEADER
@@ -295,7 +219,7 @@ app.get("/decks/:deckName", async (req, res) => {
         sortDirection: sortDirection,
         // -- pagination
         page: pageData.page,
-        totalPages: pageData.totalPages,
+        totalPages: totalPages,
         filterUrl: pageData.filterUrl,
         // -- cards
         cards: amountMap,
@@ -321,7 +245,7 @@ app.post("/changeDeckName", async (req, res) => {
 });
 
 let lastSelectedDeck: i.Deck;
-let selectedDeck: i.Deck | undefined = undefined;
+let selectedDeck: i.Deck | null = null;
 let unpulledCards: i.Card[] | undefined = [];
 let pulledCards: i.Card[];
 
@@ -349,14 +273,18 @@ app.get("/drawtest", async (req, res) => {
     let selectedDeckQuery = req.query.decks;
     // Logic
     // Find What Deck is selected
-    selectedDeck = allDecks.find((e) => e.deckName == selectedDeckQuery);
+    selectedDeck = await db.decksCollection.findOne({ deckName: `${selectedDeckQuery}` })
 
     // if deck is not found,
     // set to deck nr. 1
     // else set to lastDeck
-    if (selectedDeck === undefined) {
-        if (lastSelectedDeck == undefined) {
-            selectedDeck = allDecks[0];
+    if (!selectedDeck) {
+        if (!lastSelectedDeck) {
+            selectedDeck = await db.decksCollection.findOne({});
+            if (!selectedDeck) {
+                // TODO: make noDecks page
+                return res.render("noDecks")
+            }
         } else {
             selectedDeck = lastSelectedDeck;
         }
@@ -364,6 +292,10 @@ app.get("/drawtest", async (req, res) => {
 
     let cardLookupInDeckCard: i.Card | undefined = undefined;
     let cardLookupInDeckCardChance: number | undefined = undefined;
+    if (lastSelectedDeck) console.log(lastSelectedDeck.deckName);
+    console.log(selectedDeck.deckName);
+
+
     // if deck is diffrent from last load
     if (lastSelectedDeck !== selectedDeck) {
         // set unpulledCards to cards of new deck
@@ -426,7 +358,6 @@ app.get("/drawtest", async (req, res) => {
 
     let amountMap = new Map<i.Card, number>();
 
-
     for (const card of filterAndSortedCards) {
         const existingCard = Array.from(amountMap.keys()).find(c => c.name === card.name);
         if (existingCard) {
@@ -447,17 +378,14 @@ app.get("/drawtest", async (req, res) => {
 
     // calculate the chanceData of the cardToSHow
     let chanceData = f.getChance(selectedDeck.cards, cardToShow);
+
     // save selectedDeck to be used next load of page
     lastSelectedDeck = selectedDeck;
 
     // Pagination
     let pageSize: number = 6;
-    let pageData: i.PageData = f.handlePageClickEvent(
-        req.query,
-        `${pageQueryParam}`,
-        pageSize,
-        Array.from(amountMap.keys()).length
-    );
+    let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`);
+    let totalPages = f.getTotalPages(Array.from(amountMap.keys()).length, pageSize)
 
     amountMap = f.getCardWAmauntForPage(
         amountMap,
@@ -503,7 +431,7 @@ app.get("/drawtest", async (req, res) => {
         pageLink: "drawtest",
         // -- pagination
         page: pageData.page,
-        totalPages: pageData.totalPages,
+        totalPages: totalPages,
         filterUrl: pageData.filterUrl,
         // -- cardlookupInDeck
         cardLookupInDeck: cardLookupInDeck,
@@ -511,7 +439,7 @@ app.get("/drawtest", async (req, res) => {
         cardLookupInDeckCard: cardLookupInDeckCard,
         cardLookupInDeckCardChance: cardLookupInDeckCardChance,
         // -- other
-        allDecks: allDecks,
+        allDecks: await db.decksCollection.find().toArray(),
         selectedDeck: selectedDeck,
         unpulledCards: unpulledCards,
         pulledCards: pulledCards,
@@ -528,38 +456,24 @@ app.get("/profile", (req, res) => {
 });
 
 app.get("/editDeck/:deckName", async (req, res) => {
-    allDecks = [];
-    await getTempDecks();
-    let selectedDeck: i.Deck | undefined = allDecks.find((deck) => {
-        return deck.deckName === req.params.deckName;
-    });
-
+    const selectedDeck: i.Deck | null = await db.decksCollection.findOne({ deckName: req.params.deckName })
+    if (!selectedDeck) {
+        return res.redirect("/404");
+    }
     // params from route
     let pageQueryParam = req.query.page;
 
     // Pagination
-    let pageSize: number = 6;
-    let pageData: i.PageData | undefined = undefined;
-    if (selectedDeck !== undefined) {
-        pageData = f.handlePageClickEvent(
-            req.query,
-            `${pageQueryParam}`,
-            pageSize,
-            selectedDeck?.cards.length
-        );
-    }
-
+    let pageSize: number = 3;
+    let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`);
+    let totalPages = f.getTotalPages(selectedDeck.cards.length, pageSize);
     let cardsToLoad = undefined;
 
-    if (selectedDeck?.cards !== undefined && pageData !== undefined) {
-        cardsToLoad = f.getCardsForPage(
-            selectedDeck?.cards,
-            pageData.page,
-            pageSize / 2
-        );
-    } else {
-        console.log("[ - SERVER - ]=> selected deck cards = undefined");
-    }
+    cardsToLoad = f.getCardsForPageFromArray(
+        selectedDeck.cards,
+        pageData.page,
+        pageSize
+    );
 
     res.render("editDeck", {
         // HEADER
@@ -576,7 +490,7 @@ app.get("/editDeck/:deckName", async (req, res) => {
         // MAIN
         // -- pagination
         page: pageData?.page,
-        totalPages: pageData?.totalPages,
+        totalPages: totalPages,
         filterUrl: pageData?.filterUrl,
         // -- cards
         cards: cardsToLoad,
@@ -584,16 +498,26 @@ app.get("/editDeck/:deckName", async (req, res) => {
     });
 });
 
+app.get("/404", (req, res) => {
+    res.render("404", {
+        // HEADER
+        user: i.tempUser,
+        // -- The names of the js files you want to load on the page.
+        jsFiles: [],
+        // -- The title of the page
+        title: "! 404 - niet gevonden !",
+        // -- The Tab in the nav bar you want to have the orange color
+        // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
+        tabToColor: 3,
+        // The page it should redirect to after feedback form is submitted
+        toRedirectTo: "404",
+
+    })
+})
 app.listen(app.get("port"), async () => {
     console.clear();
     console.log("[ - SERVER - ]=> connecting to database");
-
     await db.connect()
-
-    console.log("[ - SERVER - ]=> Counting total cards");
-    allCardsLength = await db.cardsCollection.countDocuments();
-    // console.log("[ - SERVER - ]=> getting temp decks");
-    // await getTempDecks();
     console.log("[ - SERVER - ]=> getting tips");
     await getTips();
     console.log("[ - SERVER - ]=> ! DONE !");

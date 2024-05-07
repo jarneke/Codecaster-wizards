@@ -4,17 +4,17 @@ import { Filter, Sort, Condition } from "mongodb";
 import * as db from "./db"
 
 /**
- * Function to get the cards u need to load the page
- * @param allItems The array of all the items
- * @param page The page you want to load
- * @param pageSize The amount of items you want on the page
- * @returns an array with length of pageSize
+ * A function to get the cards to load on a page specified by diffrent filter and sort params
+ * @param filterParam The parameters to filter and sort on
+ * @param page Page you wqnt to load
+ * @param pageSize Pagesize of the page you want to load
+ * @returns array of cards
  */
-export async function getCardsForPage(filterParam: i.Filter, page: number, pageSize: number): Promise<i.Card[]> {
-    let query: Filter<i.Card> = {};
-    // Text search or Id match
-    console.log(filterParam);
+export async function getCardsForPage(filterParam: i.Filter, page: number, pageSize: number): Promise<{ cards: i.Card[], totalPages: number }> {
 
+    let query: Filter<i.Card> = {};
+
+    // Text search or Id match
     if (filterParam.cardLookup && filterParam.cardLookup != "") {
         const numberLookup = parseInt(filterParam.cardLookup, 10);
         const isNumber = !isNaN(numberLookup)
@@ -22,9 +22,9 @@ export async function getCardsForPage(filterParam: i.Filter, page: number, pageS
             { name: { $regex: new RegExp(filterParam.cardLookup, "i") } },
             { id: { $regex: new RegExp(filterParam.cardLookup, "i") } },
         ];
-        /* if (isNumber) {
+        if (isNumber) {
             query.$or.push({ multiverseid: numberLookup })
-        }*/
+        }
     }
     // Type filter
     if (filterParam.filterType && filterParam.filterType != "") {
@@ -78,12 +78,20 @@ export async function getCardsForPage(filterParam: i.Filter, page: number, pageS
         sortOptions[filterParam.sort] = filterParam.sortDirection === "down" ? 1 : -1;
     }
 
-    const skipDocuments = (page - 1) * pageSize
-    const cards = await db.cardsCollection.find(query).sort(sortOptions).skip(skipDocuments).limit(pageSize).toArray()
-    // console.log(cards);
-    return cards
+    const skipDocuments: number = (page - 1) * pageSize
+    const cards: i.Card[] = await db.cardsCollection.find(query).sort(sortOptions).skip(skipDocuments).limit(pageSize).toArray()
+    const totalPages = getTotalPages(await db.cardsCollection.countDocuments(query), pageSize)
+    return {
+        cards: cards,
+        totalPages: totalPages
+    }
 }
+export function getCardsForPageFromArray(arr: i.Card[], page: number, pagesize: number): i.Card[] {
+    const startIndex = (page - 1) * pagesize;
+    const endIndex = startIndex + pagesize;
+    return arr.slice(startIndex, endIndex);
 
+}
 export function getCardWAmauntForPage(allItems: Map<i.Card, number>, page: number, pageSize: number): Map<i.Card, number> {
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
@@ -109,24 +117,14 @@ export function getCardWAmauntForPage(allItems: Map<i.Card, number>, page: numbe
  * @param pageSize The amount of items per page
  * @returns The amount of pages you can have with a certain page size
  */
-function getTotalPages(allItemsLength: number, pageSize: number): number {
+export function getTotalPages(allItemsLength: number, pageSize: number): number {
     return Math.ceil(allItemsLength / pageSize);
 }
-/**
- * Function to handle the pagination logic
- * @param reqQuery req.query of the route
- * @param pageQueryParam req.query.page
- * @param pageSize The size of the pages 
- * @param allItems The list of all items to calculate the total pages
- * @returns obj with obj.page being the page number, obj.totalPages being the total amount of pages you can have and obj.filterUrl being the url that needs to be added to the pagination element so that when we change pages, our filter and sort will remain
- */
-export function handlePageClickEvent(reqQuery: any, pageQueryParam: string, pageSize: number, allItemsLength: number): i.PageData {
+
+export function handlePageClickEvent(reqQuery: any, pageQueryParam: string): i.PageData {
     let page: number = parseInt(pageQueryParam) || 1
-    // get totalPages
-    let totalPages: number = getTotalPages(allItemsLength, pageSize)
     //initialize filterUrl
     let filterUrl: string = "";
-
     // for every param in req.query, 
     // check if key is not page or action and value exists
     // if true => add to filterUrl
@@ -142,7 +140,6 @@ export function handlePageClickEvent(reqQuery: any, pageQueryParam: string, page
     // return data in pageData Obj
     return {
         page: page,
-        totalPages: totalPages,
         filterUrl: filterUrl
     };
 }

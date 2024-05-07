@@ -39,13 +39,21 @@ export interface Feedback {
     feedback: string,
 }
 // extention of Magic.Card interface, to allow dinamic calling of object params
-export interface Card extends Magic.Card {
+export interface Card {
     [key: string]: any,
+    id: string,
+    name: string,
+    manaCost: string,
+    cmc: number,
+    colorIdentity: string[]
+    types: string[],
+    multiverseid: number,
+    imageUrl: string;
 }
 // interface for decks
 export interface Deck {
     deckName: string,
-    cards: Magic.Card[],
+    cards: Card[],
     deckImageUrl: string
 }
 // interface for tips
@@ -53,3 +61,45 @@ export interface Tip {
     _id?: ObjectId,
     tip: string
 }
+export interface Filter {
+    cardLookup?: any,
+    filterType?: any,
+    filterRarity?: any,
+    whiteManaChecked?: any,
+    blueManaChecked?: any,
+    blackManaChecked?: any,
+    greenManaChecked?: any,
+    redManaChecked?: any,
+    colorlessManaChecked?: any,
+    sort?: any,
+    sortDirection?: any
+}
+export const filterTypes: string[] = [
+    "Creature",
+    "Sorcery",
+    "Enchantment",
+    "Instant",
+    "Artifact",
+    "Land",
+    "Tribal",
+    "Planeswalker",
+    "Vanguard",
+    "Summon",
+    "Wolf",
+    "Elemental",
+    "Conspiracy",
+    "Plane",
+    "Phenomenon",
+    "Battle",
+    "Scheme",
+    "Stickers",
+    "Eaturecray",
+    "instant"
+];
+export const filterRarities: string[] = [
+    "Common",
+    "Uncommon",
+    "Rare",
+    "Mythic",
+    "Special"
+]

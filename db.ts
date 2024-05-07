@@ -22,7 +22,7 @@ const mtgTips: i.Tip[] = [
     { tip: "Veel plezier! - Magic is een spel, dus zorg ervoor dat je je amuseert en de ervaring waardeert, winnen of verliezen." },
 ];
 // initialize allCards
-let allCards: Magic.Card[] = [];
+let allCards: i.Card[] = [];
 // get uri from enviroment variables
 const uri: any = process.env.MONGO_URI || "mongodb://localhost:27017"
 // initialize Mongoclient
@@ -62,35 +62,46 @@ export async function connect() {
 /**
  * A function to seed the database if needed
  */
-async function seed() {
+async function seed(reseed?: boolean) {
+    if (reseed) {
+        await cardsCollection.deleteMany({});
+    }
     // if there are no cards in database pull them from API, else pull them from database
     if (!await cardsCollection.findOne({})) {
         console.log("[ - SERVER - ]=> Fetching all cards from API");
-        // rough estimate of total cards to make loadingbar
-        const allCardsCount: number = 26023;
         // initialize emitter to get cards
         Magic.Cards.all({})
             // on card recieved
             .on("data", async (card) => {
                 // check if the card has a imageUrl
                 if (card.imageUrl !== undefined) {
-                    // display loading screen
+
+                    const isNotInArray: boolean = !allCards.some((e) => e.name == card.name)
                     console.clear();
-                    // generate loadingbar and display it
-                    console.log(f.updateLoadingBar(allCards.length / allCardsCount));
-                    console.log();
-                    const isInArray: boolean = !allCards.some((e) => e.name == card.name)
                     // log if card is already in allCard or not and show the amount of cards
-                    console.log("Adding card..\t" + isInArray + `\t=>\tCount: ${allCards.length}`);
+                    console.log("Adding card..\t" + isNotInArray + `\t=>\tCount: ${allCards.length}`);
                     // if card doesnt have a duplicate in allCards array
-                    if (isInArray) {
+                    if (isNotInArray) {
+                        const temp: i.Card = {
+                            id: card.id,
+                            name: card.name,
+                            manaCost: card.manaCost,
+                            cmc: card.cmc,
+                            colorIdentity: card.colorIdentity,
+                            multiverseid: card.multiverseid,
+                            types: card.types,
+                            imageUrl: card.imageUrl,
+                            rarity: card.rarity
+                        }
                         // push card to allCards array
-                        allCards.push(card);
+                        allCards.push(temp);
                     }
                 }
             })
             .on("end", async () => {
                 await cardsCollection.insertMany(allCards)
+                console.log("All cards added to database");
+
             })
             // if error occurs with loading cards, log it
             .on("error", (e) => console.error("[ - ERROR - ]=> " + e));
@@ -143,4 +154,4 @@ export const feedbacksCollection: Collection<i.Feedback> = db.collection<i.Feedb
 // initialize tipsCollection and export it to be used outside of db setup
 export const tipsCollection: Collection<i.Tip> = db.collection<i.Tip>("Tips");
 // initialize cardsCollection and export it to be used outside of db setup
-export const cardsCollection: Collection<Magic.Card> = db.collection<Magic.Card>("Cards");
+export const cardsCollection: Collection<i.Card> = db.collection<i.Card>("Cards");

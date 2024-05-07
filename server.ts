@@ -7,28 +7,51 @@ import * as db from "./db";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 
-async function getAllCards() {
+/*async function getAllCards(allCards: i.Card[]) {
     try {
         console.log("[ - SERVER - ]=> Getting all cards");
         const spinner = ['|', '/', '-', '\\'];
         let spinnerIndex = 0;
+
+        const loadingbarLength: number = 25;
+        const collectionLength: number = await db.cardsCollection.countDocuments()
+
+        let totalTimeSpent = 0;
+        let loadedElements = 0;
+
+
+
         function updateSpinner() {
-            process.stdout.write(`\r[ - SERVER - ]=> Loading ${spinner[spinnerIndex]}`);
+            totalTimeSpent = (Date.now() - start) / 1000
+
+            const remaining = collectionLength - allCards.length;
+            const avgPerElem = totalTimeSpent / allCards.length;
+            const estimatedTime = avgPerElem * remaining
+            const percentile: number = (allCards.length / collectionLength)
+            const filledBarlen = Math.round(percentile * loadingbarLength)
+            const emptyBarlen = loadingbarLength - filledBarlen;
+            process.stdout.clearLine(1)
+            process.stdout.write(`\r[ - SERVER - ]=> Loading ${spinner[spinnerIndex]}\t [${'='.repeat(filledBarlen)}${' '.repeat(emptyBarlen)}]\tEst. ${(estimatedTime).toFixed(2)} seconds left `);
             spinnerIndex = (spinnerIndex + 1) % spinner.length;
         }
-        const spinnerInterval = setInterval(updateSpinner, 100);
+        const batchSize = 100;
+        const cursor = db.cardsCollection.find({}).batchSize(batchSize);
         const start = Date.now();
-        allCards = await db.cardsCollection.find({}).toArray();
+        const spinnerInterval = setInterval(updateSpinner, 100);
+        while (await cursor.hasNext()) {
+            const batch = await cursor.next()
+            allCards.push(batch!)
+        }
         const end = Date.now();
         clearInterval(spinnerInterval);
         process.stdout.write('\r');
         console.log("[ - SERVER - ]=> Done getting cards");
         console.log(`[ - SERVER - ]=> size: ${Math.round(JSON.stringify(allCards).length / 1024 / 1024)} MB`);
-        console.log(`[ - SERVER - ]=> Took ${end - start} milliseconds to load`);
+        console.log(`[ - SERVER - ]=> Took ${((end - start) / 1000).toFixed(2)} seconds to load`);
     } catch (error) {
         console.error(error);
     }
-}
+}*/
 
 async function getTempDecks() {
     allDecks = await db.decksCollection.find({}).toArray();
@@ -40,14 +63,11 @@ async function getTips() {
 
 const app = express();
 
+let allCardsLength: number = 0;
+
 let allTips: i.Tip[] = [];
 
 let allDecks: i.Deck[] = [];
-
-let allCards: Magic.Card[] = [];
-
-let allCardTypes: string[] = [];
-let allCardRarities: string[] = [];
 
 app.set("port", process.env.PORT ?? 3000);
 app.set("view engine", "ejs");
@@ -94,35 +114,26 @@ app.get("/home", async (req, res) => {
     let sortDirection = req.query.sortDirection;
     // -- pagination
     let pageQueryParam = req.query.page;
-    // filter logic
-    let filteredAndSortedCards: Magic.Card[] = f.filterAndSortCards(
-        allCards,
-        cardLookup,
-        filterType,
-        filterRarity,
-        whiteManaChecked,
-        blueManaChecked,
-        blackManaChecked,
-        greenManaChecked,
-        redManaChecked,
-        colorlessManaChecked,
-        sort,
-        sortDirection
-    );
+
+
     // Pagination
     let pageSize: number = 12;
-    let pageData: i.PageData = f.handlePageClickEvent(
-        req.query,
-        `${pageQueryParam}`,
-        pageSize,
-        filteredAndSortedCards
-    );
+    let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`, pageSize, allCardsLength);
 
-    let cardsToLoad = f.getCardsForPage(
-        filteredAndSortedCards,
-        pageData.page,
-        pageSize
-    );
+    const filterParam: i.Filter = {
+        cardLookup: cardLookup,
+        filterType: filterType,
+        filterRarity: filterRarity,
+        whiteManaChecked: whiteManaChecked,
+        blueManaChecked: blueManaChecked,
+        blackManaChecked: blackManaChecked,
+        greenManaChecked: greenManaChecked,
+        redManaChecked: redManaChecked,
+        colorlessManaChecked: colorlessManaChecked,
+        sort: sort,
+        sortDirection: sortDirection
+    }
+    let cardsToLoad = await f.getCardsForPage(filterParam, pageData.page, pageSize);
     // Render
     res.render("home", {
         // HEADER
@@ -140,9 +151,9 @@ app.get("/home", async (req, res) => {
         // -- filter system
         cardLookup: cardLookup,
         type: filterType,
-        types: allCardTypes,
+        types: i.filterTypes,
         rarity: filterRarity,
-        rarities: allCardRarities,
+        rarities: i.filterRarities,
         whiteManaChecked: whiteManaChecked == undefined ? "true" : whiteManaChecked,
         blueManaChecked: blueManaChecked == undefined ? "true" : blueManaChecked,
         blackManaChecked: blackManaChecked == undefined ? "true" : blackManaChecked,
@@ -175,7 +186,7 @@ app.get("/decks", async (req, res) => {
         req.query,
         `${pageQueryParam}`,
         pageSize,
-        allDecks
+        allDecks.length
     );
 
     let decksForPage = f.getDecksForPage(allDecks, pageData.page, pageSize);
@@ -217,7 +228,7 @@ app.get("/decks/:deckName", async (req, res) => {
     let selectedDeck: i.Deck | undefined = allDecks.find((deck) => {
         return deck.deckName === req.params.deckName;
     });
-    let amountMap = new Map<Magic.Card, number>();
+    let amountMap = new Map<i.Card, number>();
 
 
     for (const card of selectedDeck!.cards) {
@@ -234,7 +245,7 @@ app.get("/decks/:deckName", async (req, res) => {
         req.query,
         `${pageQueryParam}`,
         pageSize,
-        Array.from(amountMap.keys())
+        Array.from(amountMap.keys()).length
     );
 
     let cardsToLoad: i.Card[] | undefined = undefined;
@@ -311,8 +322,8 @@ app.post("/changeDeckName", async (req, res) => {
 
 let lastSelectedDeck: i.Deck;
 let selectedDeck: i.Deck | undefined = undefined;
-let unpulledCards: Magic.Card[] | undefined = [];
-let pulledCards: Magic.Card[];
+let unpulledCards: i.Card[] | undefined = [];
+let pulledCards: i.Card[];
 
 app.get("/drawtest", async (req, res) => {
     // Query params
@@ -351,7 +362,7 @@ app.get("/drawtest", async (req, res) => {
         }
     }
 
-    let cardLookupInDeckCard: Magic.Card | undefined = undefined;
+    let cardLookupInDeckCard: i.Card | undefined = undefined;
     let cardLookupInDeckCardChance: number | undefined = undefined;
     // if deck is diffrent from last load
     if (lastSelectedDeck !== selectedDeck) {
@@ -393,7 +404,7 @@ app.get("/drawtest", async (req, res) => {
         }
     }
     // --filter logic
-    let filterAndSortedCards: Magic.Card[] = pulledCards;
+    let filterAndSortedCards: i.Card[] = pulledCards;
     if (pulledCards !== undefined) {
         filterAndSortedCards = [
             ...f.filterAndSortCards(
@@ -413,7 +424,7 @@ app.get("/drawtest", async (req, res) => {
         ];
     }
 
-    let amountMap = new Map<Magic.Card, number>();
+    let amountMap = new Map<i.Card, number>();
 
 
     for (const card of filterAndSortedCards) {
@@ -425,9 +436,9 @@ app.get("/drawtest", async (req, res) => {
         }
     }
     // get the cardToShow (always the first card in pulledCards)
-    let cardToShow: Magic.Card = pulledCards[0];
+    let cardToShow: i.Card = pulledCards[0];
     // initialize nextCard
-    let nextCard: Magic.Card | undefined = undefined;
+    let nextCard: i.Card | undefined = undefined;
     // if there is still a card in unpulled cards
     if (unpulledCards !== undefined) {
         // set nextCard to the last index of unpulledCards
@@ -445,7 +456,7 @@ app.get("/drawtest", async (req, res) => {
         req.query,
         `${pageQueryParam}`,
         pageSize,
-        Array.from(amountMap.keys())
+        Array.from(amountMap.keys()).length
     );
 
     amountMap = f.getCardWAmauntForPage(
@@ -476,9 +487,9 @@ app.get("/drawtest", async (req, res) => {
         // -- filter system
         cardLookup: cardLookup,
         type: filterType,
-        types: allCardTypes,
+        types: i.filterTypes,
         rarity: filterRarity,
-        rarities: allCardRarities,
+        rarities: i.filterRarities,
         whiteManaChecked: whiteManaChecked == undefined ? "true" : whiteManaChecked,
         blueManaChecked: blueManaChecked == undefined ? "true" : blueManaChecked,
         blackManaChecked: blackManaChecked == undefined ? "true" : blackManaChecked,
@@ -534,7 +545,7 @@ app.get("/editDeck/:deckName", async (req, res) => {
             req.query,
             `${pageQueryParam}`,
             pageSize,
-            selectedDeck?.cards
+            selectedDeck?.cards.length
         );
     }
 
@@ -574,14 +585,18 @@ app.get("/editDeck/:deckName", async (req, res) => {
 });
 
 app.listen(app.get("port"), async () => {
+    console.clear();
+    console.log("[ - SERVER - ]=> connecting to database");
+
     await db.connect()
 
-    // Get all the cards from the api, there are allot so takes a while before all cards get loaded
-    await getAllCards();
-    await getTempDecks();
+    console.log("[ - SERVER - ]=> Counting total cards");
+    allCardsLength = await db.cardsCollection.countDocuments();
+    // console.log("[ - SERVER - ]=> getting temp decks");
+    // await getTempDecks();
+    console.log("[ - SERVER - ]=> getting tips");
     await getTips();
-    allCardTypes = f.getAllCardTypes(allCards);
-    allCardRarities = f.getAllRarities(allCards);
+    console.log("[ - SERVER - ]=> ! DONE !");
     console.log(
         "[ - SERVER - ]=> Listening at http://localhost:" + app.get("port")
     );

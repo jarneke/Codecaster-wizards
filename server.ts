@@ -246,8 +246,8 @@ app.post("/changeDeckName", async (req, res) => {
 
 let lastSelectedDeck: i.Deck;
 let selectedDeck: i.Deck | null = null;
-let unpulledCards: i.Card[] | undefined = [];
-let pulledCards: i.Card[];
+let unpulledCards: i.Card[] = [];
+let pulledCards: i.Card[] = [];
 
 app.get("/drawtest", async (req, res) => {
     // Query params
@@ -274,7 +274,6 @@ app.get("/drawtest", async (req, res) => {
     // Logic
     // Find What Deck is selected
     selectedDeck = await db.decksCollection.findOne({ deckName: `${selectedDeckQuery}` })
-
     // if deck is not found,
     // set to deck nr. 1
     // else set to lastDeck
@@ -289,7 +288,9 @@ app.get("/drawtest", async (req, res) => {
             selectedDeck = lastSelectedDeck;
         }
     }
-
+    if (!lastSelectedDeck) {
+        lastSelectedDeck = selectedDeck
+    }
     let cardLookupInDeckCard: i.Card | undefined = undefined;
     let cardLookupInDeckCardChance: number | undefined = undefined;
     if (lastSelectedDeck) console.log(lastSelectedDeck.deckName);
@@ -297,7 +298,7 @@ app.get("/drawtest", async (req, res) => {
 
 
     // if deck is diffrent from last load
-    if (lastSelectedDeck !== selectedDeck) {
+    if (lastSelectedDeck.deckName !== selectedDeck.deckName) {
         // set unpulledCards to cards of new deck
         unpulledCards = [...selectedDeck.cards];
         // Shuffle cards
@@ -305,6 +306,9 @@ app.get("/drawtest", async (req, res) => {
         // clear pulledCards
         pulledCards = [];
     } else {
+        if (unpulledCards.length === 0 && !whatToDo) {
+            unpulledCards = [...f.shuffleCards(selectedDeck.cards)]
+        }
         // if clicked to pull a card
         if (whatToDo == "pull") {
             if (pulledCards !== undefined && unpulledCards !== undefined) {
@@ -337,6 +341,7 @@ app.get("/drawtest", async (req, res) => {
     }
     // --filter logic
     let filterAndSortedCards: i.Card[] = pulledCards;
+
     if (pulledCards !== undefined) {
         filterAndSortedCards = [
             ...f.filterAndSortCards(

@@ -6,31 +6,51 @@ import * as f from "./functions";
 import * as db from "./db";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-
+/**
+ * A function to get and set all tips
+ */
 async function getTips() {
     allTips = await db.tipsCollection.find({}).toArray();
 }
 
+// initialize express app
 const app = express();
 
+// initialize alltips array
 let allTips: i.Tip[] = [];
+// variable to store last selected deck on drawtest page
 let lastSelectedDeck: i.Deck;
+// variable to store selected deck
 let selectedDeck: i.Deck | null = null;
+// variable to store unpulled cards of drawtest page
 let unpulledCards: i.Card[] = [];
+// variable to store pulled cards of drawtest page
 let pulledCards: i.Card[] = [];
 
+// set the port to use on the port specified in .env, or default to 3000
 app.set("port", process.env.PORT ?? 3000);
+// set the viewengine to ejs
 app.set("view engine", "ejs");
 
+// tell app that static files ae in public map
 app.use(express.static("public"));
+// tell app to use bodyParser
 app.use(bodyParser.urlencoded({ extended: true }));
+// tell app to use cookieParser
 app.use(cookieParser());
 
+// landingspage
 app.get("/", (req, res) => {
     res.render("landingspage");
 });
 
+// post route to handle cookie of showPopup
 app.post("/dontShowPopup", async (req, res) => {
+    console.log(req.query);
+
+    const show: boolean | undefined = req.cookies.showPopup ? undefined : req.cookies.showPopup === "true" ? true : false;
+    !show ? res.cookie("showPopup", true) : console.log(show);
+    ;
     res.redirect("/home")
 })
 

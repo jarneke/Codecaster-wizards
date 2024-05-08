@@ -54,7 +54,7 @@ app.use(cookieParser());
 app.use(session);
 
 // landingspage
-app.get("/", secureMiddleware, (req, res) => {
+app.get("/", (req, res) => {
   res.render("landingspage");
 });
 
@@ -114,8 +114,8 @@ app.post("/dontShowPopup", async (req, res) => {
   const show: boolean | undefined = req.cookies.showPopup
     ? undefined
     : req.cookies.showPopup === "true"
-    ? true
-    : false;
+      ? true
+      : false;
   !show ? res.cookie("showPopup", true) : console.log(show);
   res.redirect("/home");
 });
@@ -592,9 +592,8 @@ app.post("/profile", async (req, res) => {
 
   const firstName: string = req.body.firstName;
   const lastName: string = req.body.lastName;
-  const userName: string = `${
-    firstName === "" ? res.locals.user?.firstName : firstName
-  }_${lastName === "" ? res.locals.user?.lastName : lastName}`;
+  const userName: string = `${firstName === "" ? res.locals.user?.firstName : firstName
+    }_${lastName === "" ? res.locals.user?.lastName : lastName}`;
   const email: string = req.body.email;
   const password: string = req.body.passwordFormLabel; //later encrypten
   const description: string = req.body.description;

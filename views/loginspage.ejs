@@ -1,5 +1,8 @@
 <%- include("partials/landingsheader") %>
-<main class="d-flex w-100 justify-content-center" style="min-height: 72vh">
+<main
+  class="d-flex flex-wrap w-100 justify-content-center"
+  style="min-height: 72vh"
+>
   <form
     action="/login"
     method="post"
@@ -57,6 +60,24 @@
       Nog geen account, registreer
     </a>
   </form>
+  <% if (alert) { %>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+    <strong>! FOUT !</strong> <%= alertMsg %>
+  </div>
+
+  <script>
+    var alertList = document.querySelectorAll(".alert");
+    alertList.forEach(function (alert) {
+      new bootstrap.Alert(alert);
+    });
+  </script>
+  <% } %>
 </main>
 
 <%- include("partials/landingsfooter") %>

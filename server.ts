@@ -18,9 +18,6 @@ import { secureMiddleware } from "./secureMiddleware";
 async function getTips() {
   allTips = await db.tipsCollection.find({}).toArray();
 }
-async function getUsers() {
-  loggedInUser = await db.usersCollection.findOne({});
-}
 // initialize express app
 const app = express();
 
@@ -30,9 +27,6 @@ let allCards: Magic.Card[] = [];
 let allTips: i.Tip[] = [];
 
 let allDecks: i.Deck[] = [];
-
-let loggedInUser: i.User | null = null;
-getUsers();
 
 let allCardTypes: string[] = [];
 let allCardRarities: string[] = [];
@@ -65,7 +59,10 @@ app.get("/", secureMiddleware, (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  res.render("loginspage");
+  return res.render("loginspage", {
+    alert: false,
+    alertMsg: "",
+  });
 });
 
 app.post("/login", async (req, res) => {
@@ -80,7 +77,10 @@ app.post("/login", async (req, res) => {
     req.session.user = user;
     res.redirect("/home");
   } catch (e: any) {
-    res.redirect("/login");
+    return res.render("loginspage", {
+      alert: true,
+      alertMsg: "E-mail of wachtwoord is onjuist!",
+    });
   }
 });
 
@@ -99,6 +99,12 @@ app.post("/register", (req, res) => {
   } = req.body;
 
   res.redirect("/login");
+});
+
+app.post("/logout", async (req, res) => {
+  req.session.destroy(() => {
+    res.redirect("/login");
+  });
 });
 
 // post route to handle cookie of showPopup
@@ -177,7 +183,7 @@ app.get("/home", secureMiddleware, async (req, res) => {
   // Render
   res.render("home", {
     // HEADER
-    user: loggedInUser,
+    user: res.locals.user,
     // -- The names of the js files you want to load on the page.
     jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
     // -- The title of the page
@@ -214,7 +220,7 @@ app.get("/home", secureMiddleware, async (req, res) => {
   });
 });
 
-app.get("/decks", async (req, res) => {
+app.get("/decks", secureMiddleware, async (req, res) => {
   let decksForPage: i.Deck[] = await db.decksCollection.find({}).toArray();
   // params from route
 
@@ -226,7 +232,7 @@ app.get("/decks", async (req, res) => {
 
   res.render("decks", {
     // HEADER
-    user: loggedInUser,
+    user: res.locals.user,
     // -- The names of the js files you want to load on the page.
     jsFiles: [],
     // -- The title of the page
@@ -249,7 +255,7 @@ app.get("/decks", async (req, res) => {
 app.get("/noDeck", (req, res) => {
   res.render("noDeck", {
     // HEADER
-    user: loggedInUser,
+    user: res.locals.user,
     // -- The names of the js files you want to load on the page.
     jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
     // -- The title of the page
@@ -261,7 +267,7 @@ app.get("/noDeck", (req, res) => {
     toRedirectTo: "noDecks",
   });
 });
-app.get("/decks/:deckName", async (req, res) => {
+app.get("/decks/:deckName", secureMiddleware, async (req, res) => {
   // params from route
   let cardLookup = req.query.cardLookup;
   let sort = req.query.sort;
@@ -313,7 +319,7 @@ app.get("/decks/:deckName", async (req, res) => {
 
   res.render("deckdetails", {
     // HEADER
-    user: loggedInUser,
+    user: res.locals.user,
     // -- The names of the js files you want to load on the page.
     jsFiles: [],
     // -- The title of the page
@@ -353,7 +359,7 @@ app.post("/changeDeckName", async (req, res) => {
 
   res.redirect(`/editDeck/${name}`);
 });
-app.get("/drawtest", async (req, res) => {
+app.get("/drawtest", secureMiddleware, async (req, res) => {
   // Query params
   // -- filter and sort
   let cardLookup = req.query.cardLookup;
@@ -510,7 +516,7 @@ app.get("/drawtest", async (req, res) => {
 
   res.render("drawtest", {
     // HEADER
-    user: loggedInUser,
+    user: res.locals.user,
     // -- The names of the js files you want to load on the page.
     jsFiles: [
       "submitOnChange",
@@ -565,12 +571,10 @@ app.get("/drawtest", async (req, res) => {
     amount: chanceData.amount,
   });
 });
-app.get("/profile", async (req, res) => {
-  await getUsers();
-
+app.get("/profile", secureMiddleware, async (req, res) => {
   res.render("profile", {
     // HEADER
-    user: loggedInUser,
+    user: res.locals.user,
     // -- The names of the js files you want to load on the page.
     jsFiles: ["editProfile"],
     // -- The title of the page
@@ -589,37 +593,39 @@ app.post("/profile", async (req, res) => {
   const firstName: string = req.body.firstName;
   const lastName: string = req.body.lastName;
   const userName: string = `${
-    firstName === "" ? loggedInUser?.firstName : firstName
-  }_${lastName === "" ? loggedInUser?.lastName : lastName}`;
+    firstName === "" ? res.locals.user?.firstName : firstName
+  }_${lastName === "" ? res.locals.user?.lastName : lastName}`;
   const email: string = req.body.email;
   const password: string = req.body.passwordFormLabel; //later encrypten
   const description: string = req.body.description;
   const newUserDetails: i.User = {
     firstName:
-      firstName === "" && loggedInUser ? loggedInUser.firstName : firstName,
+      firstName === "" && res.locals.user
+        ? res.locals.user.firstName
+        : firstName,
     lastName:
-      lastName === "" && loggedInUser ? loggedInUser?.lastName : lastName,
+      lastName === "" && res.locals.user ? res.locals.user?.lastName : lastName,
     userName:
-      userName === "" && loggedInUser ? loggedInUser?.userName : userName,
-    email: email === "" && loggedInUser ? loggedInUser?.email : email,
+      userName === "" && res.locals.user ? res.locals.user?.userName : userName,
+    email: email === "" && res.locals.user ? res.locals.user?.email : email,
     description:
-      description === "" && loggedInUser
-        ? loggedInUser.description
+      description === "" && res.locals.user
+        ? res.locals.user.description
         : description,
     password:
-      password === "" && loggedInUser ? loggedInUser.password : password,
+      password === "" && res.locals.user ? res.locals.user.password : password,
     role: "USER",
   };
 
   await db.usersCollection.updateOne(
-    { _id: loggedInUser?._id },
+    { _id: res.locals.user?._id },
     { $set: newUserDetails }
   );
   res.redirect("/profile");
 });
 
 app.post("/delete", async (req, res) => {
-  await db.usersCollection.deleteOne({ _id: loggedInUser?._id });
+  await db.usersCollection.deleteOne({ _id: res.locals.user?._id });
   res.redirect("/");
 });
 
@@ -644,7 +650,7 @@ app.get("/editDeck/:deckName", async (req, res) => {
 
   res.render("editDeck", {
     // HEADER
-    user: loggedInUser,
+    user: res.locals.user,
     // -- The names of the js files you want to load on the page.
     jsFiles: [],
     // -- The title of the page
@@ -665,10 +671,10 @@ app.get("/editDeck/:deckName", async (req, res) => {
   });
 });
 
-app.get("/404", (req, res) => {
+app.get("/404", secureMiddleware, (req, res) => {
   res.render("404", {
     // HEADER
-    user: loggedInUser,
+    user: res.locals.user,
     // -- The names of the js files you want to load on the page.
     jsFiles: [],
     // -- The title of the page

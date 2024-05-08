@@ -36,12 +36,17 @@ document.addEventListener("DOMContentLoaded", () => {
 function convertManaCostToImages(manaCost) {
     let response = "";
     let i = 0;
+    console.log(manaCost);
+    if (manaCost == "") {
+        response = `<img style="width: 1.5rem" src="/assets/images/mana_symbols/0.svg" alt="0">`;
+    }
     while (i < manaCost.length) {
         if (manaCost[i] == '{') {
             let endIndex = manaCost.indexOf('}', i);
             if (endIndex !== -1) {
                 let symbol = manaCost.substring(i + 1, endIndex);
-                response += `<img style="width: 1.5rem" src="/assets/images/mana_symbols/${symbol}.svg" alt="${symbol}">`;
+                console.log(symbol);
+                response += `<img style="width: 1.5rem" src="/assets/images/mana_symbols/${symbol.split("/").join("")}.svg" alt="${symbol}">`;
                 i = endIndex + 1;
             } else {
                 response += `<img style="width: 1.5rem" src="/assets/images/mana_symbols/${manaCost[i]}.svg" alt="${manaCost[i]}">`;

@@ -371,3 +371,7 @@ export function updateLoadingBar(progress: number): string {
     return "[" + "=".repeat(filledLength) + " ".repeat(emptyLength) + "]";
 
 }
+
+export function deleteCard(){
+    
+}

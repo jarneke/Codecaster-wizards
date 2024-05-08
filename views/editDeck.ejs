@@ -57,8 +57,12 @@
             />
           </a>
         </article>
-        <i class="bi bi-dash-circle-fill col-6 text-center fs-3"></i>
-        <i class="bi bi-plus-circle-fill col-6 text-center fs-3"></i>
+        <form action="/removeCardFromDeck/<%= selectedDeck.deckName %>/<%= encodeURIComponent(card.name) %>" method="post">
+          <button type="submit"><i class="bi bi-dash-circle-fill col-6 text-center fs-3"></i></button>
+        </form>
+        <form action="/addCardTooDeck/<%= selectedDeck.deckName %>/<%= encodeURIComponent(card.name) %>" method="post">
+          <button type="submit"><i class="bi bi-plus-circle-fill col-6 text-center fs-3"></i></button>
+        </form>
       </article>
       <% } %>
     </section>

@@ -209,7 +209,7 @@ export async function populateTips(allTips: i.Tip[]) {
 }
 
 async function createInitialUser() {
-  await usersCollection.deleteMany({});
+ // await usersCollection.deleteMany({});
   if ((await usersCollection.countDocuments()) > 0) {
     return;
   }

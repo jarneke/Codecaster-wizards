@@ -2,7 +2,6 @@ import Magic = require("mtgsdk-ts");
 import * as i from "./interfaces";
 import { Filter, Sort, Condition } from "mongodb";
 import * as db from "./db"
-import bcrypt from "bcrypt";
 
 /**
  * A function to get the cards to load on a page specified by diffrent filter and sort params

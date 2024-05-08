@@ -3,7 +3,7 @@ import * as i from "./interfaces";
 import * as f from "./functions";
 import Magic = require("mtgsdk-ts");
 import dotenv from "dotenv";
-import bcrypt from "bcrypt";
+import bcrypt from "bcrypt"
 
 dotenv.config();
 

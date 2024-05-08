@@ -6,11 +6,11 @@ import ejs from "ejs";
 import * as i from "./interfaces";
 import Magic = require("mtgsdk-ts");
 import * as f from "./functions";
-import bcrypt from "bcrypt";
 import { Rarity } from "mtgsdk-ts/out/IMagic";
 import * as db from "./db";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import session from "./session"
 /**
  * A function to get and set all tips
  */

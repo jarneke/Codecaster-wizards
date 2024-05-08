@@ -14,6 +14,10 @@ async function getTips() {
 const app = express();
 
 let allTips: i.Tip[] = [];
+let lastSelectedDeck: i.Deck;
+let selectedDeck: i.Deck | null = null;
+let unpulledCards: i.Card[] = [];
+let pulledCards: i.Card[] = [];
 
 app.set("port", process.env.PORT ?? 3000);
 app.set("view engine", "ejs");
@@ -31,16 +35,21 @@ app.post("/dontShowPopup", async (req, res) => {
 })
 
 app.post("/feedback", (req, res) => {
+    // params from route
     const feedbackType = req.body.feedbackType;
     const feedback = req.body.feedback;
     const redirectPage = req.body.toRedirectTo
 
+    // make a feedback object
     const feedBackItem: i.Feedback = {
         feedbackType: feedbackType,
         feedback: feedback,
     }
 
+    // insert it in database
+    // no need to await, can run in bakground
     db.feedbacksCollection.insertOne(feedBackItem)
+    // redirect to specified page
     res.redirect(`/${redirectPage}`)
 })
 
@@ -58,14 +67,14 @@ app.get("/home", async (req, res) => {
     let colorlessManaChecked = req.query.colorlessManaChecked;
     let sort = req.query.sort;
     let sortDirection = req.query.sortDirection;
-    // -- pagination
-    let pageQueryParam = req.query.page;
-
 
     // Pagination
+    // -- Set pageSize
     let pageSize: number = 12;
-    let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`);
+    // -- Get page and filterUrl
+    let pageData: i.PageData = f.handlePageClickEvent(req.query);
 
+    // -- set filterparams for cards to load
     const filterParam: i.Filter = {
         cardLookup: cardLookup,
         filterType: filterType,
@@ -79,6 +88,7 @@ app.get("/home", async (req, res) => {
         sort: sort,
         sortDirection: sortDirection
     }
+    // get cardsToLoad and totalpages
     let cardsToLoadAndTotalPages = await f.getCardsForPage(filterParam, pageData.page, pageSize);
     // Render
     res.render("home", {
@@ -123,11 +133,11 @@ app.get("/home", async (req, res) => {
 app.get("/decks", async (req, res) => {
     let decksForPage: i.Deck[] = await db.decksCollection.find({}).toArray()
     // params from route
-    let pageQueryParam = req.query.page;
+
 
     // Pagination
     let pageSize: number = 9;
-    let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`);
+    let pageData: i.PageData = f.handlePageClickEvent(req.query);
 
     let totalPages = f.getTotalPages(decksForPage.length, pageSize)
 
@@ -153,13 +163,27 @@ app.get("/decks", async (req, res) => {
         decks: decksForPage,
     });
 });
-
+app.get("/noDeck", (req, res) => {
+    res.render("noDeck", {
+        // HEADER
+        user: i.tempUser,
+        // -- The names of the js files you want to load on the page.
+        jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
+        // -- The title of the page
+        title: "! geen decks !",
+        // -- The Tab in the nav bar you want to have the orange color
+        // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
+        tabToColor: 3,
+        // The page it should redirect to after feedback form is submitted
+        toRedirectTo: "noDecks",
+    })
+})
 app.get("/decks/:deckName", async (req, res) => {
     // params from route
     let cardLookup = req.query.cardLookup;
     let sort = req.query.sort;
     let sortDirection = req.query.sortDirection;
-    let pageQueryParam = req.query.page;
+
 
     const selectedDeck: i.Deck | null = await db.decksCollection.findOne({ deckName: req.params.deckName })
     if (selectedDeck == null) {
@@ -177,7 +201,7 @@ app.get("/decks/:deckName", async (req, res) => {
     }
     // Pagination
     let pageSize: number = 6;
-    let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`);
+    let pageData: i.PageData = f.handlePageClickEvent(req.query);
     let totalPages: number = f.getTotalPages(selectedDeck!.cards.length, pageSize)
 
     let amountLandcards: number | undefined = undefined;
@@ -229,7 +253,6 @@ app.get("/decks/:deckName", async (req, res) => {
         avgManaCost: avgManaCost
     });
 });
-
 app.post("/changeDeckName", async (req, res) => {
     const name = req.body.deckNameInput;
     const oldName = req.body.oldDeckName;
@@ -243,12 +266,6 @@ app.post("/changeDeckName", async (req, res) => {
 
     res.redirect(`/editDeck/${name}`);
 });
-
-let lastSelectedDeck: i.Deck;
-let selectedDeck: i.Deck | null = null;
-let unpulledCards: i.Card[] = [];
-let pulledCards: i.Card[] = [];
-
 app.get("/drawtest", async (req, res) => {
     // Query params
     // -- filter and sort
@@ -266,8 +283,8 @@ app.get("/drawtest", async (req, res) => {
     let deck = req.query.decks;
     let cardLookupInDeck = req.query.cardLookupInDeck;
     let cardLookupInDeckInput = req.query.cardLookupInDeckInput;
-    // -- pagination
-    let pageQueryParam = req.query.page;
+
+
     // -- other
     let whatToDo = req.query.action;
     let selectedDeckQuery = req.query.decks;
@@ -282,7 +299,7 @@ app.get("/drawtest", async (req, res) => {
             selectedDeck = await db.decksCollection.findOne({});
             if (!selectedDeck) {
                 // TODO: make noDecks page
-                return res.render("noDecks")
+                return res.redirect("/noDecks")
             }
         } else {
             selectedDeck = lastSelectedDeck;
@@ -389,7 +406,7 @@ app.get("/drawtest", async (req, res) => {
 
     // Pagination
     let pageSize: number = 6;
-    let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`);
+    let pageData: i.PageData = f.handlePageClickEvent(req.query);
     let totalPages = f.getTotalPages(Array.from(amountMap.keys()).length, pageSize)
 
     amountMap = f.getCardWAmauntForPage(
@@ -465,12 +482,9 @@ app.get("/editDeck/:deckName", async (req, res) => {
     if (!selectedDeck) {
         return res.redirect("/404");
     }
-    // params from route
-    let pageQueryParam = req.query.page;
-
     // Pagination
     let pageSize: number = 3;
-    let pageData: i.PageData = f.handlePageClickEvent(req.query, `${pageQueryParam}`);
+    let pageData: i.PageData = f.handlePageClickEvent(req.query);
     let totalPages = f.getTotalPages(selectedDeck.cards.length, pageSize);
     let cardsToLoad = undefined;
 

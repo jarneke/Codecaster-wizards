@@ -110,7 +110,6 @@ export function getCardWAmauntForPage(allItems: Map<i.Card, number>, page: numbe
 
     return slicedItems;
 }
-
 /**
  * Function to get The total amount of pages
  * @param allItems The array of all the items
@@ -120,9 +119,13 @@ export function getCardWAmauntForPage(allItems: Map<i.Card, number>, page: numbe
 export function getTotalPages(allItemsLength: number, pageSize: number): number {
     return Math.ceil(allItemsLength / pageSize);
 }
-
-export function handlePageClickEvent(reqQuery: any, pageQueryParam: string): i.PageData {
-    let page: number = parseInt(pageQueryParam) || 1
+/**
+ * A function that handles switching page and adding the filter elements to the url so filtering and sorting doesnt go away after page sap
+ * @param reqQuery The req.query of the route
+ * @returns PageData, the page and filterUrl to load
+ */
+export function handlePageClickEvent(reqQuery: any): i.PageData {
+    let page: number = parseInt(reqQuery.page) || 1
     //initialize filterUrl
     let filterUrl: string = "";
     // for every param in req.query, 

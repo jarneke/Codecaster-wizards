@@ -37,7 +37,7 @@ export interface Feedback {
     feedbackType: feedbackType,
     feedback: string,
 }
-// extention of Magic.Card interface, to allow dinamic calling of object params
+// interd-face for shertend cards
 export interface Card {
     [key: string]: any,
     id: string,
@@ -61,6 +61,7 @@ export interface Tip {
     _id?: ObjectId,
     tip: string
 }
+// interface for Mongodb filter
 export interface Filter {
     cardLookup?: any,
     filterType?: any,
@@ -74,6 +75,7 @@ export interface Filter {
     sort?: any,
     sortDirection?: any
 }
+// all types
 export const filterTypes: string[] = [
     "Creature",
     "Sorcery",
@@ -96,6 +98,7 @@ export const filterTypes: string[] = [
     "Eaturecray",
     "instant"
 ];
+// all rarities
 export const filterRarities: string[] = [
     "Common",
     "Uncommon",

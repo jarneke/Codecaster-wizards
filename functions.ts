@@ -1,23 +1,101 @@
 import Magic = require("mtgsdk-ts");
 import * as i from "./interfaces";
+import { Filter, Sort, Condition } from "mongodb";
+import * as db from "./db"
 
 /**
- * Function to get the cards u need to load the page
- * @param allItems The array of all the items
- * @param page The page you want to load
- * @param pageSize The amount of items you want on the page
- * @returns an array with length of pageSize
+ * A function to get the cards to load on a page specified by diffrent filter and sort params
+ * @param filterParam The parameters to filter and sort on
+ * @param page Page you wqnt to load
+ * @param pageSize Pagesize of the page you want to load
+ * @returns array of cards
  */
-export function getCardsForPage(allItems: Magic.Card[], page: number, pageSize: number): Magic.Card[] {
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    return allItems.slice(startIndex, endIndex);
-}
+export async function getCardsForPage(filterParam: i.Filter, page: number, pageSize: number): Promise<{ cards: i.Card[], totalPages: number }> {
 
-export function getCardWAmauntForPage(allItems: Map<Magic.Card, number>, page: number, pageSize: number): Map<Magic.Card, number> {
+    let query: Filter<i.Card> = {};
+
+    // Text search or Id match
+    if (filterParam.cardLookup && filterParam.cardLookup != "") {
+        const numberLookup = parseInt(filterParam.cardLookup, 10);
+        const isNumber = !isNaN(numberLookup)
+        query.$or = [
+            { name: { $regex: new RegExp(filterParam.cardLookup, "i") } },
+            { id: { $regex: new RegExp(filterParam.cardLookup, "i") } },
+        ];
+        if (isNumber) {
+            query.$or.push({ multiverseid: numberLookup })
+        }
+    }
+    // Type filter
+    if (filterParam.filterType && filterParam.filterType != "") {
+        query.types = { $in: [filterParam.filterType] }
+    }
+    // Rarity filter
+    if (filterParam.filterRarity && filterParam.filterRarity != "") {
+        query.rarity = { $regex: filterParam.filterRarity }
+    }
+    // Color filter
+
+    let includeManaConditions: string[] = [];
+    let excludeManaConditions: string[] = ['W', 'U', 'B', 'G', 'R', '\\d+', 'X']; // Start with all possibilities for exclusion
+
+    if (filterParam.whiteManaChecked === 'false') includeManaConditions.push('W');
+    else excludeManaConditions.splice(excludeManaConditions.indexOf('W'), 1);
+
+    if (filterParam.blueManaChecked === 'false') includeManaConditions.push('U');
+    else excludeManaConditions.splice(excludeManaConditions.indexOf('U'), 1);
+
+    if (filterParam.blackManaChecked === 'false') includeManaConditions.push('B');
+    else excludeManaConditions.splice(excludeManaConditions.indexOf('B'), 1);
+
+    if (filterParam.greenManaChecked === 'false') includeManaConditions.push('G');
+    else excludeManaConditions.splice(excludeManaConditions.indexOf('G'), 1);
+
+    if (filterParam.redManaChecked === 'false') includeManaConditions.push('R');
+    else excludeManaConditions.splice(excludeManaConditions.indexOf('R'), 1);
+
+    if (filterParam.colorlessManaChecked === 'false') includeManaConditions.push('\\d+', 'X');
+    else {
+        excludeManaConditions.splice(excludeManaConditions.indexOf('\\d+'), 1);
+        excludeManaConditions.splice(excludeManaConditions.indexOf('X'), 1);
+    }
+
+    if (includeManaConditions.length > 0) {
+        query.manaCost = {
+            $regex: new RegExp(`^(${includeManaConditions.map(c => `\\{${c}\\}`).join('|')})+$`, 'i')
+        };
+    }
+
+    if (excludeManaConditions.length > 0) {
+        query.manaCost = {
+            $not: new RegExp(`\\{(${excludeManaConditions.join('|')})\\}`, 'i')
+        };
+    }
+
+    // sorting
+    let sortOptions: Sort = {}
+    if (filterParam.sort && filterParam.sortDirection && filterParam.sort != "" && filterParam.sortDirection != "") {
+        sortOptions[filterParam.sort] = filterParam.sortDirection === "down" ? 1 : -1;
+    }
+
+    const skipDocuments: number = (page - 1) * pageSize
+    const cards: i.Card[] = await db.cardsCollection.find(query).sort(sortOptions).skip(skipDocuments).limit(pageSize).toArray()
+    const totalPages = getTotalPages(await db.cardsCollection.countDocuments(query), pageSize)
+    return {
+        cards: cards,
+        totalPages: totalPages
+    }
+}
+export function getCardsForPageFromArray(arr: i.Card[], page: number, pagesize: number): i.Card[] {
+    const startIndex = (page - 1) * pagesize;
+    const endIndex = startIndex + pagesize;
+    return arr.slice(startIndex, endIndex);
+
+}
+export function getCardWAmauntForPage(allItems: Map<i.Card, number>, page: number, pageSize: number): Map<i.Card, number> {
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
-    const slicedItems = new Map<Magic.Card, number>();
+    const slicedItems = new Map<i.Card, number>();
 
     let index = 0;
     // Iterate over allItems and add items within the startIndex and endIndex range to slicedItems
@@ -32,37 +110,30 @@ export function getCardWAmauntForPage(allItems: Map<Magic.Card, number>, page: n
 
     return slicedItems;
 }
-
 /**
  * Function to get The total amount of pages
  * @param allItems The array of all the items
  * @param pageSize The amount of items per page
  * @returns The amount of pages you can have with a certain page size
  */
-function getTotalPages(allItems: any, pageSize: number): number {
-    return Math.ceil(allItems.length / pageSize);
+export function getTotalPages(allItemsLength: number, pageSize: number): number {
+    return Math.ceil(allItemsLength / pageSize);
 }
 /**
- * Function to handle the pagination logic
- * @param reqQuery req.query of the route
- * @param pageQueryParam req.query.page
- * @param pageSize The size of the pages 
- * @param allItems The list of all items to calculate the total pages
- * @returns obj with obj.page being the page number, obj.totalPages being the total amount of pages you can have and obj.filterUrl being the url that needs to be added to the pagination element so that when we change pages, our filter and sort will remain
+ * A function that handles switching page and adding the filter elements to the url so filtering and sorting doesnt go away after page sap
+ * @param reqQuery The req.query of the route
+ * @returns PageData, the page and filterUrl to load
  */
-export function handlePageClickEvent(reqQuery: any, pageQueryParam: string, pageSize: number, allItems: any): i.PageData {
-    let page: number = parseInt(pageQueryParam) || 1
-    // get totalPages
-    let totalPages: number = getTotalPages(allItems, pageSize)
+export function handlePageClickEvent(reqQuery: any): i.PageData {
+    let page: number = parseInt(reqQuery.page) || 1
     //initialize filterUrl
     let filterUrl: string = "";
-
     // for every param in req.query, 
     // check if key is not page or action and value exists
     // if true => add to filterUrl
     // if false => skip
     for (const [key, value] of Object.entries(reqQuery)) {
-        if (key !== "page" && value && key !== "action") {
+        if (key != "page" && value && key != "action") {
             filterUrl += `${key}=${value}&`;
         }
     }
@@ -72,43 +143,8 @@ export function handlePageClickEvent(reqQuery: any, pageQueryParam: string, page
     // return data in pageData Obj
     return {
         page: page,
-        totalPages: totalPages,
         filterUrl: filterUrl
     };
-}
-/**
- * Function that gets all types of the loaded cards
- * @param allCards array of all cards
- * @returns string[] of all types
- */
-export function getAllCardTypes(allCards: Magic.Card[]): string[] {
-    let types: string[] = []
-    for (const card of allCards) {
-        let cardTypes = card.types
-        if (cardTypes && Array.isArray(cardTypes)) {
-            for (const type of cardTypes) {
-                if (!types.includes(type)) {
-                    types.push(type);
-                }
-            }
-        }
-    }
-    return types;
-}
-/**
- * Function that gets all types of the loaded cards
- * @param allCards array of all cards
- * @returns array of all types
- */
-export function getAllRarities(allCards: Magic.Card[]): string[] {
-    let types: string[] = []
-    for (const card of allCards) {
-        let cardTypes = card.rarity
-        if (!types.includes(cardTypes)) {
-            types.push(cardTypes);
-        }
-    }
-    return types;
 }
 /**
  * A function to filter cards by a specified mana color
@@ -117,7 +153,7 @@ export function getAllRarities(allCards: Magic.Card[]): string[] {
  * @param colorCode The color code corresponding to the mana color (W, U, B, G, R, C)
  * @returns filtered array
  */
-function filterManaType(arrToFilter: Magic.Card[], manaReqQuery: any, colorCode: string): Magic.Card[] {
+function filterManaType(arrToFilter: i.Card[], manaReqQuery: any, colorCode: string): i.Card[] {
     if (manaReqQuery != undefined && manaReqQuery != "") {
         if (manaReqQuery == "false") {
             arrToFilter = arrToFilter.filter(e => e.manaCost && !e.manaCost.includes(colorCode))
@@ -131,8 +167,8 @@ function filterManaType(arrToFilter: Magic.Card[], manaReqQuery: any, colorCode:
  * @param manaReqQuery the req.query.<mana>ManaColor
  * @returns filtered array
  */
-function filterColorlessManaType(arrToFilter: Magic.Card[], manaReqQuery: any): Magic.Card[] {
-    if (manaReqQuery !== undefined && manaReqQuery !== "") {
+function filterColorlessManaType(arrToFilter: i.Card[], manaReqQuery: any): i.Card[] {
+    if (manaReqQuery != undefined && manaReqQuery != "") {
         if (manaReqQuery == "false") {
             arrToFilter = arrToFilter.filter(e => {
                 const hasNumber = /\d/.test(e.manaCost);
@@ -189,8 +225,8 @@ export function getDecksForPage(allItems: i.Deck[], page: number, pageSize: numb
  * @param sortDirection The string ("up" or "down") to know in what direction to sort
  * @returns The sorted and filtered array
  */
-export function filterAndSortCards(allCards: Magic.Card[], cardLookup: any, filterType: any, filterRarity: any, whiteManaChecked: any, blueManaChecked: any, blackManaChecked: any, greenManaChecked: any, redManaChecked: any, colorlessManaChecked: any, sort: any, sortDirection: any): Magic.Card[] {
-    let filteredCards: Magic.Card[] = [...allCards];
+export function filterAndSortCards(allCards: i.Card[], cardLookup: any, filterType: any, filterRarity: any, whiteManaChecked: any, blueManaChecked: any, blackManaChecked: any, greenManaChecked: any, redManaChecked: any, colorlessManaChecked: any, sort: any, sortDirection: any): i.Card[] {
+    let filteredCards: i.Card[] = [...allCards];
     // check if there was a search param specified
     if (cardLookup != undefined && cardLookup != "") {
         // filter the cards
@@ -214,12 +250,12 @@ export function filterAndSortCards(allCards: Magic.Card[], cardLookup: any, filt
     filteredCards = filterManaType(filteredCards, redManaChecked, "R")
     filteredCards = filterColorlessManaType(filteredCards, colorlessManaChecked)
     // sort logic
-    let sortedCards: Magic.Card[] = [...filteredCards]
+    let sortedCards: i.Card[] = [...filteredCards]
     if (sort != undefined && sort != "" && sortDirection != undefined && sortDirection != "") {
         if (`${sortDirection}` === "down") {
-            sortedCards = [...sortedCards.sort((a: Magic.Card, b: Magic.Card) => sortBy(a, b, `${sort}`))]
+            sortedCards = [...sortedCards.sort((a: i.Card, b: i.Card) => sortBy(a, b, `${sort}`))]
         } else {
-            sortedCards = [...sortedCards.sort((a: Magic.Card, b: Magic.Card) => sortBy(a, b, `${sort}`) * -1)]
+            sortedCards = [...sortedCards.sort((a: i.Card, b: i.Card) => sortBy(a, b, `${sort}`) * -1)]
         }
     }
 
@@ -230,13 +266,13 @@ export function filterAndSortCards(allCards: Magic.Card[], cardLookup: any, filt
  * @param cards array of cards that need to be shuffled
  * @returns shuffeled array of cards
  */
-export function shuffleCards(cards: Magic.Card[]): Magic.Card[] {
+export function shuffleCards(cards: i.Card[]): i.Card[] {
     // iterate thru the array starting from the back going to front
     for (let i = cards.length - 1; i > 0; i--) {
         // generate a random index j between the range 0 and i
         const j: number = getRandomNumber(0, i);
         // swap card at index i with card at index j
-        const temp: Magic.Card = cards[i]; // store card in temp variable so we dont lose it
+        const temp: i.Card = cards[i]; // store card in temp variable so we dont lose it
         cards[i] = cards[j]; // set i to j
         cards[j] = temp // set j to i (stored in temp)
     }
@@ -257,7 +293,7 @@ export function getRandomNumber(min: number, max: number): number {
  * @param card Card you want to calculate the chance of
  * @returns obj with obj.chance being the (in %) chance you have to pull card from card array and obj.amount being how many instances of this card is in the array
  */
-export function getChance(cards: Magic.Card[], card: Magic.Card): { chance: number, amount: number } {
+export function getChance(cards: i.Card[], card: i.Card): { chance: number, amount: number } {
     let count = 0;
     cards.forEach((arrCard, index) => {
         if (arrCard && typeof arrCard === typeof card && arrCard.name === card.name) {
@@ -299,7 +335,7 @@ export function getAvgManaCost(cardsArray: i.Card[]) {
  * @param allCards 
  * @returns 
  */
-export function generateMockDecks(allCards: Magic.Card[]): i.Deck[] {
+export function generateMockDecks(allCards: i.Card[]): i.Deck[] {
     const mockDecks: i.Deck[] = [];
 
     // Generate 9 mock decks
@@ -307,7 +343,7 @@ export function generateMockDecks(allCards: Magic.Card[]): i.Deck[] {
         const deckName = `Deck ${i}`;
         const deckImageUrl = `/assets/images/decks/Deck${i}.jpg`;
         const cardsCount = getRandomNumber(5, 60);
-        const cards: Magic.Card[] = [];
+        const cards: i.Card[] = [];
 
         // Add random cards to the deck
         for (let j = 0; j < cardsCount; j++) {

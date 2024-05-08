@@ -56,7 +56,7 @@ app.use(cookieParser());
 app.use(session);
 
 // landingspage
-app.get("/", secureMiddleware, (req, res) => {
+app.get("/", (req, res) => {
   res.render("landingspage");
 });
 

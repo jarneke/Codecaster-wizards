@@ -3,11 +3,11 @@ import * as i from "./interfaces";
 import * as f from "./functions";
 import Magic = require("mtgsdk-ts");
 import dotenv from "dotenv";
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
 
 dotenv.config();
 
-const saltRounds: number = 2;
+const saltRounds = process.env.SALTROUNDS || 10;
 
 // all devTips
 const mtgTips: i.Tip[] = [
@@ -128,7 +128,7 @@ async function seed(reseed?: boolean) {
     await cardsCollection.deleteMany({});
   }
   // if there are no cards in database pull them from API, else pull them from database
-  if (!await cardsCollection.findOne({})) {
+  if (!(await cardsCollection.findOne({}))) {
     console.log("[ - SERVER - ]=> Fetching all cards from API");
     // initialize emitter to get cards
     Magic.Cards.all({})
@@ -136,11 +136,14 @@ async function seed(reseed?: boolean) {
       .on("data", async (card) => {
         // check if the card has a imageUrl
         if (card.imageUrl !== undefined) {
-
-          const isNotInArray: boolean = !allCards.some((e) => e.name == card.name)
+          const isNotInArray: boolean = !allCards.some(
+            (e) => e.name == card.name
+          );
           console.clear();
           // log if card is already in allCard or not and show the amount of cards
-          console.log("Adding card..\t" + isNotInArray + `\t=>\tCount: ${allCards.length}`);
+          console.log(
+            "Adding card..\t" + isNotInArray + `\t=>\tCount: ${allCards.length}`
+          );
           // if card doesnt have a duplicate in allCards array
           if (isNotInArray) {
             const temp: i.Card = {
@@ -152,17 +155,16 @@ async function seed(reseed?: boolean) {
               multiverseid: card.multiverseid,
               types: card.types,
               imageUrl: card.imageUrl,
-              rarity: card.rarity
-            }
+              rarity: card.rarity,
+            };
             // push card to allCards array
             allCards.push(temp);
           }
         }
       })
       .on("end", async () => {
-        await cardsCollection.insertMany(allCards)
+        await cardsCollection.insertMany(allCards);
         console.log("All cards added to database");
-
       })
       // if error occurs with loading cards, log it
       .on("error", (e) => console.error("[ - ERROR - ]=> " + e));
@@ -209,7 +211,7 @@ export async function populateTips(allTips: i.Tip[]) {
 }
 
 async function createInitialUser() {
-  await usersCollection.deleteMany({});
+  //await usersCollection.deleteMany({});
   if ((await usersCollection.countDocuments()) > 0) {
     return;
   }
@@ -267,4 +269,5 @@ export const feedbacksCollection: Collection<i.Feedback> =
 // initialize tipsCollection and export it to be used outside of db setup
 export const tipsCollection: Collection<i.Tip> = db.collection<i.Tip>("Tips");
 // initialize cardsCollection and export it to be used outside of db setup
-export const cardsCollection: Collection<i.Card> = db.collection<i.Card>("Cards");
+export const cardsCollection: Collection<i.Card> =
+  db.collection<i.Card>("Cards");

@@ -59,25 +59,28 @@
     <a href="/register" class="btn btn-link ctext-white ms-4 col-3 text-nowrap">
       Nog geen account, registreer
     </a>
-  </form>
-  <% if (alert) { %>
-  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-    <button
-      type="button"
-      class="btn-close"
-      data-bs-dismiss="alert"
-      aria-label="Close"
-    ></button>
-    <strong>! FOUT !</strong> <%= alertMsg %>
-  </div>
+    <% if (alert) { %>
+    <div
+      class="col-12 mt-3 alert alert-danger alert-dismissible fade show"
+      role="alert"
+    >
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+      <%= alertMsg %>
+    </div>
 
-  <script>
-    var alertList = document.querySelectorAll(".alert");
-    alertList.forEach(function (alert) {
-      new bootstrap.Alert(alert);
-    });
-  </script>
-  <% } %>
+    <script>
+      var alertList = document.querySelectorAll(".alert");
+      alertList.forEach(function (alert) {
+        new bootstrap.Alert(alert);
+      });
+    </script>
+    <% } %>
+  </form>
 </main>
 
 <%- include("partials/landingsfooter") %>

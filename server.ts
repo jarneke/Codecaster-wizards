@@ -23,12 +23,14 @@ async function getTips() {
 const app = express();
 
 let allCards: Magic.Card[] = [];
-const saltRounds = process.env.SALTROUNDS || 10;
+const saltRounds = parseInt(process.env.SALTROUNDS!) || 10;
 
 // initialize alltips array
 let allTips: i.Tip[] = [];
 
 let allDecks: i.Deck[] = [];
+
+let newUser: i.User[] = [];
 
 let allCardTypes: string[] = [];
 let allCardRarities: string[] = [];
@@ -90,7 +92,7 @@ app.get("/register", (req, res) => {
   res.render("registerpage");
 });
 
-app.post("/register", (req, res) => {
+app.post("/register", async (req, res) => {
   const {
     registerFName,
     registerName,
@@ -99,6 +101,23 @@ app.post("/register", (req, res) => {
     registerPassword,
     registerConfirmPassword,
   } = req.body;
+  //if (registerConfirmPassword !== registerPassword) {
+  //res.render("registerpagina", {
+  // alert: true,
+  //  alertMsg
+  // })
+  //}
+  const newUser: i.User = {
+    firstName: registerFName,
+    lastName: registerName,
+    userName: registerUsername,
+    email: registerEmail,
+    description: "",
+    password: await bcrypt.hash(registerPassword, saltRounds),
+    role: "USER",
+  };
+
+  await db.usersCollection.insertOne(newUser);
 
   res.redirect("/login");
 });

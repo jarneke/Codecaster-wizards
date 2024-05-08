@@ -7,7 +7,7 @@ import bcrypt from "bcrypt";
 
 dotenv.config();
 
-const saltRounds = process.env.SALTROUNDS || 10;
+const saltRounds = parseInt(process.env.SALTROUNDS!) || 10;
 
 // all devTips
 const mtgTips: i.Tip[] = [

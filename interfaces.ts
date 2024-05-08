@@ -1,24 +1,17 @@
 import Magic = require("mtgsdk-ts");
-import * as f from "./functions"
+import * as f from "./functions";
 import { ObjectId } from "mongodb";
 
 // interface for user
 export interface User {
-    firstName: string,
-    lastName: string
-    userName: string,
-    email: string,
-    description: string,
-    Password: string,
-}
-// used for testing while log in and user registration is not done yet
-export const tempUser: User = {
-    firstName: "John",
-    lastName: "Doe",
-    userName: "John_Doe",
-    email: "John.Doe@example.com",
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur aliquid excepturi ducimus provident temporibus vero error sed distinctio, ab ut.",
-    Password: "Password123"
+    firstName: string;
+    lastName: string;
+    userName: string;
+    email: string;
+    description: string;
+    password?: string;
+    role: "ADMIN" | "USER";
+    _id?: ObjectId;
 }
 // interface for pageData
 export interface PageData {
@@ -30,12 +23,12 @@ export enum feedbackType {
     bug,
     suggestion,
     compliment,
-    general
+    general,
 }
 // interface for feedback
 export interface Feedback {
-    feedbackType: feedbackType,
-    feedback: string,
+    feedbackType: feedbackType;
+    feedback: string;
 }
 // interd-face for shertend cards
 export interface Card {
@@ -58,8 +51,8 @@ export interface Deck {
 }
 // interface for tips
 export interface Tip {
-    _id?: ObjectId,
-    tip: string
+    _id?: ObjectId;
+    tip: string;
 }
 // interface for Mongodb filter
 export interface Filter {

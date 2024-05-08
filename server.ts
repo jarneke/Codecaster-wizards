@@ -1,8 +1,13 @@
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config;
+}
 import express from "express";
 import ejs from "ejs";
 import * as i from "./interfaces";
 import Magic = require("mtgsdk-ts");
 import * as f from "./functions";
+import bcrypt from "bcrypt";
+import { Rarity } from "mtgsdk-ts/out/IMagic";
 import * as db from "./db";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -12,12 +17,25 @@ import cookieParser from "cookie-parser";
 async function getTips() {
     allTips = await db.tipsCollection.find({}).toArray();
 }
-
+async function getUsers() {
+    loggedInUser = await db.usersCollection.findOne({});
+}
 // initialize express app
 const app = express();
 
+let allCards: Magic.Card[] = [];
+
 // initialize alltips array
 let allTips: i.Tip[] = [];
+
+let allDecks: i.Deck[] = [];
+
+let loggedInUser: i.User | null = null;
+getUsers();
+
+let allCardTypes: string[] = [];
+let allCardRarities: string[] = [];
+
 // variable to store last selected deck on drawtest page
 let lastSelectedDeck: i.Deck;
 // variable to store selected deck
@@ -38,6 +56,7 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 // tell app to use cookieParser
 app.use(cookieParser());
+app.use(session);
 
 // landingspage
 app.get("/", (req, res) => {
@@ -429,11 +448,7 @@ app.get("/drawtest", async (req, res) => {
     let pageData: i.PageData = f.handlePageClickEvent(req.query);
     let totalPages = f.getTotalPages(Array.from(amountMap.keys()).length, pageSize)
 
-    amountMap = f.getCardWAmauntForPage(
-        amountMap,
-        pageData.page,
-        pageSize
-    );
+    amountMap = f.getCardWAmauntForPage(amountMap, pageData.page, pageSize);
 
     res.render("drawtest", {
         // HEADER
@@ -492,9 +507,61 @@ app.get("/drawtest", async (req, res) => {
         amount: chanceData.amount,
     });
 });
+app.get("/profile", async (req, res) => {
+    await getUsers();
 
-app.get("/profile", (req, res) => {
-    res.render("profile");
+    res.render("profile", {
+        // HEADER
+        user: loggedInUser,
+        // -- The names of the js files you want to load on the page.
+        jsFiles: ["editProfile"],
+        // -- The title of the page
+        title: "Profile Page",
+        toRedirectTo: "profile",
+        // -- The Tab in the nav bar you want to have the orange color
+        // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
+        tabToColor: 3,
+        favoriteDecks: allDecks,
+    });
+});
+
+app.post("/profile", async (req, res) => {
+    console.log(req.body);
+
+    const firstName: string = req.body.firstName;
+    const lastName: string = req.body.lastName;
+    const userName: string = `${firstName === "" ? loggedInUser?.firstName : firstName
+        }_${lastName === "" ? loggedInUser?.lastName : lastName}`;
+    const email: string = req.body.email;
+    const password: string = req.body.passwordFormLabel; //later encrypten
+    const description: string = req.body.description;
+    const newUserDetails: i.User = {
+        firstName:
+            firstName === "" && loggedInUser ? loggedInUser.firstName : firstName,
+        lastName:
+            lastName === "" && loggedInUser ? loggedInUser?.lastName : lastName,
+        userName:
+            userName === "" && loggedInUser ? loggedInUser?.userName : userName,
+        email: email === "" && loggedInUser ? loggedInUser?.email : email,
+        description:
+            description === "" && loggedInUser
+                ? loggedInUser.description
+                : description,
+        password:
+            password === "" && loggedInUser ? loggedInUser.password : password,
+        role: "USER",
+    };
+
+    await db.usersCollection.updateOne(
+        { _id: loggedInUser?._id },
+        { $set: newUserDetails }
+    );
+    res.redirect("/profile");
+});
+
+app.post("/delete", async (req, res) => {
+    await db.usersCollection.deleteOne({ _id: loggedInUser?._id });
+    res.redirect("/");
 });
 
 app.get("/editDeck/:deckName", async (req, res) => {

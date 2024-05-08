@@ -1,0 +1,62 @@
+<%- include("partials/landingsheader") %>
+<main class="d-flex w-100 justify-content-center" style="min-height: 72vh">
+  <form
+    action="/login"
+    method="post"
+    class="px-4 py-3 col-12 col-md-9 col-lg-4"
+  >
+    <fieldset class="text-center mb-3 d-flex justify-content-center">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="#ffffff"
+        width="130"
+        height="130"
+        fill="currentColor"
+        class="bi bi-person-circle"
+        viewBox="0 0 16 16"
+      >
+        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+        <path
+          fill-rule="evenodd"
+          d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
+        />
+      </svg>
+    </fieldset>
+    <fieldset class="mb-3">
+      <label for="loginEmail" class="form-label ctext-white">E-mail</label>
+      <input
+        type="e-mail"
+        class="form-control"
+        name="loginEmail"
+        id="loginEmail"
+        placeholder="e-mail@voorbeeld.com"
+      />
+    </fieldset>
+    <fieldset class="mb-3">
+      <label for="loginPassword" class="form-label ctext-white"
+        >Wachtwoord</label
+      >
+      <input
+        type="password"
+        class="form-control"
+        name="loginPassword"
+        id="loginPassword"
+        placeholder="Wachtwoord"
+      />
+    </fieldset>
+    <fieldset class="mb-3">
+      <section class="form-check">
+        <input type="checkbox" class="form-check-input" id="dropdownCheck" />
+        <label class="form-check-label ctext-white" for="dropdownCheck">
+          Onthoud mij!
+        </label>
+      </section>
+    </fieldset>
+    <button type="submit" class="btn btn-dark cbg-dark col-3">Login</button>
+    <a href="/register" class="btn btn-link ctext-white ms-4 col-3 text-nowrap">
+      Nog geen account, registreer
+    </a>
+  </form>
+</main>
+
+<%- include("partials/landingsfooter") %>

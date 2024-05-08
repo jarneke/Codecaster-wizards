@@ -12,6 +12,7 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import session from "./session";
 import { secureMiddleware } from "./secureMiddleware";
+import bcrypt from "bcrypt";
 /**
  * A function to get and set all tips
  */
@@ -22,6 +23,7 @@ async function getTips() {
 const app = express();
 
 let allCards: Magic.Card[] = [];
+const saltRounds = process.env.SALTROUNDS || 10;
 
 // initialize alltips array
 let allTips: i.Tip[] = [];
@@ -587,16 +589,13 @@ app.get("/profile", secureMiddleware, async (req, res) => {
   });
 });
 
-app.post("/profile", async (req, res) => {
+app.post("/profile", secureMiddleware, async (req, res) => {
   console.log(req.body);
-
-  const firstName: string = req.body.firstName;
-  const lastName: string = req.body.lastName;
+  const { firstName, lastName, email, passwordFormLabel, description } =
+    req.body;
   const userName: string = `${firstName === "" ? res.locals.user?.firstName : firstName
     }_${lastName === "" ? res.locals.user?.lastName : lastName}`;
-  const email: string = req.body.email;
-  const password: string = req.body.passwordFormLabel; //later encrypten
-  const description: string = req.body.description;
+
   const newUserDetails: i.User = {
     firstName:
       firstName === "" && res.locals.user
@@ -612,7 +611,9 @@ app.post("/profile", async (req, res) => {
         ? res.locals.user.description
         : description,
     password:
-      password === "" && res.locals.user ? res.locals.user.password : password,
+      passwordFormLabel === "" && res.locals.user
+        ? res.locals.user.password
+        : await bcrypt.hash(passwordFormLabel, saltRounds),
     role: "USER",
   };
 

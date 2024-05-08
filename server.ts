@@ -132,7 +132,7 @@ app.get("/home", async (req, res) => {
     // Render
     res.render("home", {
         // HEADER
-        user: i.tempUser,
+        user: loggedInUser,
         // -- The names of the js files you want to load on the page.
         jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
         // -- The title of the page
@@ -182,7 +182,7 @@ app.get("/decks", async (req, res) => {
 
     res.render("decks", {
         // HEADER
-        user: i.tempUser,
+        user: loggedInUser,
         // -- The names of the js files you want to load on the page.
         jsFiles: [],
         // -- The title of the page
@@ -205,7 +205,7 @@ app.get("/decks", async (req, res) => {
 app.get("/noDeck", (req, res) => {
     res.render("noDeck", {
         // HEADER
-        user: i.tempUser,
+        user: loggedInUser,
         // -- The names of the js files you want to load on the page.
         jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
         // -- The title of the page
@@ -265,7 +265,7 @@ app.get("/decks/:deckName", async (req, res) => {
 
     res.render("deckdetails", {
         // HEADER
-        user: i.tempUser,
+        user: loggedInUser,
         // -- The names of the js files you want to load on the page.
         jsFiles: [],
         // -- The title of the page
@@ -452,7 +452,7 @@ app.get("/drawtest", async (req, res) => {
 
     res.render("drawtest", {
         // HEADER
-        user: i.tempUser,
+        user: loggedInUser,
         // -- The names of the js files you want to load on the page.
         jsFiles: [
             "submitOnChange",
@@ -583,7 +583,7 @@ app.get("/editDeck/:deckName", async (req, res) => {
 
     res.render("editDeck", {
         // HEADER
-        user: i.tempUser,
+        user: loggedInUser,
         // -- The names of the js files you want to load on the page.
         jsFiles: [],
         // -- The title of the page
@@ -607,7 +607,7 @@ app.get("/editDeck/:deckName", async (req, res) => {
 app.get("/404", (req, res) => {
     res.render("404", {
         // HEADER
-        user: i.tempUser,
+        user: loggedInUser,
         // -- The names of the js files you want to load on the page.
         jsFiles: [],
         // -- The title of the page

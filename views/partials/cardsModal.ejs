@@ -34,15 +34,17 @@
                     <article>
                         <div class="mt-2" style="height: 3rem;" id="AlertPlaceHolder"></div>
                     </article>
-                    <form class="" action="">
+                    <form id="AddToDeck" action="/" method="post">
                         <label class="form-control-label" for="deck">Voeg toe aan deck</label>
                         <select class="form-select" name="deck" id="deck">
-                            <option value="deck1">deck1</option>
-                            <option value="deck1">deck2</option>
-                            <option value="deck1">deck3</option>
+                            <% for(const deck of allDecks){%>
+                                <option value="<%= deck.deckName%>">
+                                    <%= deck.deckName %>
+                                </option>
+                                <%}%>
                         </select>
 
-                        <button type="button" class="w-100 btn btn-dark mt-3">
+                        <button type="submit" class="w-100 btn btn-dark mt-3" id="AddToDeckSubmit">
                             <i class="bi bi-plus"></i>
                             Voeg toe
                         </button>

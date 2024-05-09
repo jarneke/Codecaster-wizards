@@ -23,52 +23,53 @@
 
                 <%- include("partials/pagination") %>
     </main>
-    <section class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-        <section class="modal-dialog modal-lg">
-            <section class="modal-content ctext-white cbg-primary">
-                <section class="modal-header cbg-dark border-0">
-                    <h1 class="modal-title ctext-white fs-6 col-11" id="infoModalLabel">
-                        Speluitleg</h1>
-                    <button type="button" class="btn-close cbg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </section>
-                <section class="modal-body">
-                    <h3 class="ch1 fs-2">Over Magic The Gathering</h3>
-                    <p> Hier kun je alles leren over het spel en je decks beheren. Hier
-                        zijn enkele functies die je kunt gebruiken
-                    </p>
-                    <h3 class="ch1">Speluitleg</h3>
-                    <p>
-                        Magic the Gathering is een strategisch kaartspel waarbij spelers elkaar proberen te verslaan door spreuken
-                        te casten, wezens op te roepen en hun tegenstanders levenspunten te verminderen.
-                    </p>
-                    <h3 class="ch1">Kaarten zoeken</h3>
-                    <p>
-                        Gebruik de zoekfunctie om kaarten te vinden op basis van naam, kleur, type, of andere kenmerken. Zoek naar
-                        specifieke kaarten om je deck te verbeteren.
-                    </p>
-                    <h3 class="ch1">Deck beheren</h3>
-                    <p>
-                        Voeg kaarten toe aan je deck, bekijk de kaarten in je deck en pas je decks aan om de perfecte strategie te
-                        creëren.
-                    </p>
-                    <h3 class="ch1">Deck simuleren</h3>
-                    <p>
-                        Gebruik de decksimulator om willekeurige kaarten te trekken en je kansen te beoordelen. Dit helpt je om de
-                        consistentie van je deck te optimaliseren en te zien hoe het presteert in verschillende scenario's.
-                    </p>
-                </section>
-                <section class="modal-footer justify-content-between">
-                    <form>
-                        <input type="checkbox" name="dontShowAgain" id="dontShowAgain" checked>
-                        <label for="dontShowAgain">Laat dit bericht niet meer zien</label>
-
-                        <button type="submit" class="btn btn-dark bg-dark" data-bs-dismiss="modal" id="CloseInfo">Ik begrijp
-                            het
-                        </button>
-                    </form>
+    <% if (!dontShowModal) { %>
+        <section class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+            <section class="modal-dialog modal-lg">
+                <section class="modal-content ctext-white cbg-primary">
+                    <section class="modal-header cbg-dark border-0">
+                        <h1 class="modal-title ctext-white fs-6 col-11" id="infoModalLabel">
+                            Speluitleg</h1>
+                        <button type="button" class="btn-close cbg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </section>
+                    <section class="modal-body">
+                        <h3 class="ch1 fs-2">Over Magic The Gathering</h3>
+                        <p> Hier kun je alles leren over het spel en je decks beheren. Hier
+                            zijn enkele functies die je kunt gebruiken
+                        </p>
+                        <h3 class="ch1">Speluitleg</h3>
+                        <p>
+                            Magic the Gathering is een strategisch kaartspel waarbij spelers elkaar proberen te verslaan door spreuken
+                            te casten, wezens op te roepen en hun tegenstanders levenspunten te verminderen.
+                        </p>
+                        <h3 class="ch1">Kaarten zoeken</h3>
+                        <p>
+                            Gebruik de zoekfunctie om kaarten te vinden op basis van naam, kleur, type, of andere kenmerken. Zoek naar
+                            specifieke kaarten om je deck te verbeteren.
+                        </p>
+                        <h3 class="ch1">Deck beheren</h3>
+                        <p>
+                            Voeg kaarten toe aan je deck, bekijk de kaarten in je deck en pas je decks aan om de perfecte strategie te
+                            creëren.
+                        </p>
+                        <h3 class="ch1">Deck simuleren</h3>
+                        <p>
+                            Gebruik de decksimulator om willekeurige kaarten te trekken en je kansen te beoordelen. Dit helpt je om de
+                            consistentie van je deck te optimaliseren en te zien hoe het presteert in verschillende scenario's.
+                        </p>
+                    </section>
+                    <section class="modal-footer">
+                        <form class="container d-flex justify-content-between" action="/dontShowPopup" method="post">
+                            <div>
+                                <input type="checkbox" name="dontShowAgain" id="dontShowAgain" checked>
+                                <label for="dontShowAgain"> Laat dit bericht niet meer zien</label>
+                            </div>
+                            <button type="submit" class="btn btn-dark bg-dark">Ik begrijp het</button>
+                        </form>
+                    </section>
                 </section>
             </section>
         </section>
-    </section>
-    <%- include("partials/cardsModal") %>
-        <%- include("partials/footer") %>
+        <% } %>
+            <%- include("partials/cardsModal") %>
+                <%- include("partials/footer") %>

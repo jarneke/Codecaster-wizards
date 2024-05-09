@@ -1,4 +1,6 @@
+// wait for DOM to be loaded
 document.addEventListener("DOMContentLoaded", () => {
+    // Get all needed dom elements
     const form = document.getElementById("actionForm");
     const actionField = document.getElementById("actionField")
     const deck = document.getElementById("hiddenSelectedDeck")
@@ -13,11 +15,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const allChildren = dropdownItems.children;
     const cardLookupInDeckForm = document.getElementById("cardLookupInDeckForm");
     const hiddenField = document.getElementById("cardLookupInDeck")
+    // initialize array for all card names
     const allCardNames = []
-
+    // loop over allChildren array
     for (let i = 0; i < allChildren.length; i++) {
         const cardBtn = allChildren[i];
+        // get cardName from attribute of the child element
         const cardName = cardBtn.getAttribute("data-cardName");
+        // add it to cardNames
         allCardNames.push(cardName)
     }
     // for each childelement of the dropdown add a clicklistener to submit the form with correct hidden value
@@ -25,12 +30,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const cardBtn = allChildren[i];
         const cardName = cardBtn.getAttribute("data-cardName");
         cardBtn.addEventListener("click", () => {
+            // set hidden field value
             hiddenField.value = cardName;
+            // submit form
             cardLookupInDeckForm.submit();
         });
     }
+    // if cardLookupInDeckForm is submitted
     cardLookupInDeckForm.addEventListener("submit", (e) => {
+        // prevent default behaviour
         e.preventDefault()
+        // if hiddenField is empty
         if (hiddenField.value === "") {
             // filter out all that dont match input
             let matchingCards = allCardNames.filter(cardName => cardName.toLowerCase().includes(cardLookupInDeckInput.value.toLowerCase()));
@@ -47,8 +57,10 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 hiddenField.value = "multiple-cards-found"
             }
+            // submit form
             cardLookupInDeckForm.submit()
         } else {
+            // submit form
             cardLookupInDeckForm.submit()
         }
     })
@@ -105,8 +117,11 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     // when clicked anywhere that is not the lookup box, set all childelements to display none
     document.addEventListener('mousedown', (e) => {
+        // check if click is inside dropdown
         const isClickInsideInput = dropdown.contains(e.target);
+        // if not
         if (!isClickInsideInput) {
+            // set all childelements to display none
             for (let i = 0; i < allChildren.length; i++) {
                 const cardBtn = allChildren[i];
                 cardBtn.classList.add("d-none")
@@ -143,59 +158,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     })
-    /**
-     * Function to update the css variables used for the animation
-     */
-    function updateCSSVariables() {
-        // document.getElementById() makes it not work for some reason, so i used queryselectors.
-
-        // get the element to animate
-        const animationElement = document.querySelector('.flip-card');
-        // get element to animate to
-        const targetElement = document.querySelector('.pulledPile');
-        // get boundingbox of the animate element
-        const animationRect = animationElement.getBoundingClientRect();
-
-        // Wait for the image to load
-        const img = targetElement.querySelector('img');
-        if (img.complete) {
-            calculateDimensions();
-        } else {
-            img.onload = calculateDimensions;
-        }
-
-        /**
-         * A function to calculate the x and y values that the element has to animate
-         */
-        function calculateDimensions() {
-
-            const targetRect = targetElement.getBoundingClientRect();
-
-            // Calculate the difference in size between the two elements
-            // since they are around the same size, these should be close to 0
-            const sizeDiffX = (targetRect.width - animationRect.width) / 2;
-            const sizeDiffY = (targetRect.height - animationRect.height) / 2;
-
-            // Calculate the translation values based on the center of the target element
-
-            // little more explenation:
-            // targetRect.left = how much space from the edge of the screen to the edge of the element
-            // we want to move to the center of the target, so we take the width / 2
-
-            // we add those together to get the amount we have from the left of the screen to the center line of the element
-
-            // we then do the same from the animationRect and subtract this from the targetRect value
-            // this gives us the amount we have to move on the X axis
-            // the - sizeDiffX, is to adjust a bit if the elements arent the same size, but this is so minor that you may aswell leave it out
-            const translateXValue = targetRect.left + (targetRect.width / 2) - (animationRect.left + (animationRect.width / 2)) - sizeDiffX;
-            // we do simular with the Y axis, but use amount from top and height of the element
-            const translateYValue = targetRect.top + (targetRect.height / 2) - (animationRect.top + (animationRect.height / 2)) - sizeDiffY;
-
-            // set the root values so the animation gets the values.
-            document.documentElement.style.setProperty('--translate-x', translateXValue + 'px');
-            document.documentElement.style.setProperty('--translate-y', translateYValue + 'px');
-        }
-    }
 
 
     // on page load get the X and Y values
@@ -203,3 +165,56 @@ document.addEventListener("DOMContentLoaded", () => {
     // and evrytime the page gets resized, get the X and Y values.
     window.addEventListener('resize', updateCSSVariables);
 });
+/**
+* Function to update the css variables used for the animation
+*/
+function updateCSSVariables() {
+    // document.getElementById() makes it not work for some reason, so i used queryselectors.
+
+    // get the element to animate
+    const animationElement = document.querySelector('.flip-card');
+    // get element to animate to
+    const targetElement = document.querySelector('.pulledPile');
+    // get boundingbox of the animate element
+    const animationRect = animationElement.getBoundingClientRect();
+
+    // Wait for the image to load
+    const img = targetElement.querySelector('img');
+    if (img.complete) {
+        calculateDimensions();
+    } else {
+        img.onload = calculateDimensions;
+    }
+
+    /**
+     * A function to calculate the x and y values that the element has to animate
+     */
+    function calculateDimensions() {
+
+        const targetRect = targetElement.getBoundingClientRect();
+
+        // Calculate the difference in size between the two elements
+        // since they are around the same size, these should be close to 0
+        const sizeDiffX = (targetRect.width - animationRect.width) / 2;
+        const sizeDiffY = (targetRect.height - animationRect.height) / 2;
+
+        // Calculate the translation values based on the center of the target element
+
+        // little more explenation:
+        // targetRect.left = how much space from the edge of the screen to the edge of the element
+        // we want to move to the center of the target, so we take the width / 2
+
+        // we add those together to get the amount we have from the left of the screen to the center line of the element
+
+        // we then do the same from the animationRect and subtract this from the targetRect value
+        // this gives us the amount we have to move on the X axis
+        // the - sizeDiffX, is to adjust a bit if the elements arent the same size, but this is so minor that you may aswell leave it out
+        const translateXValue = targetRect.left + (targetRect.width / 2) - (animationRect.left + (animationRect.width / 2)) - sizeDiffX;
+        // we do simular with the Y axis, but use amount from top and height of the element
+        const translateYValue = targetRect.top + (targetRect.height / 2) - (animationRect.top + (animationRect.height / 2)) - sizeDiffY;
+
+        // set the root values so the animation gets the values.
+        document.documentElement.style.setProperty('--translate-x', translateXValue + 'px');
+        document.documentElement.style.setProperty('--translate-y', translateYValue + 'px');
+    }
+}

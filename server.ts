@@ -22,16 +22,12 @@ async function getTips() {
 // initialize express app
 const app = express();
 
-let allCards: Magic.Card[] = [];
 const saltRounds = process.env.SALTROUNDS || 10;
 
 // initialize alltips array
 let allTips: i.Tip[] = [];
 
 let allDecks: i.Deck[] = [];
-
-let allCardTypes: string[] = [];
-let allCardRarities: string[] = [];
 
 // variable to store last selected deck on drawtest page
 let lastSelectedDeck: i.Deck;
@@ -109,16 +105,8 @@ app.post("/logout", async (req, res) => {
   });
 });
 
-// post route to handle cookie of showPopup
 app.post("/dontShowPopup", async (req, res) => {
-  console.log(req.query);
-
-  const show: boolean | undefined = req.cookies.showPopup
-    ? undefined
-    : req.cookies.showPopup === "true"
-      ? true
-      : false;
-  !show ? res.cookie("showPopup", true) : console.log(show);
+  res.cookie("dontShowInfo", "true", { maxAge: 1 * 24 * 60 * 60/* * 1000*/, httpOnly: true })
   res.redirect("/home");
 });
 
@@ -142,6 +130,7 @@ app.post("/feedback", (req, res) => {
 });
 
 app.get("/home", secureMiddleware, async (req, res) => {
+  const allDecks: i.Deck[] = await db.decksCollection.find().toArray()
   // params from route
   // -- filter and sort
   let cardLookup = req.query.cardLookup;
@@ -196,6 +185,8 @@ app.get("/home", secureMiddleware, async (req, res) => {
     // The page it should redirect to after feedback form is submitted
     toRedirectTo: "home",
     // MAIN
+    // -- modal
+    dontShowModal: req.cookies.dontShowInfo === "true" ? true : false,
     // -- filter system
     cardLookup: cardLookup,
     type: filterType,
@@ -219,6 +210,8 @@ app.get("/home", secureMiddleware, async (req, res) => {
     filterUrl: pageData.filterUrl,
     // -- cards
     cards: cardsToLoadAndTotalPages.cards,
+    // cardModal
+    allDecks: allDecks
   });
 });
 

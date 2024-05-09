@@ -247,7 +247,8 @@ app.get("/decks", secureMiddleware, async (req, res) => {
     decks: decksForPage,
   });
 });
-app.get("/noDeck", (req, res) => {
+
+app.get("/noDeck", secureMiddleware, (req, res) => {
   res.render("noDeck", {
     // HEADER
     user: res.locals.user,
@@ -262,6 +263,7 @@ app.get("/noDeck", (req, res) => {
     toRedirectTo: "noDecks",
   });
 });
+
 app.get("/decks/:deckName", secureMiddleware, async (req, res) => {
   // params from route
   let cardLookup = req.query.cardLookup;
@@ -341,6 +343,7 @@ app.get("/decks/:deckName", secureMiddleware, async (req, res) => {
     avgManaCost: avgManaCost,
   });
 });
+
 app.post("/changeDeckName", async (req, res) => {
   const name = req.body.deckNameInput;
   const oldName = req.body.oldDeckName;
@@ -354,6 +357,7 @@ app.post("/changeDeckName", async (req, res) => {
 
   res.redirect(`/editDeck/${name}`);
 });
+
 app.get("/drawtest", secureMiddleware, async (req, res) => {
   // Query params
   // -- filter and sort
@@ -566,6 +570,7 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
     amount: chanceData.amount,
   });
 });
+
 app.get("/profile", secureMiddleware, async (req, res) => {
   res.render("profile", {
     // HEADER
@@ -622,24 +627,41 @@ app.post("/delete", async (req, res) => {
   res.redirect("/");
 });
 
-app.get("/editDeck/:deckName", async (req, res) => {
+app.get("/editDeck/:deckName", secureMiddleware, async (req, res) => {
   const selectedDeck: i.Deck | null = await db.decksCollection.findOne({
     deckName: req.params.deckName,
   });
   if (!selectedDeck) {
     return res.redirect("/404");
   }
+
+  let amountMap = new Map<i.Card, number>();
+  for (const card of selectedDeck!.cards) {
+    const existingCard = Array.from(amountMap.keys()).find(
+      (c) => c.name === card.name
+    );
+    if (existingCard) {
+      amountMap.set(existingCard, amountMap.get(existingCard)! + 1);
+    } else {
+      amountMap.set(card, 1);
+    }
+  }
+
   // Pagination
   let pageSize: number = 3;
   let pageData: i.PageData = f.handlePageClickEvent(req.query);
-  let totalPages = f.getTotalPages(selectedDeck.cards.length, pageSize);
-  let cardsToLoad = undefined;
+  let sorted: [i.Card, number][] = Array.from(amountMap).sort((a, b) => {
+    return a[0].name.localeCompare(b[0].name);
+  });
+  let sortedAmountMap = new Map();
 
-  cardsToLoad = f.getCardsForPageFromArray(
-    selectedDeck.cards,
-    pageData.page,
-    pageSize
-  );
+  sorted.forEach(([card, number]) => {
+    sortedAmountMap.set(card, number);
+});
+let totalPages = f.getTotalPages(sortedAmountMap.size, pageSize);
+
+sortedAmountMap =  f.getCardWAmauntForPage(sortedAmountMap, pageData.page, pageSize);
+
 
   res.render("editDeck", {
     // HEADER
@@ -659,9 +681,57 @@ app.get("/editDeck/:deckName", async (req, res) => {
     totalPages: totalPages,
     filterUrl: pageData?.filterUrl,
     // -- cards
-    cards: cardsToLoad,
+    cards: sortedAmountMap,
     selectedDeck: selectedDeck,
   });
+});
+
+app.post("/removeCardFromDeck/:deckName/:cardName", async(req, res) => {
+  const selectedDeck: i.Deck | null = await db.decksCollection.findOne({
+    deckName: req.params.deckName,
+  });
+  if (!selectedDeck) {
+    return res.redirect("/404");
+  }
+
+  let newCards = selectedDeck.cards;
+  let removed = false;
+  newCards = newCards.filter((card) => {
+    if (card.name === req.params.cardName && !removed) {
+      removed = true;
+      return false;
+    }
+    return true;
+  });
+
+  await db.decksCollection.updateOne({
+    deckName : req.params.deckName
+  },{
+    $set: { cards : newCards}
+  }
+);
+res.redirect(`/editDeck/${req.params.deckName}`);
+});
+
+app.post("/addCardTooDeck/:deckName/:cardName", async(req,res) => {
+  const selectedDeck: i.Deck | null = await db.decksCollection.findOne({
+    deckName: req.params.deckName,
+  });
+  if (!selectedDeck) {
+    return res.redirect("/404");
+  }
+
+  let cardsTooAdd : i.Card | null = await db.cardsCollection.findOne({name : req.params.cardName});
+
+  if (!cardsTooAdd) {
+    return res.redirect("/404");
+  }
+  
+  // logica toevoegen voor landkaarten
+  await db.decksCollection.updateOne({ deckName : req.params.deckName}, { $push : { cards : cardsTooAdd } });
+
+
+res.redirect(`/editDeck/${req.params.deckName}`);
 });
 
 app.get("/404", secureMiddleware, (req, res) => {
@@ -679,6 +749,7 @@ app.get("/404", secureMiddleware, (req, res) => {
     toRedirectTo: "404",
   });
 });
+
 app.listen(app.get("port"), async () => {
   console.clear();
   console.log("[ - SERVER - ]=> connecting to database");

@@ -22,12 +22,13 @@ async function getTips() {
 // initialize express app
 const app = express();
 
-const saltRounds = process.env.SALTROUNDS || 10;
+const saltRounds = parseInt(process.env.SALTROUNDS!) || 10;
 
 // initialize alltips array
 let allTips: i.Tip[] = [];
 
 let allDecks: i.Deck[] = [];
+
 
 // variable to store last selected deck on drawtest page
 let lastSelectedDeck: i.Deck;
@@ -86,7 +87,7 @@ app.get("/register", (req, res) => {
   res.render("registerpage");
 });
 
-app.post("/register", (req, res) => {
+app.post("/register", async (req, res) => {
   const {
     registerFName,
     registerName,
@@ -95,6 +96,23 @@ app.post("/register", (req, res) => {
     registerPassword,
     registerConfirmPassword,
   } = req.body;
+  //if (registerConfirmPassword !== registerPassword) {
+  //res.render("registerpagina", {
+  // alert: true,
+  //  alertMsg
+  // })
+  //}
+  const newUser: i.User = {
+    firstName: registerFName,
+    lastName: registerName,
+    userName: registerUsername,
+    email: registerEmail,
+    description: "",
+    password: await bcrypt.hash(registerPassword, saltRounds),
+    role: "USER",
+  };
+
+  await db.usersCollection.insertOne(newUser);
 
   res.redirect("/login");
 });
@@ -657,10 +675,10 @@ app.get("/editDeck/:deckName", secureMiddleware, async (req, res) => {
 
   sorted.forEach(([card, number]) => {
     sortedAmountMap.set(card, number);
-});
-let totalPages = f.getTotalPages(sortedAmountMap.size, pageSize);
+  });
+  let totalPages = f.getTotalPages(sortedAmountMap.size, pageSize);
 
-sortedAmountMap =  f.getCardWAmauntForPage(sortedAmountMap, pageData.page, pageSize);
+  sortedAmountMap = f.getCardWAmauntForPage(sortedAmountMap, pageData.page, pageSize);
 
 
   res.render("editDeck", {
@@ -686,7 +704,7 @@ sortedAmountMap =  f.getCardWAmauntForPage(sortedAmountMap, pageData.page, pageS
   });
 });
 
-app.post("/removeCardFromDeck/:deckName/:cardName", async(req, res) => {
+app.post("/removeCardFromDeck/:deckName/:cardName", async (req, res) => {
   const selectedDeck: i.Deck | null = await db.decksCollection.findOne({
     deckName: req.params.deckName,
   });
@@ -705,15 +723,15 @@ app.post("/removeCardFromDeck/:deckName/:cardName", async(req, res) => {
   });
 
   await db.decksCollection.updateOne({
-    deckName : req.params.deckName
-  },{
-    $set: { cards : newCards}
+    deckName: req.params.deckName
+  }, {
+    $set: { cards: newCards }
   }
-);
-res.redirect(`/editDeck/${req.params.deckName}`);
+  );
+  res.redirect(`/editDeck/${req.params.deckName}`);
 });
 
-app.post("/addCardTooDeck/:deckName/:cardName", async(req,res) => {
+app.post("/addCardTooDeck/:deckName/:cardName", async (req, res) => {
   const selectedDeck: i.Deck | null = await db.decksCollection.findOne({
     deckName: req.params.deckName,
   });
@@ -721,17 +739,17 @@ app.post("/addCardTooDeck/:deckName/:cardName", async(req,res) => {
     return res.redirect("/404");
   }
 
-  let cardsTooAdd : i.Card | null = await db.cardsCollection.findOne({name : req.params.cardName});
+  let cardsTooAdd: i.Card | null = await db.cardsCollection.findOne({ name: req.params.cardName });
 
   if (!cardsTooAdd) {
     return res.redirect("/404");
   }
-  
+
   // logica toevoegen voor landkaarten
-  await db.decksCollection.updateOne({ deckName : req.params.deckName}, { $push : { cards : cardsTooAdd } });
+  await db.decksCollection.updateOne({ deckName: req.params.deckName }, { $push: { cards: cardsTooAdd } });
 
 
-res.redirect(`/editDeck/${req.params.deckName}`);
+  res.redirect(`/editDeck/${req.params.deckName}`);
 });
 
 app.get("/404", secureMiddleware, (req, res) => {

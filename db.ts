@@ -7,7 +7,7 @@ import bcrypt from "bcrypt";
 
 dotenv.config();
 
-const saltRounds = process.env.SALTROUNDS || 10;
+const saltRounds = parseInt(process.env.SALTROUNDS!) || 10;
 
 // all devTips
 const mtgTips: i.Tip[] = [
@@ -212,7 +212,7 @@ export async function populateTips(allTips: i.Tip[]) {
 
 async function createInitialUser() {
   // await usersCollection.deleteMany({});
-  if (await usersCollection.countDocuments() > 0) {
+  if ((await usersCollection.countDocuments()) > 0) {
     console.log("[ - SERVER - ]=> Initial user exists");
 
     return;

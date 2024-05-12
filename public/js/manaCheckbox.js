@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
         hiddenField.value = isUp ? "down" : "up";
         sortDirectionButton.innerHTML = isUp ? '<i class="bi bi-sort-down"><i>' : '<i class="bi bi-sort-up"><i></i>'
     })
-
     function updateHiddenField(checkboxId, isChecked) {
         let hiddenField = document.getElementById(checkboxId + "Checked");
         hiddenField.value = isChecked ? "false" : "true";

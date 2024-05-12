@@ -24,7 +24,7 @@
     <header class="p-3 cbg-primary text-dark">
         <section class="container">
             <article class="d-flex flex-wrap align-items-center justify-content-between gapx-1">
-                <img height="100px" src="assets/images/header/CcW_Logo.png">
+                <img height="100px" src="/assets/images/header/CcW_Logo.png">
                 <section>
                     <h1 class="ch1 ctext-secondary">Magic The Gathering</h1>
                 </section>
@@ -70,8 +70,9 @@
                 </button>
             </section>
             <section class="offcanvas-body">
-                <form class="mb-5">
+                <form class="mb-5" action="/feedback" method="post">
                     <fieldset class="d-flex flex-column gap-1">
+                        <input type="hidden" name="toRedirectTo" id="toRedirectTo" value="<%= toRedirectTo %>">
                         <legend>Geef ons je feedback:</legend>
                         <label for="feedbackType">Welke soort feedback wil je geven?</label>
                         <select name="feedbackType" id="feedbackType" class="form-select p-2">
@@ -89,7 +90,9 @@
                         </p>
                     </fieldset>
                 </form>
-                <button class="btn btn-danger" aria-label="exit">Log uit</button>
+                <form action="/logout" method="post">
+                    <button type="submit">Logout</button>
+                </form>
             </section>
         </section>
         <!-- ========== End mini profile offcanvas ========== -->

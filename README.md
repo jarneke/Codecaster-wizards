@@ -1,7 +1,10 @@
 # Codecaster Wizards - Magic: The Gathering Web App
 
+[English version](README-ENG.md)
+
 ## Inhoudsopgave
 
+- [Hoe start ik de app](#hoe-start-ik-de-app)
 - [Project Beschrijving](#project-beschrijving)
   - [De opdracht](#de-opdracht)
   - [Gemeenschappelijk](#gemeenschappelijk)
@@ -12,6 +15,17 @@
   - [Decktest](#decktest)
 - [Extra functies](#extra-functies)
 - [Richtlijnen voor bijdragen](#richtlijnen-voor-bijdragen)
+
+## Hoe start ik de app
+
+Momenteel staat de app niet online, dus moet je hem runnen via een localhost op je pc.
+
+Hier meer uitleg over hoe je dit doet.
+
+- 1. Download repository als .zip
+- 2. pak de .zip file uit en slaag op waar je wilt
+- 3. De app heeft enviroment variabelen nodig om te kunnen werken. Dus maak een ".env" file aan en kijk naar de ".env.example" file om te weten wat hierin te zetten.
+- 4. open nu een terminal en in de map van de app typ je npm start. dit zal de nodige paketten installeren en de app starten.
 
 ## Project Beschrijving
 

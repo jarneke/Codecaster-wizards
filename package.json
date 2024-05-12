@@ -20,7 +20,9 @@
     "@types/express-session": "^1.18.0",
     "@types/node": "^20.12.7",
     "@types/nodemon": "^1.19.6",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "@types/cookie-parser": "^1.4.7",

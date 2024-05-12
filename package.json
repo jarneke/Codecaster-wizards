@@ -1,6 +1,7 @@
 {
   "name": "codecaster-wizards",
   "version": "1.0.0",
+  "type": "module",
   "description": "## Inhoudsopgave",
   "main": "index.js",
   "scripts": {

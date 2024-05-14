@@ -66,12 +66,10 @@ app.get("/login", (req, res) => {
 
 app.post("/login", async (req, res) => {
   const { loginEmail, loginPassword } = req.body;
-  console.log(req.body);
 
   try {
     let user: i.User | undefined = await db.login(loginEmail, loginPassword);
     delete user!.password;
-    console.log(req.session.user);
 
     req.session.user = user;
     res.redirect("/home");

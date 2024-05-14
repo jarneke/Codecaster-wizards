@@ -48,40 +48,6 @@ const mtgTips: i.Tip[] = [
     tip: "Veel plezier! - Magic is een spel, dus zorg ervoor dat je je amuseert en de ervaring waardeert, winnen of verliezen.",
   },
 ];
-
-const allUsers: i.User[] = [
-  {
-    firstName: "John",
-    lastName: "Doe",
-    userName: "John_Doe",
-    email: "John.Doe@mail.com",
-    description:
-      "John Doe is a dynamic individual with a diverse skill set and a passion for excellence. With a background in [industry/field], he brings a unique blend of [skills/traits] to every project he undertakes. Whether he's [activity/task], [activity/task], or [activity/task], John approaches each endeavor with dedication and creativity. His ability to [skill/quality] and [skill/quality] make him a valuable asset to any team. Outside of work, John enjoys [hobbies/interests], [hobbies/interests], and [hobbies/interests]. With a commitment to continuous growth and a drive to succeed, John is poised to make a significant impact in [industry/field].",
-    password: "Passw0rd123",
-    role: "ADMIN",
-  },
-  {
-    firstName: "Jane",
-    lastName: "Smith",
-    userName: "Smiley_Jane",
-    email: "Jane.Smith@mail.com",
-    description:
-      "Jane Smith is a highly motivated individual with a strong work ethic and a passion for [industry/field]. With a background in [industry/field], she brings extensive experience and a proven track record of success to every project she undertakes. Whether she's [activity/task], [activity/task], or [activity/task], Jane consistently delivers high-quality results with precision and efficiency. Her exceptional [skills/traits] and [skills/traits] make her a valuable asset to any team. Outside of work, Jane enjoys [hobbies/interests], [hobbies/interests], and [hobbies/interests]. With a dedication to continuous improvement and a focus on achieving her goals, Jane is well-positioned to excel in [industry/field].",
-    password: "Jane1234",
-    role: "USER",
-  },
-  {
-    firstName: "Michael",
-    lastName: "Johnson",
-    userName: "Mighty_Mike",
-    email: "Michael.Johnson@mail.com",
-    description:
-      "Michael Johnson is a results-oriented professional with a proven track record of success in [industry/field]. With a background in [industry/field], he brings a wealth of knowledge and expertise to every project he undertakes. Whether he's [activity/task], [activity/task], or [activity/task], Michael consistently exceeds expectations and delivers exceptional results. His strong [skills/traits] and [skills/traits] enable him to thrive in fast-paced environments and tackle challenges with confidence. Outside of work, Michael enjoys [hobbies/interests], [hobbies/interests], and [hobbies/interests]. With a commitment to excellence and a drive to succeed, Michael is well-equipped to make a significant impact in [industry/field].",
-    password: "Michael!23",
-    role: "USER",
-  },
-];
-
 // initialize allCards
 let allCards: i.Card[] = [];
 // get uri from enviroment variables
@@ -184,14 +150,14 @@ async function seed(reseed?: boolean) {
  */
 async function populateDecks() {
   // uncomment line beneath if you want to refresh decks in database
-  // decksCollection.deleteMany({});
+  decksCollection.deleteMany({});
 
   // if decksCollection is empty insert and log that its added
   if ((await decksCollection.countDocuments()) === 0) {
     if (allCards.length === 0) {
       allCards = await cardsCollection.find({}).toArray();
     }
-    const mockDecks: i.Deck[] = f.generateMockDecks(allCards);
+    const mockDecks: i.Deck[] = await f.generateMockDecks(allCards);
     await decksCollection.insertMany(mockDecks);
     console.log("[ - SERVER - ]=> Mock decks inserted into database");
   }

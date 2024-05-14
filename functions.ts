@@ -1,8 +1,12 @@
 import Magic = require("mtgsdk-ts");
 import * as i from "./interfaces";
-import { Filter, Sort, Condition } from "mongodb";
+import { Filter, Sort, Condition, ObjectId } from "mongodb";
 import * as db from "./db"
 
+
+export async function getDecksOfUser(res: any): Promise<i.Deck[]> {
+    return await db.decksCollection.find({ userId: res.locals.user._id }).toArray()
+}
 /**
  * A function to get the cards to load on a page specified by diffrent filter and sort params
  * @param filterParam The parameters to filter and sort on
@@ -335,11 +339,13 @@ export function getAvgManaCost(cardsArray: i.Card[]) {
  * @param allCards 
  * @returns 
  */
-export function generateMockDecks(allCards: i.Card[]): i.Deck[] {
+export async function generateMockDecks(allCards: i.Card[]): Promise<i.Deck[]> {
     const mockDecks: i.Deck[] = [];
 
     // Generate 9 mock decks
     for (let i = 1; i <= 9; i++) {
+        const user = await db.usersCollection.findOne();
+        const userId: ObjectId = user?._id!;
         const deckName = `Deck ${i}`;
         const deckImageUrl = `/assets/images/decks/Deck${i}.jpg`;
         const cardsCount = getRandomNumber(5, 60);
@@ -353,6 +359,7 @@ export function generateMockDecks(allCards: i.Card[]): i.Deck[] {
 
         // Create the deck object
         const deck: i.Deck = {
+            userId,
             deckName,
             cards,
             deckImageUrl

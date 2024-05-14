@@ -66,12 +66,10 @@ app.get("/login", (req, res) => {
 
 app.post("/login", async (req, res) => {
   const { loginEmail, loginPassword } = req.body;
-  console.log(req.body);
 
   try {
     let user: i.User | undefined = await db.login(loginEmail, loginPassword);
     delete user!.password;
-    console.log(req.session.user);
 
     req.session.user = user;
     res.redirect("/home");
@@ -148,7 +146,7 @@ app.post("/feedback", (req, res) => {
 });
 
 app.get("/home", secureMiddleware, async (req, res) => {
-  const allDecks: i.Deck[] = await db.decksCollection.find().toArray()
+  const allDecks: i.Deck[] = await f.getDecksOfUser(res)
   // params from route
   // -- filter and sort
   let cardLookup = req.query.cardLookup;
@@ -234,7 +232,7 @@ app.get("/home", secureMiddleware, async (req, res) => {
 });
 
 app.get("/decks", secureMiddleware, async (req, res) => {
-  let decksForPage: i.Deck[] = await db.decksCollection.find({}).toArray();
+  let decksForPage: i.Deck[] = await f.getDecksOfUser(res)
   // params from route
 
   // Pagination
@@ -577,7 +575,7 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
     cardLookupInDeckCard: cardLookupInDeckCard,
     cardLookupInDeckCardChance: cardLookupInDeckCardChance,
     // -- other
-    allDecks: await db.decksCollection.find().toArray(),
+    allDecks: await f.getDecksOfUser(res),
     selectedDeck: selectedDeck,
     unpulledCards: unpulledCards,
     pulledCards: pulledCards,
@@ -640,7 +638,7 @@ app.post("/profile", secureMiddleware, async (req, res) => {
   res.redirect("/profile");
 });
 
-app.post("/delete", async (req, res) => {
+app.post("/delete", secureMiddleware, async (req, res) => {
   await db.usersCollection.deleteOne({ _id: res.locals.user?._id });
   res.redirect("/");
 });

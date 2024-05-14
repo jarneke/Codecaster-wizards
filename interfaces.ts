@@ -45,6 +45,7 @@ export interface Card {
 // interface for decks
 export interface Deck {
     _id?: ObjectId,
+    userId: ObjectId,
     deckName: string,
     cards: Card[],
     deckImageUrl: string

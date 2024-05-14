@@ -642,7 +642,7 @@ app.post("/profile", secureMiddleware, async (req, res) => {
   res.redirect("/profile");
 });
 
-app.post("/delete", async (req, res) => {
+app.post("/delete", secureMiddleware, async (req, res) => {
   await db.usersCollection.deleteOne({ _id: res.locals.user?._id });
   res.redirect("/");
 });

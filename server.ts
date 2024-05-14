@@ -148,7 +148,7 @@ app.post("/feedback", (req, res) => {
 });
 
 app.get("/home", secureMiddleware, async (req, res) => {
-  const allDecks: i.Deck[] = await db.decksCollection.find({ userId: res.locals.user._id }).toArray()
+  const allDecks: i.Deck[] = await f.getDecksOfUser(res)
   // params from route
   // -- filter and sort
   let cardLookup = req.query.cardLookup;
@@ -234,7 +234,7 @@ app.get("/home", secureMiddleware, async (req, res) => {
 });
 
 app.get("/decks", secureMiddleware, async (req, res) => {
-  let decksForPage: i.Deck[] = await db.decksCollection.find({ userId: res.locals.user._id }).toArray();
+  let decksForPage: i.Deck[] = await f.getDecksOfUser(res)
   // params from route
 
   // Pagination
@@ -577,7 +577,7 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
     cardLookupInDeckCard: cardLookupInDeckCard,
     cardLookupInDeckCardChance: cardLookupInDeckCardChance,
     // -- other
-    allDecks: await db.decksCollection.find({ userId: res.locals.user._id }).toArray(),
+    allDecks: await f.getDecksOfUser(res),
     selectedDeck: selectedDeck,
     unpulledCards: unpulledCards,
     pulledCards: pulledCards,

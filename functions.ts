@@ -3,6 +3,10 @@ import * as i from "./interfaces";
 import { Filter, Sort, Condition, ObjectId } from "mongodb";
 import * as db from "./db"
 
+
+export async function getDecksOfUser(res: any): Promise<i.Deck[]> {
+    return await db.decksCollection.find({ userId: res.locals.user._id }).toArray()
+}
 /**
  * A function to get the cards to load on a page specified by diffrent filter and sort params
  * @param filterParam The parameters to filter and sort on

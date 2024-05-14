@@ -66,12 +66,10 @@ app.get("/login", (req, res) => {
 
 app.post("/login", async (req, res) => {
   const { loginEmail, loginPassword } = req.body;
-  console.log(req.body);
 
   try {
     let user: i.User | undefined = await db.login(loginEmail, loginPassword);
     delete user!.password;
-    console.log(req.session.user);
 
     req.session.user = user;
     res.redirect("/home");
@@ -640,7 +638,7 @@ app.post("/profile", secureMiddleware, async (req, res) => {
   res.redirect("/profile");
 });
 
-app.post("/delete", async (req, res) => {
+app.post("/delete", secureMiddleware, async (req, res) => {
   await db.usersCollection.deleteOne({ _id: res.locals.user?._id });
   res.redirect("/");
 });

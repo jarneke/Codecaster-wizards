@@ -94,12 +94,13 @@ app.post("/register", async (req, res) => {
     registerPassword,
     registerConfirmPassword,
   } = req.body;
-  //if (registerConfirmPassword !== registerPassword) {
-  //res.render("registerpagina", {
-  // alert: true,
-  //  alertMsg
-  // })
-  //}
+  if (registerConfirmPassword !== registerPassword) {
+    return res.render("registerpagina", {
+      alert: true,
+      alertMsg: "wachtwoorden komen niet overeen"
+    })
+  }
+  // TODO: Schrijf check of e-mail nog niet bestaat, anders, geef alert
   const newUser: i.User = {
     firstName: registerFName,
     lastName: registerName,
@@ -109,9 +110,7 @@ app.post("/register", async (req, res) => {
     password: await bcrypt.hash(registerPassword, saltRounds),
     role: "USER",
   };
-
   await db.usersCollection.insertOne(newUser);
-
   res.redirect("/login");
 });
 
@@ -122,7 +121,9 @@ app.post("/logout", async (req, res) => {
 });
 
 app.post("/dontShowPopup", async (req, res) => {
-  res.cookie("dontShowInfo", "true", { maxAge: 1 * 24 * 60 * 60/* * 1000*/, httpOnly: true })
+  // set a cookie that lasts a week
+  res.cookie("dontShowInfo", "true", { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true })
+  // redirect to home page after setting cookie
   res.redirect("/home");
 });
 
@@ -139,14 +140,17 @@ app.post("/feedback", (req, res) => {
   };
 
   // insert it in database
-  // no need to await, can run in bakground
+  // no need to await, can run in background
   db.feedbacksCollection.insertOne(feedBackItem);
   // redirect to specified page
   res.redirect(`/${redirectPage}`);
 });
 
 app.get("/home", secureMiddleware, async (req, res) => {
+  // get all the decks of a user
   const allDecks: i.Deck[] = await f.getDecksOfUser(res)
+  // store all the deckNames
+  const deckNames: string[] = allDecks.map(e => e.deckName)
   // params from route
   // -- filter and sort
   let cardLookup = req.query.cardLookup;
@@ -218,23 +222,22 @@ app.get("/home", secureMiddleware, async (req, res) => {
       colorlessManaChecked == undefined ? "true" : colorlessManaChecked,
     sort: sort,
     sortDirection: sortDirection,
-    deck: "",
     pageLink: "home",
     // -- pagination
     page: pageData.page,
     totalPages: cardsToLoadAndTotalPages.totalPages,
     filterUrl: pageData.filterUrl,
+    deck: "",
     // -- cards
     cards: cardsToLoadAndTotalPages.cards,
     // cardModal
-    allDecks: allDecks
+    allDeckName: deckNames
   });
 });
 
 app.get("/decks", secureMiddleware, async (req, res) => {
   let decksForPage: i.Deck[] = await f.getDecksOfUser(res)
   // params from route
-
   // Pagination
   let pageSize: number = 9;
   let pageData: i.PageData = f.handlePageClickEvent(req.query);
@@ -253,7 +256,6 @@ app.get("/decks", secureMiddleware, async (req, res) => {
     tabToColor: 1,
     // The page it should redirect to after feedback form is submitted
     toRedirectTo: `decks`,
-    // MAIN
     // MAIN
     // -- pagination
     page: pageData.page,
@@ -396,18 +398,21 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
   let whatToDo = req.query.action;
   let selectedDeckQuery = req.query.decks;
   // Logic
+  // TODO: Redo this entire logic part
   // Find What Deck is selected
+  console.log(selectedDeckQuery);
+
   selectedDeck = await db.decksCollection.findOne({
     deckName: `${selectedDeckQuery}`,
   });
+  if (!selectedDeck) {
+
+  }
   // if deck is not found,
-  // set to deck nr. 1
-  // else set to lastDeck
   if (!selectedDeck) {
     if (!lastSelectedDeck) {
       selectedDeck = await db.decksCollection.findOne({});
       if (!selectedDeck) {
-        // TODO: make noDecks page
         return res.redirect("/noDecks");
       }
     } else {
@@ -741,38 +746,32 @@ app.post("/addCardTooDeck/:deckName/:cardName", async (req, res) => {
   if (!cardTooAdd) {
     return res.redirect("/404");
   }
-// checks voor max 60 kaarten/deck
-// check voor max 4 kaarten van 1 soort buiten landkaarten
-if (selectedDeck.cards.length < 60) {
-  if (!cardTooAdd!.types.find(e=> e == "Land")) {
-    if (selectedDeck.cards.filter(e=> e.name == cardTooAdd!.name).length < 4) {
-      await db.decksCollection.updateOne({ deckName: req.params.deckName }, { $push: { cards: cardTooAdd! } });
+  if (selectedDeck.cards.length < 60) {
+    if (!cardTooAdd!.types.find(e => e == "Land")) {
+      if (selectedDeck.cards.filter(e => e.name == cardTooAdd!.name).length < 4) {
+        await db.decksCollection.updateOne({ deckName: req.params.deckName }, { $push: { cards: cardTooAdd! } });
+      } else {
+        console.log("4 or more cards");
+      }
     } else {
-      console.log("4 or more cards");
-    } 
-  }else {
-    console.log("Is land card");
-    await db.decksCollection.updateOne({ deckName: req.params.deckName }, { $push: { cards: cardTooAdd! } });
+      console.log("Is land card");
+      await db.decksCollection.updateOne({ deckName: req.params.deckName }, { $push: { cards: cardTooAdd! } });
+    }
+  } else {
+    console.log("Deck full");
+
+    // handle alert
   }
-} else {
-  console.log("Deck full");
-  
-  // handle alert
-}
-
-  
-
-  // logica toevoegen voor landkaarten
-  
 
   res.redirect(`/editDeck/${req.params.deckName}`);
 });
 
-app.get("/makeDeck", secureMiddleware, (req, res) => {  
+app.get("/makeDeck", secureMiddleware, (req, res) => {
   const deck: i.Deck = {
-    deckName: req.body.deckName? req.body.deckName : "",
+    userId: res.locals.user._id,
+    deckName: req.body.deckName ? req.body.deckName : "",
     cards: [],
-    deckImageUrl: req.body.hiddenImgUrl? req.body.hiddenImgUrl : "/assets/images/decks/Deck1.jpg"
+    deckImageUrl: req.body.hiddenImgUrl ? req.body.hiddenImgUrl : "/assets/images/decks/Deck1.jpg"
   }
   res.render("makeDeck", {
     // HEADER
@@ -792,13 +791,14 @@ app.get("/makeDeck", secureMiddleware, (req, res) => {
   })
 });
 
-app.post("/editMakeDeck", secureMiddleware, (req, res) => {  
+app.post("/editMakeDeck", secureMiddleware, (req, res) => {
   console.log(req.body);
-  
+
   const deck: i.Deck = {
-    deckName: req.body.deckName? req.body.deckName : "",
+    userId: res.locals.user._id,
+    deckName: req.body.deckName ? req.body.deckName : "",
     cards: [],
-    deckImageUrl: req.body.hiddenImgUrl? req.body.hiddenImgUrl : "/assets/images/decks/Deck1.jpg"
+    deckImageUrl: req.body.hiddenImgUrl ? req.body.hiddenImgUrl : "/assets/images/decks/Deck1.jpg"
   }
   res.render("makeDeck", {
     // HEADER

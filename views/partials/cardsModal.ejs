@@ -37,9 +37,9 @@
                     <form id="AddToDeck" action="/" method="post">
                         <label class="form-control-label" for="deck">Voeg toe aan deck</label>
                         <select class="form-select" name="deck" id="AddToDeckSubmit">
-                            <% for(const deck of allDecks){%>
-                                <option value="<%= deck.deckName%>">
-                                    <%= deck.deckName %>
+                            <% for(const deckName of allDeckName){%>
+                                <option value="<%= deckName%>">
+                                    <%= deckName %>
                                 </option>
                                 <%}%>
                         </select>

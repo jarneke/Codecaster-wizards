@@ -326,9 +326,19 @@ export function getTotalManaCost(cardsArray: i.Card[]) {
  * @returns 
  */
 export function getAvgManaCost(cardsArray: i.Card[]) {
-    let totalManaCost = getTotalManaCost(cardsArray);
+    // initialize counter
+    let counter: number = 0;
+    // initialiize totalManaCost
+    let totalManaCost: number = 0;
+    // count all cards excluding land cards
+    for (const card of cardsArray) {
+        if (!card.types.find(e=> e == "Land")) {
+            counter ++;
+            totalManaCost += card.cmc;
+        }
+    }
 
-    return Math.round((totalManaCost / cardsArray.length) * 100) / 100;
+    return Math.round((totalManaCost / counter) * 100) / 100;
 }
 /**
  * 
@@ -342,7 +352,7 @@ export function generateMockDecks(allCards: i.Card[]): i.Deck[] {
     for (let i = 1; i <= 9; i++) {
         const deckName = `Deck ${i}`;
         const deckImageUrl = `/assets/images/decks/Deck${i}.jpg`;
-        const cardsCount = getRandomNumber(5, 60);
+        const cardsCount = getRandomNumber(60, 60);
         const cards: i.Card[] = [];
 
         // Add random cards to the deck

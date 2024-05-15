@@ -1,0 +1,88 @@
+<%- include('partials/header') %>
+<main class="container d-flex py-5">
+  <form action="/makeDeck" method="post" class="d-flex flex-wrap">
+    <fieldset>
+      <input type="hidden" name="hiddenImgUrl" value="" id="hiddenImgUrl" />
+      <img src="<%= deckImage %>" alt="<%= deckImage %>" id="deckImage" />
+      <button
+        type="button"
+        class="btn btn-primary col-12"
+        data-bs-toggle="modal"
+        data-bs-target="#imageModal"
+      >
+        Selecteer deck afbeelding
+      </button>
+    </fieldset>
+    <label for="deckName" class="form-label">Decknaam</label>
+    <input
+      type="text"
+      name="deckName"
+      id="deckName"
+      class="form-control"
+      value="<%= deckName %>"
+    />
+    <button type="submit">Maak deck</button>
+  </form>
+  <div
+    class="modal fade"
+    id="imageModal"
+    tabindex="-1"
+    aria-labelledby="imageModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="imageModalLabel">
+            Selecteer je deck afbeelding
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form
+            action="/editMakeDeck"
+            method="post"
+            ,
+            id="imageForm"
+            class="d-flex flex-wrap gap-2 justify-content-center"
+          >
+            <input
+              type="hidden"
+              name="hiddenImgUrl"
+              value=""
+              id="editHiddenImgUrl"
+            />
+            <% for( let i = 1; i < 10; i++ ) { %>
+            <button
+              type="submit"
+              class="col-3 imgButton border border-0 cbg-transparent"
+            >
+              <img
+                class="col-12"
+                src="/assets/images/decks/Deck<%= i %>.jpg"
+                alt="DeckImage<%= i %>"
+              />
+            </button>
+            <% } %>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('partials/footer') %>

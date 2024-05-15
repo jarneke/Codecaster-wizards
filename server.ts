@@ -269,7 +269,7 @@ app.get("/noDeck", secureMiddleware, (req, res) => {
     // HEADER
     user: res.locals.user,
     // -- The names of the js files you want to load on the page.
-    jsFiles: ["infoPopUp", "manaCheckbox", "tooltips", "cardsModal"],
+    jsFiles: [],
     // -- The title of the page
     title: "! geen decks !",
     // -- The Tab in the nav bar you want to have the orange color
@@ -737,17 +737,85 @@ app.post("/addCardTooDeck/:deckName/:cardName", async (req, res) => {
     return res.redirect("/404");
   }
 
-  let cardsTooAdd: i.Card | null = await db.cardsCollection.findOne({ name: req.params.cardName });
-
-  if (!cardsTooAdd) {
+  let cardTooAdd: i.Card | null = await db.cardsCollection.findOne({ name: req.params.cardName });
+  if (!cardTooAdd) {
     return res.redirect("/404");
   }
+// checks voor max 60 kaarten/deck
+// check voor max 4 kaarten van 1 soort buiten landkaarten
+if (selectedDeck.cards.length < 60) {
+  if (!cardTooAdd!.types.find(e=> e == "Land")) {
+    if (selectedDeck.cards.filter(e=> e.name == cardTooAdd!.name).length < 4) {
+      await db.decksCollection.updateOne({ deckName: req.params.deckName }, { $push: { cards: cardTooAdd! } });
+    } else {
+      console.log("4 or more cards");
+    } 
+  }else {
+    console.log("Is land card");
+    await db.decksCollection.updateOne({ deckName: req.params.deckName }, { $push: { cards: cardTooAdd! } });
+  }
+} else {
+  console.log("Deck full");
+  
+  // handle alert
+}
+
+  
 
   // logica toevoegen voor landkaarten
-  await db.decksCollection.updateOne({ deckName: req.params.deckName }, { $push: { cards: cardsTooAdd } });
-
+  
 
   res.redirect(`/editDeck/${req.params.deckName}`);
+});
+
+app.get("/makeDeck", secureMiddleware, (req, res) => {  
+  const deck: i.Deck = {
+    deckName: req.body.deckName? req.body.deckName : "",
+    cards: [],
+    deckImageUrl: req.body.hiddenImgUrl? req.body.hiddenImgUrl : "/assets/images/decks/Deck1.jpg"
+  }
+  res.render("makeDeck", {
+    // HEADER
+    user: res.locals.user,
+    // -- The names of the js files you want to load on the page.
+    jsFiles: [],
+    // -- The title of the page
+    title: "makeDeck",
+    // -- The Tab in the nav bar you want to have the orange color
+    // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
+    tabToColor: 1,
+    // The page it should redirect to after feedback form is submitted
+    toRedirectTo: "makeDeck",
+    // makeDeck form
+    deckName: deck.deckName,
+    deckImage: deck.deckImageUrl
+  })
+});
+
+app.post("/editMakeDeck", secureMiddleware, (req, res) => {  
+  console.log(req.body);
+  
+  const deck: i.Deck = {
+    deckName: req.body.deckName? req.body.deckName : "",
+    cards: [],
+    deckImageUrl: req.body.hiddenImgUrl? req.body.hiddenImgUrl : "/assets/images/decks/Deck1.jpg"
+  }
+  res.render("makeDeck", {
+    // HEADER
+    user: res.locals.user,
+    // -- The names of the js files you want to load on the page.
+    jsFiles: ["changeDeckImage"],
+    // -- The title of the page
+    title: "makeDeck",
+    // -- The Tab in the nav bar you want to have the orange color
+    // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
+    tabToColor: 1,
+    // The page it should redirect to after feedback form is submitted
+    toRedirectTo: "makeDeck",
+    // makeDeck form
+    deckName: deck.deckName,
+    deckImage: deck.deckImageUrl
+  })
 });
 
 app.get("/404", secureMiddleware, (req, res) => {

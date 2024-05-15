@@ -1,55 +1,43 @@
 <%- include("partials/header") %>
 
-<main class="album py-5 bg-light" style="background-image: url(assets/images/background/MTGBackground.jpg);background-size: cover;">
-  
-  
-  <%- include("partials/paginationShort") %>
+  <main class="album py-5 bg-light" style="background-image: url(assets/images/background/MTGBackground.jpg);background-size: cover;">
 
-  <section class="cards">
-    <section class="container" id="cards_animation">
-      <section class="row">
 
-        <% for (const deck of decks) { %>
-        <section class="col-md-6 col-lg-4">
-          <section
-            class="card mb-4 box-shadow card-flyer"
-            style="
+    <%- include("partials/paginationShort") %>
+
+      <section class="cards">
+        <section class="container" id="cards_animation">
+          <section class="row">
+
+            <% for (const deck of decks) { %>
+              <section class="col-md-6 col-lg-4">
+                <section class="card mb-4 box-shadow card-flyer" style="
               background-image: url(assets/images/background/MTGTest.jpg);
               background-size: cover;
-            "
-          >
-            <img
-              class="deckImage"
-              src="<%= deck.deckImageUrl %>"
-              alt="image of deck"
-              
-            />
-            <section class="card-body purplebg">
-              <p class="card-text ctext-white ch1 text-center fs-3"> <%= deck.deckName %> </p>
-              <section
-                class="d-flex justify-content-between align-items-center"
-              >
-                <section class="btn-group">
-                  <a
-                    href="/decks/<%= deck.deckName %>"
-                    class="btn btn-lg btn-dark ctext-white"
-                    >bekijk</a
-                  >
+            ">
+                  <img class="deckImage" src="<%= deck.deckImageUrl %>" alt="image of deck" />
+                  <section class="card-body purplebg">
+                    <p class="card-text ctext-white ch1 text-center fs-3">
+                      <%= deck.deckName %>
+                    </p>
+                    <section class="d-flex justify-content-between align-items-center">
+                      <section class="btn-group">
+                        <a href="/decks/<%= deck.deckName %>" class="btn btn-lg btn-dark ctext-white">bekijk</a>
+                      </section>
+                    </section>
+                  </section>
                 </section>
               </section>
-            </section>
+              <% } %>
+
+
+
           </section>
         </section>
-        <% } %>
-
-
-
       </section>
-    </section>
-  </section>
 
- <%- include("partials/paginationShort") %>
+      <%- include("partials/paginationShort") %>
 
-</main>
+  </main>
 
-<%- include("partials/footer") %>
+  <%- include("partials/footer") %>

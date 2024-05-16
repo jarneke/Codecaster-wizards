@@ -336,8 +336,8 @@ export function getAvgManaCost(cardsArray: i.Card[]) {
     let totalManaCost: number = 0;
     // count all cards excluding land cards
     for (const card of cardsArray) {
-        if (!card.types.find(e=> e == "Land")) {
-            counter ++;
+        if (!card.types.find(e => e == "Land")) {
+            counter++;
             totalManaCost += card.cmc;
         }
     }
@@ -357,7 +357,7 @@ export async function generateMockDecks(allCards: i.Card[]): Promise<i.Deck[]> {
         const user = await db.usersCollection.findOne();
         const userId: ObjectId = user?._id!;
         const deckName = `Deck ${i}`;
-        const deckImageUrl = `/assets/images/decks/Deck${i}.jpg`;
+        const deckImageUrl = `/assets/images/decks/${i}.webp`;
         const cardsCount = getRandomNumber(60, 60);
         const cards: i.Card[] = [];
 

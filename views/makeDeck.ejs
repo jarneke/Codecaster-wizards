@@ -17,7 +17,7 @@
       </fieldset>
     </form>
     <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
+      <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="imageModalLabel">
@@ -30,7 +30,7 @@
               <input type="hidden" name="hiddenImgUrl" value="" id="editHiddenImgUrl" />
               <% for( let i=1; i < 10; i++ ) { %>
                 <button type="submit" class="col-3 imgButton border border-0 cbg-transparent">
-                  <img class="col-12" src="/assets/images/decks/Deck<%= i %>.jpg" alt="DeckImage<%= i %>" />
+                  <img class="col-12" src="/assets/images/decks/<%= i %>.webp" alt="DeckImage<%= i %>" />
                 </button>
                 <% } %>
             </form>

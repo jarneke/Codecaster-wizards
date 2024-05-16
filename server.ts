@@ -80,6 +80,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/favorite/:deckName", secureMiddleware, async (req, res) => {
+  // IMPORANT: This isnt gonna work,  need to filter by userId too, else 2 people with same deckName will conflict
   const selectedDeck: Deck | null = await decksCollection.findOne({
     deckName: req.params.deckName,
   });
@@ -333,10 +334,11 @@ app.get("/decks/:deckName", secureMiddleware, async (req, res) => {
   let sort = req.query.sort;
   let sortDirection = req.query.sortDirection;
 
+  // IMPORANT: This isnt gonna work,  need to filter by userId too, else 2 people with same deckName will conflict
   const selectedDeck: Deck | null = await decksCollection.findOne({
     deckName: req.params.deckName,
   });
-  if (selectedDeck == null) {
+  if (!selectedDeck) {
     res.redirect("/404");
   }
 
@@ -408,6 +410,7 @@ app.post("/changeDeckName", async (req, res) => {
   const name = req.body.deckNameInput;
   const oldName = req.body.oldDeckName;
 
+  // IMPORANT: This isnt gonna work,  need to filter by userId too, else 2 people with same deckName will conflict
   const oldDeck = await decksCollection.findOne({ deckName: oldName });
 
   decksCollection.updateOne(
@@ -439,82 +442,86 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
   // -- other
   let whatToDo = req.query.action;
   let selectedDeckQuery = req.query.decks;
+
+  let cardLookupInDeckCard: Card | undefined = undefined;
+  let cardLookupInDeckCardChance: number | undefined = undefined;
   // Logic
   // TODO: Redo this entire logic part
-  // Find What Deck is selected
-  console.log(selectedDeckQuery);
 
-  selectedDeck = await decksCollection.findOne({
-    deckName: `${selectedDeckQuery}`,
-  });
-  // if deck is not found with query
-  if (!selectedDeck) {
-    // if selected deck is defined load this, else select first deck
+  // Find What Deck is selected
+  // -- if selectedDeckQuery is defined, look in deckscollection for this deck
+  if (selectedDeckQuery) {
+    selectedDeck = await decksCollection.findOne({
+      deckName: `${selectedDeckQuery}`,
+      userId: res.locals.user._id
+    });
+    // if this is not found, render 404 not found page
+    if (!selectedDeck) {
+      return res.redirect("/404")
+    }
+    // -- if selectedDeckQuery is undefined
+  } else {
+    // -- and lastSelectedDeck is undefined
     if (!lastSelectedDeck) {
-      selectedDeck = await decksCollection.findOne({});
+      // -- find the first deck in the deckscollection
+      selectedDeck = await decksCollection.findOne({ userId: res.locals.user._id });
       // if not found => no decks in database, so redirect to /noDeck
       if (!selectedDeck) return res.redirect("/noDeck");
+      // -- if lastSelectedDeck is defined, set selectedDeck to lastSelectedDeck
     } else {
       selectedDeck = lastSelectedDeck
     }
   }
 
-  let cardLookupInDeckCard: Card | undefined = undefined;
-  let cardLookupInDeckCardChance: number | undefined = undefined;
-  if (lastSelectedDeck) console.log(lastSelectedDeck.deckName);
-  console.log(selectedDeck.deckName);
-
   // if deck is diffrent from last load
-  if (lastSelectedDeck.deckName !== selectedDeck.deckName) {
-    // set unpulledCards to cards of new deck
-    unpulledCards = [...selectedDeck.cards];
-    // Shuffle cards
-    unpulledCards = [...shuffleCards(unpulledCards)];
+  if (lastSelectedDeck && lastSelectedDeck.deckName !== selectedDeck.deckName) {
+    // set unpulledCards to cards of new deck and shuffle them
+    unpulledCards = [...shuffleCards(selectedDeck.cards)];
     // clear pulledCards
     pulledCards = [];
   } else {
-    if (unpulledCards.length === 0 && !whatToDo) {
-      unpulledCards = [...shuffleCards(selectedDeck.cards)];
-    }
-    // if clicked to pull a card
-    if (whatToDo == "pull") {
-      if (pulledCards !== undefined && unpulledCards !== undefined) {
-        // get the last card from the unpulled cards
-        let card = unpulledCards.pop();
-        if (card !== undefined) {
-          // if it exists add it as the first card in pulledCards
-          pulledCards.unshift(card);
-        }
+    // pull and reset logic
+    // -- if pull is asked
+    if (whatToDo === "pull") {
+      // -- get last card of unpulledCards
+      let card = unpulledCards.pop()
+      // -- if this card is found
+      if (card !== undefined) {
+        // -- add this card to the front of pulledCards
+        pulledCards.unshift(card)
       }
-      // if clicked to reset
-    } else if (whatToDo == "reset") {
-      // reset the unpulledcards to the cards of the selected deck
-      unpulledCards = [...selectedDeck.cards];
-      // shuffle the cards
-      unpulledCards = [...shuffleCards(unpulledCards)];
-      // empty the pulled cards
+      // -- id reset is asked
+    } else if (whatToDo === "reset") {
+      // reset unpulledCards and shuffle them
+      unpulledCards = [...shuffleCards(selectedDeck.cards)];
+      // reset pulledCards
       pulledCards = [];
     }
-    // if cardLookupInDeck is not defined
-    if (cardLookupInDeck != undefined && selectedDeck != undefined) {
+    // CardLookup Logic
+    console.log(cardLookupInDeck);
+
+    if (cardLookupInDeck !== "" && cardLookupInDeck) {
       // find the card they are looking for
       cardLookupInDeckCard = selectedDeck.cards.find((e) =>
         e.name.toLowerCase().includes(`${cardLookupInDeck}`.toLowerCase())
       );
-      // if card is found and there are cards in unpulledCards
-      if (cardLookupInDeckCard != undefined && unpulledCards != undefined) {
-        // calculate the chance u have to pull that card from the unpulledCards
-        cardLookupInDeckCardChance = getChance(
-          unpulledCards,
-          cardLookupInDeckCard
-        ).chance;
+      // if not found, redirect to 404
+      if (!cardLookupInDeckCard) {
+        return res.redirect("/404")
       }
+      // calculate the chance u have to pull that card from the unpulledCards
+      cardLookupInDeckCardChance = getChance(
+        unpulledCards,
+        cardLookupInDeckCard
+      ).chance;
     }
   }
-  // --filter logic
-  let filterAndSortedCards: Card[] = pulledCards;
+  // Filter logic
+  // -- initialize array
+  let filterAndSortedCards: Card[] = [];
 
-  if (pulledCards !== undefined) {
+  // if length is 0 skip cause unneeded
+  if (pulledCards.length !== 0) {
     filterAndSortedCards = [
       ...filterAndSortCards(
         pulledCards,
@@ -533,41 +540,50 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
     ];
   }
 
+  // Map cards so we filter out duplicates and keep count of how many of them are duplicate
+  // -- initialize map
   let amountMap = new Map<Card, number>();
+  // -- if length is 0 skip cause unneeded
+  if (filterAndSortedCards.length !== 0) {
 
+  }
+  // -- loop over array
   for (const card of filterAndSortedCards) {
-    const existingCard = Array.from(amountMap.keys()).find(
+    // -- if card already exists in map or undefined if not
+    const existingCard: Card | undefined = Array.from(amountMap.keys()).find(
       (c) => c.name === card.name
     );
+    // -- if card exists in map
     if (existingCard) {
+      // -- increase the count of the existing card
       amountMap.set(existingCard, amountMap.get(existingCard)! + 1);
+      // -- if not
     } else {
+      // -- add card to map and set count to 1
       amountMap.set(card, 1);
     }
   }
+
   // get the cardToShow (always the first card in pulledCards)
   let cardToShow: Card = pulledCards[0];
   // initialize nextCard
   let nextCard: Card | undefined = undefined;
   // if there is still a card in unpulled cards
-  if (unpulledCards !== undefined) {
+  if (unpulledCards.length !== 0) {
     // set nextCard to the last index of unpulledCards
     nextCard = unpulledCards[unpulledCards.length - 1];
   }
-
-  // calculate the chanceData of the cardToSHow
+  // calculate the chanceData of the cardToShow
   let chanceData = getChance(selectedDeck.cards, cardToShow);
-
   // save selectedDeck to be used next load of page
   lastSelectedDeck = selectedDeck;
-
   // Pagination
   let pageSize: number = 6;
   let pageData: PageData = handlePageClickEvent(req.query);
   let totalPages = getTotalPages(Array.from(amountMap.keys()).length, pageSize);
-
   amountMap = getCardWAmauntForPage(amountMap, pageData.page, pageSize);
-
+  const allDecks: Deck[] = await getDecksOfUser(res);
+  const allDeckNames: string[] = allDecks.map(e => e.deckName)
   res.render("drawtest", {
     // HEADER
     user: res.locals.user,
@@ -614,7 +630,8 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
     cardLookupInDeckCard: cardLookupInDeckCard,
     cardLookupInDeckCardChance: cardLookupInDeckCardChance,
     // -- other
-    allDecks: await getDecksOfUser(res),
+    allDecks: allDecks,
+    allDeckName: allDeckNames,
     selectedDeck: selectedDeck,
     unpulledCards: unpulledCards,
     pulledCards: pulledCards,
@@ -627,6 +644,7 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
 });
 
 app.get("/profile", secureMiddleware, async (req, res) => {
+  // IMPORANT: This isnt gonna work,  need to filter by userId too, else 2 people with same deckName will conflict
   let allDecks: Deck[] = await decksCollection.find().toArray();
   let favoritedDecks: Deck[] = allDecks.filter((e) => e.favorited);
 
@@ -693,6 +711,7 @@ app.post("/delete", secureMiddleware, async (req, res) => {
 });
 
 app.get("/editDeck/:deckName", secureMiddleware, async (req, res) => {
+  // IMPORANT: This isnt gonna work,  need to filter by userId too, else 2 people with same deckName will conflict
   const selectedDeck: Deck | null = await decksCollection.findOne({
     deckName: req.params.deckName,
   });
@@ -755,6 +774,7 @@ app.get("/editDeck/:deckName", secureMiddleware, async (req, res) => {
 });
 
 app.post("/removeCardFromDeck/:deckName/:cardName", async (req, res) => {
+  // IMPORANT: This isnt gonna work,  need to filter by userId too, else 2 people with same deckName will conflict
   const selectedDeck: Deck | null = await decksCollection.findOne({
     deckName: req.params.deckName,
   });
@@ -784,6 +804,7 @@ app.post("/removeCardFromDeck/:deckName/:cardName", async (req, res) => {
 });
 
 app.post("/addCardTooDeck/:deckName/:cardName", async (req, res) => {
+  // IMPORANT: This isnt gonna work,  need to filter by userId too, else 2 people with same deckName will conflict
   const selectedDeck: Deck | null = await decksCollection.findOne({
     deckName: req.params.deckName,
   });

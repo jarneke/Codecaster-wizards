@@ -419,3 +419,6 @@ body,
       translate(calc(-1 * var(--translate-x)), var(--translate-y));
   }
 }
+.cactive a {
+  background-color: var(--secondary-color);
+}

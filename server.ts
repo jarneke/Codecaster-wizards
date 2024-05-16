@@ -81,6 +81,26 @@ app.get("/", (req, res) => {
   res.render("landingspage");
 });
 
+app.post("/favorite/:deckName", secureMiddleware, async (req, res) => {
+  const selectedDeck: Deck | null = await decksCollection.findOne({
+    deckName: req.params.deckName,
+  });
+  if (!selectedDeck) {
+    console.log(req.params.deckName);
+    return res.redirect("/404");
+  }
+  if (selectedDeck.favorited) {
+    await decksCollection.updateOne(selectedDeck, {
+      $set: { favorited: false },
+    });
+  } else {
+    await decksCollection.updateOne(selectedDeck, {
+      $set: { favorited: true },
+    });
+  }
+
+  res.redirect(`/${req.body.favToRedirect}`);
+});
 app.get("/login", (req, res) => {
   return res.render("loginspage", {
     alert: false,
@@ -613,6 +633,9 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
 });
 
 app.get("/profile", secureMiddleware, async (req, res) => {
+  let allDecks: Deck[] = await decksCollection.find().toArray();
+  let favoritedDecks: Deck[] = allDecks.filter((e) => e.favorited);
+
   res.render("profile", {
     // HEADER
     user: res.locals.user,
@@ -624,7 +647,7 @@ app.get("/profile", secureMiddleware, async (req, res) => {
     // -- The Tab in the nav bar you want to have the orange color
     // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
     tabToColor: 3,
-    favoriteDecks: allDecks,
+    favoriteDecks: favoritedDecks,
   });
 });
 
@@ -863,7 +886,7 @@ app.post("/editMakeDeck", secureMiddleware, (req, res) => {
     toRedirectTo: "makeDeck",
     // makeDeck form
     deckName: deck.deckName,
-    deckImage: deck.deckImageUrl
+    deckImage: deck.deckImageUrl,
   });
 });
 
@@ -907,10 +930,10 @@ app.get("/404", secureMiddleware, (req, res) => {
 });
 
 //catch all paths that dont already exist.
-app.all("*", (req, res) => {
+/*app.all("*", (req, res) => {
   // and redirect to 404 not found.
-  res.redirect("/404")
-})
+  res.redirect("/404");
+});*/
 
 app.listen(app.get("port"), async () => {
   console.clear();

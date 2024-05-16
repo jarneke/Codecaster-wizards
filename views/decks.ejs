@@ -14,7 +14,7 @@
       <section class="row">
         <% for (const deck of decks) { %>
         <section class="col-md-6 col-lg-4">
-          <a href="/decks/<%= deck.deckName %>">
+          <a href="/decks/<%= deck.deckName %>" class="text-decoration-none">
             <section
               class="card mb-4 box-shadow card-flyer"
               style="
@@ -27,10 +27,28 @@
                 src="<%= deck.deckImageUrl %>"
                 alt="image of deck"
               />
-              <section class="card-body purplebg">
-                <p class="card-text ctext-white ch1 text-center fs-3">
+              <section class="card-body purplebg d-flex justify-content-center">
+                <p
+                  class="card-text ctext-white ch1 text-center fs-3 flex-grow-1"
+                >
                   <%= deck.deckName %>
                 </p>
+                <form
+                  class="justify-self-end"
+                  action="/favorite/<%= deck.deckName %>"
+                  method="post"
+                >
+                  <input type="hidden" name="favToRedirect" value="decks" />
+                  <% if (deck.favorited) { %>
+                  <button type="submit" class="border border-0 cbg-transparent">
+                    <i class="bi bi-heart-fill ctext-secondary fs-4"></i>
+                  </button>
+                  <% } else { %>
+                  <button type="submit" class="border border-0 cbg-transparent">
+                    <i class="bi bi-heartbreak-fill ctext-secondary-d fs-4"></i>
+                  </button>
+                  <% } %>
+                </form>
               </section>
             </section>
           </a>

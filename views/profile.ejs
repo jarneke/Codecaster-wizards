@@ -70,35 +70,60 @@
       >
     </section>
   </section>
-  <section class="d-flex flex-wrap justify-content-center col-lg-9">
+  <section class="d-flex flex-wrap justify-content-center col-lg-9 container">
     <h1
       class="text-center mb-5 text-light border-bottom border-4 col-6 py-3 ch1"
+      style="height: 15%"
     >
       Mijn favoriete decks
     </h1>
     <section
       id="cards_animation"
-      class="d-flex flex-wrap justify-content-evenly col-12 mb-5"
+      class="d-flex flex-wrap justify-content-evenly col-12 mb-5 flex-grow-1 h-75"
+      style="height: 85%"
     >
-      <% for (const deck of favoriteDecks) { %>
-      <figure
-        class="mb-3 border cbg-primary ch1 card-flyer text-center col-12 col-md-6 col-lg-4 col-xxl-4"
-      >
-        <img
-          src="<%= deck.deckImageUrl %>"
-          class="col-12"
-          alt="<%= deck.deckName %> foto"
-        />
-        <figcaption>
-          <a
-            href="/decks/<%= deck.deckName %>"
-            class="h4 text-light text-decoration-none"
+      <% if (favoriteDecks.length === 0) { %>
+      <h1 class="ch1 fs-3 ctext-white">Je hebt nog geen favoriete decks!</h1>
+      <% } else { %> <% for (const deck of favoriteDecks) { %>
+      <section class="col-md-6 col-lg-4 p-2">
+        <a href="/decks/<%= deck.deckName %>" class="text-decoration-none">
+          <section
+            class="card mb-4 box-shadow card-flyer"
+            style="
+              background-image: url(assets/images/background/MTGTest.jpg);
+              background-size: cover;
+            "
           >
-            <%= deck.deckName %>
-          </a>
-        </figcaption>
-      </figure>
-      <%} %>
+            <img
+              class="deckImage"
+              src="<%= deck.deckImageUrl %>"
+              alt="image of deck"
+            />
+            <section class="card-body purplebg d-flex justify-content-center">
+              <p class="card-text ctext-white ch1 text-center fs-3 flex-grow-1">
+                <%= deck.deckName %>
+              </p>
+              <form
+                class="justify-self-end"
+                action="/favorite/<%= deck.deckName %>"
+                method="post"
+              >
+                <input type="hidden" name="favToRedirect" value="profile" />
+                <% if (deck.favorited) { %>
+                <button type="submit" class="border border-0 cbg-transparent">
+                  <i class="bi bi-heart-fill ctext-secondary fs-4"></i>
+                </button>
+                <% } else { %>
+                <button type="submit" class="border border-0 cbg-transparent">
+                  <i class="bi bi-heartbreak-fill ctext-secondary-d fs-4"></i>
+                </button>
+                <% } %>
+              </form>
+            </section>
+          </section>
+        </a>
+      </section>
+      <%} %> <% } %>
     </section>
   </section>
 

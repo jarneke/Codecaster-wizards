@@ -449,22 +449,18 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
   selectedDeck = await decksCollection.findOne({
     deckName: `${selectedDeckQuery}`,
   });
+  // if deck is not found with query
   if (!selectedDeck) {
-  }
-  // if deck is not found,
-  if (!selectedDeck) {
+    // if selected deck is defined load this, else select first deck
     if (!lastSelectedDeck) {
       selectedDeck = await decksCollection.findOne({});
-      if (!selectedDeck) {
-        return res.redirect("/noDecks");
-      }
+      // if not found => no decks in database, so redirect to /noDecks
+      if (!selectedDeck) return res.redirect("/noDecks");
     } else {
-      selectedDeck = lastSelectedDeck;
+      selectedDeck = lastSelectedDeck
     }
   }
-  if (!lastSelectedDeck) {
-    lastSelectedDeck = selectedDeck;
-  }
+
   let cardLookupInDeckCard: Card | undefined = undefined;
   let cardLookupInDeckCardChance: number | undefined = undefined;
   if (lastSelectedDeck) console.log(lastSelectedDeck.deckName);
@@ -655,9 +651,8 @@ app.post("/profile", secureMiddleware, async (req, res) => {
   console.log(req.body);
   const { firstName, lastName, email, passwordFormLabel, description } =
     req.body;
-  const userName: string = `${
-    firstName === "" ? res.locals.user?.firstName : firstName
-  }_${lastName === "" ? res.locals.user?.lastName : lastName}`;
+  const userName: string = `${firstName === "" ? res.locals.user?.firstName : firstName
+    }_${lastName === "" ? res.locals.user?.lastName : lastName}`;
 
   const newUserDetails: User = {
     firstName:
@@ -892,22 +887,22 @@ app.post("/editMakeDeck", secureMiddleware, (req, res) => {
 
 app.post("/deleteDeck", secureMiddleware, async (req, res) => {
   let deckName = req.body.deckName;
-  
-  await decksCollection.deleteOne({ deckName : deckName });
+
+  await decksCollection.deleteOne({ deckName: deckName });
 
   res.redirect("/decks");
 });
 
-app.post("/makeDeck", secureMiddleware, async(req, res)=>{
+app.post("/makeDeck", secureMiddleware, async (req, res) => {
   let deckName = req.body.deckName;
-  let newDeck : Deck = {
+  let newDeck: Deck = {
     userId: res.locals.user.userId,
     deckName: req.body.deckName,
     cards: [],
     deckImageUrl: req.body.hiddenImgUrl,
     favorited: false
   }
-  
+
   await decksCollection.insertOne(newDeck);
 
   res.redirect("/decks");

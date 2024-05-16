@@ -834,7 +834,7 @@ app.get("/makeDeck", secureMiddleware, (req, res) => {
     cards: [],
     deckImageUrl: req.body.hiddenImgUrl
       ? req.body.hiddenImgUrl
-      : "/assets/images/decks/Deck1.jpg",
+      : "/assets/images/decks/1.webp",
     favorited: false,
   };
   res.render("makeDeck", {
@@ -863,7 +863,7 @@ app.post("/editMakeDeck", secureMiddleware, (req, res) => {
     cards: [],
     deckImageUrl: req.body.hiddenImgUrl
       ? req.body.hiddenImgUrl
-      : "/assets/images/decks/Deck1.jpg",
+      : "/assets/images/decks/1.webp",
     favorited: false,
   };
   // and render the makeDeck page
@@ -896,7 +896,7 @@ app.post("/deleteDeck", secureMiddleware, async (req, res) => {
 app.post("/makeDeck", secureMiddleware, async (req, res) => {
   let deckName = req.body.deckName;
   let newDeck: Deck = {
-    userId: res.locals.user.userId,
+    userId: res.locals.user._id,
     deckName: req.body.deckName,
     cards: [],
     deckImageUrl: req.body.hiddenImgUrl,

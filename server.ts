@@ -817,6 +817,7 @@ app.get("/makeDeck", secureMiddleware, (req, res) => {
     deckImageUrl: req.body.hiddenImgUrl
       ? req.body.hiddenImgUrl
       : "/assets/images/decks/Deck1.jpg",
+    favorited: false,
   };
   res.render("makeDeck", {
     // HEADER
@@ -845,6 +846,7 @@ app.post("/editMakeDeck", secureMiddleware, (req, res) => {
     deckImageUrl: req.body.hiddenImgUrl
       ? req.body.hiddenImgUrl
       : "/assets/images/decks/Deck1.jpg",
+    favorited: false,
   };
   // and render the makeDeck page
   res.render("makeDeck", {

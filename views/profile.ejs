@@ -1,167 +1,314 @@
 <%- include("partials/header") %>
-  <main class="d-flex flex-wrap">
-    <section style="background-color: #00000063" class="col-12 col-lg-3 text-light p-3">
-      <section>
-        <h2 class="ch1 text-light mt-4 mb-1">
-          <%= user.firstName %>
-            <%= user.lastName %>
-        </h2>
-        <h5 class="ch1 text-light mb-5">
-          <%= user.userName %>
-        </h5>
-        <h4 class="ch1 text-light mb-2">Beschrijving</h4>
-        <p class="text-light fs-6">
-          <%= user.description %>
-        </p>
-      </section>
-      <section class="border-top border-light border-2 pt-4 d-flex flex-column">
-        <p class="ch1 text-light fs-5">
-          <svg class="pe-2" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="1rem">
-            <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-            <path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z" />
-          </svg>
-          <%= user.email %>
-        </p>
-        <a href="#changeInfoModal" class="btn btn-dark cbg-secondary-l mb-5" data-bs-toggle="modal">
-          <svg class="pe-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="1rem">
-            <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-            <path fill="#ffffff" d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
-          </svg>Bewerk profiel
-        </a>
-        <button type="button" class="btn btn-dark cbg-secondary-l mb-3 mt-5" data-bs-toggle="modal" data-bs-target="#infoModal">
-          <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-            <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-            <path fill="#ffffff" d="M80 160c0-35.3 28.7-64 64-64h32c35.3 0 64 28.7 64 64v3.6c0 21.8-11.1 42.1-29.4 53.8l-42.2 27.1c-25.2 16.2-40.4 44.1-40.4 74V320c0 17.7 14.3 32 32 32s32-14.3 32-32v-1.4c0-8.2 4.2-15.8 11-20.2l42.2-27.1c36.6-23.6 58.8-64.1 58.8-107.7V160c0-70.7-57.3-128-128-128H144C73.3 32 16 89.3 16 160c0 17.7 14.3 32 32 32s32-14.3 32-32zm80 320a40 40 0 1 0 0-80 40 40 0 1 0 0 80z" />
-          </svg>
-          Hoe wordt mijn data gebruikt
-        </button>
-        <a href="#errorModal" class="btn cbg-danger-l" data-bs-toggle="modal">Verwijder account</a>
-      </section>
+<main class="d-flex flex-wrap">
+  <section
+    style="background-color: #00000063"
+    class="col-12 col-lg-3 text-light p-3"
+  >
+    <section>
+      <h2 class="ch1 text-light mt-4 mb-1">
+        <%= user.firstName %> <%= user.lastName %>
+      </h2>
+      <h5 class="ch1 text-light mb-5"><%= user.userName %></h5>
+      <h4 class="ch1 text-light mb-2">Beschrijving</h4>
+      <p class="text-light fs-6"><%= user.description %></p>
     </section>
-    <section class="d-flex flex-wrap justify-content-center col-lg-9">
-      <h1 class="text-center mb-5 text-light border-bottom border-4 col-6 py-3 ch1">
-        Mijn favoriete decks
-      </h1>
-      <section id="cards_animation" class="d-flex flex-wrap justify-content-evenly col-12 mb-5">
-        <% for (const deck of favoriteDecks) { %>
-          <figure class="mb-3 border cbg-primary ch1 card-flyer text-center col-12 col-md-6 col-lg-4 col-xxl-4">
-            <img src="<%= deck.deckImageUrl %>" class="col-12" alt="<%= deck.deckName %> foto" />
-            <figcaption>
-              <a href="/decks/<%= deck.deckName %>" class="h4 text-light text-decoration-none">
-                <%= deck.deckName %>
-              </a>
-            </figcaption>
-          </figure>
-          <%} %>
-      </section>
+    <section class="border-top border-light border-2 pt-4 d-flex flex-column">
+      <p class="ch1 text-light fs-5">
+        <svg
+          class="pe-2"
+          fill="#ffffff"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+          height="1rem"
+        >
+          <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+          <path
+            d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"
+          />
+        </svg>
+        <%= user.email %>
+      </p>
+      <a
+        href="#changeInfoModal"
+        class="btn btn-dark cbg-secondary-l mb-5"
+        data-bs-toggle="modal"
+      >
+        <svg
+          class="pe-2"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+          height="1rem"
+        >
+          <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+          <path
+            fill="#ffffff"
+            d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"
+          /></svg
+        >Bewerk profiel
+      </a>
+      <button
+        type="button"
+        class="btn btn-dark cbg-secondary-l mb-3 mt-5"
+        data-bs-toggle="modal"
+        data-bs-target="#infoModal"
+      >
+        <svg
+          height="1rem"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 320 512"
+        >
+          <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+          <path
+            fill="#ffffff"
+            d="M80 160c0-35.3 28.7-64 64-64h32c35.3 0 64 28.7 64 64v3.6c0 21.8-11.1 42.1-29.4 53.8l-42.2 27.1c-25.2 16.2-40.4 44.1-40.4 74V320c0 17.7 14.3 32 32 32s32-14.3 32-32v-1.4c0-8.2 4.2-15.8 11-20.2l42.2-27.1c36.6-23.6 58.8-64.1 58.8-107.7V160c0-70.7-57.3-128-128-128H144C73.3 32 16 89.3 16 160c0 17.7 14.3 32 32 32s32-14.3 32-32zm80 320a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"
+          />
+        </svg>
+        Hoe wordt mijn data gebruikt
+      </button>
+      <a href="#errorModal" class="btn cbg-danger-l" data-bs-toggle="modal"
+        >Verwijder account</a
+      >
     </section>
+  </section>
+  <section class="d-flex flex-wrap justify-content-center col-lg-9">
+    <h1
+      class="text-center mb-5 text-light border-bottom border-4 col-6 py-3 ch1"
+    >
+      Mijn favoriete decks
+    </h1>
+    <section
+      id="cards_animation"
+      class="d-flex flex-wrap justify-content-evenly col-12 mb-5"
+    >
+      <% for (const deck of favoriteDecks) { %>
+      <figure
+        class="mb-3 border cbg-primary ch1 card-flyer text-center col-12 col-md-6 col-lg-4 col-xxl-4"
+      >
+        <img
+          src="<%= deck.deckImageUrl %>"
+          class="col-12"
+          alt="<%= deck.deckName %> foto"
+        />
+        <figcaption>
+          <a
+            href="/decks/<%= deck.deckName %>"
+            class="h4 text-light text-decoration-none"
+          >
+            <%= deck.deckName %>
+          </a>
+        </figcaption>
+      </figure>
+      <%} %>
+    </section>
+  </section>
 
-    <section class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-      <section class="modal-dialog">
-        <section class="modal-content">
-          <section class="modal-header cbg-dark text-white border-0">
-            <h1 class="modal-title ctext-white fs-5" id="infoModalLabel">
-              Hoe wordt mijn data gebruikt?
-            </h1>
-            <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </section>
-          <section class="modal-body cbg-primary text-light">
-            <p>
-              Wanneer je onze website bezoekt en je vrijwillig verstrekt via
-              inschrijving of formulieren, verzamelen we beperkte informatie over
-              jou. Dit gaat bijvoorbeeld over jouw naam en e-mailadres. Deze
-              informatie zullen we uitsluitend gebruiken om jou te contacteren
-              indien je onze hulp nodig hebt of ons iets zou willen melden over
-              onze diensten. Jouw privacy is belangrijk voor ons en dus zullen we
-              deze informatie nooit delen met een derden. Dit zou enkel en alleen
-              gebeuren als we van jouw uitdrukkelijke toestemming hebben gekregen.
-            </p>
-          </section>
-          <section class="modal-footer cbg-primary text-light">
-            <button type="button" class="btn btn-dark ctext-white cbg-" data-bs-dismiss="modal">
-              Ik begrijp het
-            </button>
-          </section>
+  <section
+    class="modal fade"
+    id="infoModal"
+    tabindex="-1"
+    aria-labelledby="infoModalLabel"
+    aria-hidden="true"
+  >
+    <section class="modal-dialog">
+      <section class="modal-content">
+        <section class="modal-header cbg-dark text-white border-0">
+          <h1 class="modal-title ctext-white fs-5" id="infoModalLabel">
+            Hoe wordt mijn data gebruikt?
+          </h1>
+          <button
+            type="button"
+            class="btn-close bg-white"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </section>
+        <section class="modal-body cbg-primary text-light">
+          <p>
+            Wanneer je onze website bezoekt en je vrijwillig verstrekt via
+            inschrijving of formulieren, verzamelen we beperkte informatie over
+            jou. Dit gaat bijvoorbeeld over jouw naam en e-mailadres. Deze
+            informatie zullen we uitsluitend gebruiken om jou te contacteren
+            indien je onze hulp nodig hebt of ons iets zou willen melden over
+            onze diensten. Jouw privacy is belangrijk voor ons en dus zullen we
+            deze informatie nooit delen met een derden. Dit zou enkel en alleen
+            gebeuren als we van jouw uitdrukkelijke toestemming hebben gekregen.
+          </p>
+        </section>
+        <section class="modal-footer cbg-primary text-light">
+          <button
+            type="button"
+            class="btn btn-dark ctext-white cbg-"
+            data-bs-dismiss="modal"
+          >
+            Ik begrijp het
+          </button>
         </section>
       </section>
     </section>
+  </section>
 
-    <section class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-      <section class="modal-dialog modal-dialog-centered">
-        <section class="modal-content">
-          <article class="modal-header bg-danger border-0">
-            <h5 class="modal-title text-white" id="errorModalLabel">
-              Waarschuwing!
-            </h5>
-            <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </article>
-          <article class="modal-body cbg-dark-l">
-            <p class="text-light">
-              Bent u zeker dat u het account wilt verwijderen?
-            </p>
-          </article>
-          <article class="modal-footer cbg-primary justify-content-between">
-            <button type="button" class="btn btn-success" data-bs-dismiss="modal">
-              Annuleer
+  <section
+    class="modal fade"
+    id="errorModal"
+    tabindex="-1"
+    aria-labelledby="errorModalLabel"
+    aria-hidden="true"
+  >
+    <section class="modal-dialog modal-dialog-centered">
+      <section class="modal-content">
+        <article class="modal-header bg-danger border-0">
+          <h5 class="modal-title text-white" id="errorModalLabel">
+            Waarschuwing!
+          </h5>
+          <button
+            type="button"
+            class="btn-close bg-white"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </article>
+        <article class="modal-body cbg-dark-l">
+          <p class="text-light">
+            Bent u zeker dat u het account wilt verwijderen?
+          </p>
+        </article>
+        <article class="modal-footer cbg-primary justify-content-between">
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal">
+            Annuleer
+          </button>
+          <form action="/delete" method="post">
+            <button
+              type="submit"
+              class="btn btn-danger"
+              data-bs-dismiss="modal"
+            >
+              Verwijder
             </button>
-            <form action="/delete" method="post">
-              <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">
-                Verwijder
-              </button>
-            </form>
-          </article>
+          </form>
+        </article>
+      </section>
+    </section>
+  </section>
+  <!-- Modals -->
+  <section
+    class="modal fade"
+    id="changeInfoModal"
+    aria-hidden="true"
+    aria-labelledby="changeInfoModalLabel"
+    tabindex="-1"
+  >
+    <section class="modal-dialog modal-dialog-centered">
+      <section class="modal-content">
+        <section class="modal-header cbg-dark text-white border-0">
+          <h1 class="modal-title fs-5" id="changeInfoModalLabel">
+            Verander gegevens!
+          </h1>
+          <button
+            type="button"
+            class="btn-close bg-white"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </section>
+        <section class="modal-body cbg-primary">
+          <form
+            class="px-4 py-3"
+            action="/profile"
+            method="post"
+            id="editProfile"
+          >
+            <fieldset class="text-center mb-3">
+              <svg
+                width="130"
+                height="130"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
+              >
+                <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                <path
+                  fill="#ffffff"
+                  d="M406.5 399.6C387.4 352.9 341.5 320 288 320H224c-53.5 0-99.4 32.9-118.5 79.6C69.9 362.2 48 311.7 48 256C48 141.1 141.1 48 256 48s208 93.1 208 208c0 55.7-21.9 106.2-57.5 143.6zm-40.1 32.7C334.4 452.4 296.6 464 256 464s-78.4-11.6-110.5-31.7c7.3-36.7 39.7-64.3 78.5-64.3h64c38.8 0 71.2 27.6 78.5 64.3zM256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-272a40 40 0 1 1 0-80 40 40 0 1 1 0 80zm-88-40a88 88 0 1 0 176 0 88 88 0 1 0 -176 0z"
+                />
+              </svg>
+            </fieldset>
+            <fieldset class="row mb-3">
+              <section class="col">
+                <label for="firstnameLabel" class="form-label ctext-white"
+                  >Voornaam</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  name="firstName"
+                  id="firstName"
+                  placeholder="Voornaam"
+                  aria-label="First name"
+                />
+              </section>
+              <section class="col">
+                <label for="lastnameLabel" class="form-label ctext-white"
+                  >Naam</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastName"
+                  name="lastName"
+                  placeholder="Naam"
+                  aria-label="Last name"
+                />
+              </section>
+            </fieldset>
+            <fieldset class="mb-3">
+              <label for="e-mailLabel" class="form-label ctext-white"
+                >E-mail</label
+              >
+              <input
+                type="e-mail"
+                class="form-control"
+                name="email"
+                id="email"
+                placeholder="e-mail@voorbeeld.com"
+              />
+            </fieldset>
+            <fieldset class="mb-3">
+              <label for="passwordLabel" class="form-label ctext-white"
+                >Wachtwoord</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                name="passwordFormLabel"
+                id="passwordFormLabel"
+                placeholder="Wachtwoord"
+                required
+              />
+            </fieldset>
+            <fieldset class="mb-3">
+              <label class="form-label ctext-white" for="description"
+                >Beschrijving</label
+              >
+              <textarea
+                class="form-control form-control-dark"
+                name="description"
+                id="description"
+                cols="30"
+                rows="6"
+              ></textarea>
+            </fieldset>
+          </form>
+        </section>
+        <section class="modal-footer cbg-primary d-flex justify-content-start">
+          <button
+            class="btn btn-dark col-3"
+            data-bs-dismiss="modal"
+            id="editProfileBtn"
+          >
+            Slaag op
+          </button>
         </section>
       </section>
     </section>
-    <!-- Modals -->
-    <section class="modal fade" id="changeInfoModal" aria-hidden="true" aria-labelledby="changeInfoModalLabel" tabindex="-1">
-      <section class="modal-dialog modal-dialog-centered">
-        <section class="modal-content">
-          <section class="modal-header cbg-dark text-white border-0">
-            <h1 class="modal-title fs-5" id="changeInfoModalLabel">
-              Verander gegevens!
-            </h1>
-            <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </section>
-          <section class="modal-body cbg-primary">
-            <form class="px-4 py-3" action="/profile" method="post" id="editProfile">
-              <fieldset class="text-center mb-3">
-                <svg width="130" height="130" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                  <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                  <path fill="#ffffff" d="M406.5 399.6C387.4 352.9 341.5 320 288 320H224c-53.5 0-99.4 32.9-118.5 79.6C69.9 362.2 48 311.7 48 256C48 141.1 141.1 48 256 48s208 93.1 208 208c0 55.7-21.9 106.2-57.5 143.6zm-40.1 32.7C334.4 452.4 296.6 464 256 464s-78.4-11.6-110.5-31.7c7.3-36.7 39.7-64.3 78.5-64.3h64c38.8 0 71.2 27.6 78.5 64.3zM256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-272a40 40 0 1 1 0-80 40 40 0 1 1 0 80zm-88-40a88 88 0 1 0 176 0 88 88 0 1 0 -176 0z" />
-                </svg>
-              </fieldset>
-              <fieldset class="row mb-3">
-                <section class="col">
-                  <label for="firstnameLabel" class="form-label ctext-white">Voornaam</label>
-                  <input type="text" class="form-control" name="firstName" id="firstName" placeholder="Voornaam" aria-label="First name" />
-                </section>
-                <section class="col">
-                  <label for="lastnameLabel" class="form-label ctext-white">Naam</label>
-                  <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Naam" aria-label="Last name" />
-                </section>
-              </fieldset>
-              <fieldset class="mb-3">
-                <label for="e-mailLabel" class="form-label ctext-white">E-mail</label>
-                <input type="e-mail" class="form-control" name="email" id="email" placeholder="e-mail@voorbeeld.com" />
-              </fieldset>
-              <fieldset class="mb-3">
-                <label for="passwordLabel" class="form-label ctext-white">Wachtwoord</label>
-                <input type="password" class="form-control" name="passwordFormLabel" id="passwordFormLabel" placeholder="Wachtwoord" required />
-              </fieldset>
-              <fieldset class="mb-3">
-                <label class="form-label ctext-white" for="description">Beschrijving</label>
-                <textarea class="form-control form-control-dark" name="description" id="description" cols="30" rows="6"></textarea>
-              </fieldset>
-            </form>
-          </section>
-          <section class="modal-footer cbg-primary d-flex justify-content-start">
-            <button class="btn btn-dark col-3" data-bs-dismiss="modal" id="editProfileBtn">
-              Slaag op
-            </button>
-          </section>
-        </section>
-      </section>
-    </section>
-  </main>
-  <%- include("partials/footer") %>
+  </section>
+</main>
+<%- include("partials/footer") %>

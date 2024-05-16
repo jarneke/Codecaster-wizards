@@ -1,9 +1,38 @@
 import express from "express";
 import ejs from "ejs";
-import { Tip, Deck, Card, User, Feedback, PageData, Filter, filterTypes, filterRarities } from "./interfaces";
+import {
+  Tip,
+  Deck,
+  Card,
+  User,
+  Feedback,
+  PageData,
+  Filter,
+  filterTypes,
+  filterRarities,
+} from "./interfaces";
 import Magic = require("mtgsdk-ts");
-import { getDecksOfUser, handlePageClickEvent, getCardsForPage, getTotalPages, getAvgManaCost, getCardWAmauntForPage, getRandomNumber, shuffleCards, getChance, filterAndSortCards } from "./functions";
-import { tipsCollection, login, usersCollection, feedbacksCollection, decksCollection, cardsCollection, connect } from "./db";
+import {
+  getDecksOfUser,
+  handlePageClickEvent,
+  getCardsForPage,
+  getTotalPages,
+  getAvgManaCost,
+  getCardWAmauntForPage,
+  getRandomNumber,
+  shuffleCards,
+  getChance,
+  filterAndSortCards,
+} from "./functions";
+import {
+  tipsCollection,
+  login,
+  usersCollection,
+  feedbacksCollection,
+  decksCollection,
+  cardsCollection,
+  connect,
+} from "./db";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import session from "./session";
@@ -24,7 +53,6 @@ const saltRounds = parseInt(process.env.SALTROUNDS!) || 10;
 let allTips: Tip[] = [];
 
 let allDecks: Deck[] = [];
-
 
 // variable to store last selected deck on drawtest page
 let lastSelectedDeck: Deck;
@@ -93,8 +121,8 @@ app.post("/register", async (req, res) => {
   if (registerConfirmPassword !== registerPassword) {
     return res.render("registerpagina", {
       alert: true,
-      alertMsg: "wachtwoorden komen niet overeen"
-    })
+      alertMsg: "wachtwoorden komen niet overeen",
+    });
   }
   // TODO: Schrijf check of e-mail nog niet bestaat, anders, geef alert
   const newUser: User = {
@@ -118,7 +146,10 @@ app.post("/logout", async (req, res) => {
 
 app.post("/dontShowPopup", async (req, res) => {
   // set a cookie that lasts a week
-  res.cookie("dontShowInfo", "true", { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true })
+  res.cookie("dontShowInfo", "true", {
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  });
   // redirect to home page after setting cookie
   res.redirect("/home");
 });
@@ -144,9 +175,9 @@ app.post("/feedback", (req, res) => {
 
 app.get("/home", secureMiddleware, async (req, res) => {
   // get all the decks of a user
-  const allDecks: Deck[] = await getDecksOfUser(res)
+  const allDecks: Deck[] = await getDecksOfUser(res);
   // store all the deckNames
-  const deckNames: string[] = allDecks.map(e => e.deckName)
+  const deckNames: string[] = allDecks.map((e) => e.deckName);
   // params from route
   // -- filter and sort
   let cardLookup = req.query.cardLookup;
@@ -227,12 +258,12 @@ app.get("/home", secureMiddleware, async (req, res) => {
     // -- cards
     cards: cardsToLoadAndTotalPages.cards,
     // cardModal
-    allDeckName: deckNames
+    allDeckName: deckNames,
   });
 });
 
 app.get("/decks", secureMiddleware, async (req, res) => {
-  let decksForPage: Deck[] = await getDecksOfUser(res)
+  let decksForPage: Deck[] = await getDecksOfUser(res);
   // params from route
   // Pagination
   let pageSize: number = 9;
@@ -305,10 +336,7 @@ app.get("/decks/:deckName", secureMiddleware, async (req, res) => {
   // Pagination
   let pageSize: number = 6;
   let pageData: PageData = handlePageClickEvent(req.query);
-  let totalPages: number = getTotalPages(
-    selectedDeck!.cards.length,
-    pageSize
-  );
+  let totalPages: number = getTotalPages(selectedDeck!.cards.length, pageSize);
 
   let amountLandcards: number | undefined = undefined;
 
@@ -402,7 +430,6 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
     deckName: `${selectedDeckQuery}`,
   });
   if (!selectedDeck) {
-
   }
   // if deck is not found,
   if (!selectedDeck) {
@@ -523,10 +550,7 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
   // Pagination
   let pageSize: number = 6;
   let pageData: PageData = handlePageClickEvent(req.query);
-  let totalPages = getTotalPages(
-    Array.from(amountMap.keys()).length,
-    pageSize
-  );
+  let totalPages = getTotalPages(Array.from(amountMap.keys()).length, pageSize);
 
   amountMap = getCardWAmauntForPage(amountMap, pageData.page, pageSize);
 
@@ -608,8 +632,9 @@ app.post("/profile", secureMiddleware, async (req, res) => {
   console.log(req.body);
   const { firstName, lastName, email, passwordFormLabel, description } =
     req.body;
-  const userName: string = `${firstName === "" ? res.locals.user?.firstName : firstName
-    }_${lastName === "" ? res.locals.user?.lastName : lastName}`;
+  const userName: string = `${
+    firstName === "" ? res.locals.user?.firstName : firstName
+  }_${lastName === "" ? res.locals.user?.lastName : lastName}`;
 
   const newUserDetails: User = {
     firstName:
@@ -636,6 +661,13 @@ app.post("/profile", secureMiddleware, async (req, res) => {
     { _id: res.locals.user?._id },
     { $set: newUserDetails }
   );
+
+  let user: User | undefined = await login(
+    newUserDetails.email,
+    req.body.passwordFormLabel
+  );
+  delete user!.password;
+  req.session.user = user;
   res.redirect("/profile");
 });
 
@@ -677,8 +709,11 @@ app.get("/editDeck/:deckName", secureMiddleware, async (req, res) => {
   });
   let totalPages = getTotalPages(sortedAmountMap.size, pageSize);
 
-  sortedAmountMap = getCardWAmauntForPage(sortedAmountMap, pageData.page, pageSize);
-
+  sortedAmountMap = getCardWAmauntForPage(
+    sortedAmountMap,
+    pageData.page,
+    pageSize
+  );
 
   res.render("editDeck", {
     // HEADER
@@ -721,11 +756,13 @@ app.post("/removeCardFromDeck/:deckName/:cardName", async (req, res) => {
     return true;
   });
 
-  await decksCollection.updateOne({
-    deckName: req.params.deckName
-  }, {
-    $set: { cards: newCards }
-  }
+  await decksCollection.updateOne(
+    {
+      deckName: req.params.deckName,
+    },
+    {
+      $set: { cards: newCards },
+    }
   );
   res.redirect(`/editDeck/${req.params.deckName}`);
 });
@@ -738,20 +775,30 @@ app.post("/addCardTooDeck/:deckName/:cardName", async (req, res) => {
     return res.redirect("/404");
   }
 
-  let cardTooAdd: Card | null = await cardsCollection.findOne({ name: req.params.cardName });
+  let cardTooAdd: Card | null = await cardsCollection.findOne({
+    name: req.params.cardName,
+  });
   if (!cardTooAdd) {
     return res.redirect("/404");
   }
   if (selectedDeck.cards.length < 60) {
-    if (!cardTooAdd!.types.find(e => e == "Land")) {
-      if (selectedDeck.cards.filter(e => e.name == cardTooAdd!.name).length < 4) {
-        await decksCollection.updateOne({ deckName: req.params.deckName }, { $push: { cards: cardTooAdd! } });
+    if (!cardTooAdd!.types.find((e) => e == "Land")) {
+      if (
+        selectedDeck.cards.filter((e) => e.name == cardTooAdd!.name).length < 4
+      ) {
+        await decksCollection.updateOne(
+          { deckName: req.params.deckName },
+          { $push: { cards: cardTooAdd! } }
+        );
       } else {
         console.log("4 or more cards");
       }
     } else {
       console.log("Is land card");
-      await decksCollection.updateOne({ deckName: req.params.deckName }, { $push: { cards: cardTooAdd! } });
+      await decksCollection.updateOne(
+        { deckName: req.params.deckName },
+        { $push: { cards: cardTooAdd! } }
+      );
     }
   } else {
     console.log("Deck full");
@@ -767,8 +814,10 @@ app.get("/makeDeck", secureMiddleware, (req, res) => {
     userId: res.locals.user._id,
     deckName: req.body.deckName ? req.body.deckName : "",
     cards: [],
-    deckImageUrl: req.body.hiddenImgUrl ? req.body.hiddenImgUrl : "/assets/images/decks/Deck1.jpg"
-  }
+    deckImageUrl: req.body.hiddenImgUrl
+      ? req.body.hiddenImgUrl
+      : "/assets/images/decks/Deck1.jpg",
+  };
   res.render("makeDeck", {
     // HEADER
     user: res.locals.user,
@@ -783,8 +832,8 @@ app.get("/makeDeck", secureMiddleware, (req, res) => {
     toRedirectTo: "makeDeck",
     // makeDeck form
     deckName: deck.deckName,
-    deckImage: deck.deckImageUrl
-  })
+    deckImage: deck.deckImageUrl,
+  });
 });
 
 app.post("/editMakeDeck", secureMiddleware, (req, res) => {
@@ -793,8 +842,10 @@ app.post("/editMakeDeck", secureMiddleware, (req, res) => {
     userId: res.locals.user._id,
     deckName: req.body.deckName ? req.body.deckName : "",
     cards: [],
-    deckImageUrl: req.body.hiddenImgUrl ? req.body.hiddenImgUrl : "/assets/images/decks/Deck1.jpg"
-  }
+    deckImageUrl: req.body.hiddenImgUrl
+      ? req.body.hiddenImgUrl
+      : "/assets/images/decks/Deck1.jpg",
+  };
   // and render the makeDeck page
   res.render("makeDeck", {
     // HEADER
@@ -810,8 +861,8 @@ app.post("/editMakeDeck", secureMiddleware, (req, res) => {
     toRedirectTo: "makeDeck",
     // makeDeck form
     deckName: deck.deckName,
-    deckImage: deck.deckImageUrl
-  })
+    deckImage: deck.deckImageUrl,
+  });
 });
 
 // TODO: add app.post("/makeDeck", secureMiddleware, (req, res)=>{})
@@ -834,8 +885,8 @@ app.get("/404", secureMiddleware, (req, res) => {
 //catch all paths that dont already exist.
 app.all("*", (req, res) => {
   // and redirect to 404 not found.
-  res.redirect("/404")
-})
+  res.redirect("/404");
+});
 app.listen(app.get("port"), async () => {
   console.clear();
   console.log("[ - SERVER - ]=> connecting to database");

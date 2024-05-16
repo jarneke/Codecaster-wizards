@@ -150,7 +150,7 @@ async function seed(reseed?: boolean) {
  */
 async function populateDecks() {
   // uncomment line beneath if you want to refresh decks in database
-  decksCollection.deleteMany({});
+  // decksCollection.deleteMany({});
 
   // if decksCollection is empty insert and log that its added
   if ((await decksCollection.countDocuments()) === 0) {

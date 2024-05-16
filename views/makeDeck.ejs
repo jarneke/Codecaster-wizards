@@ -2,7 +2,7 @@
   <main class="container d-flex py-5">
     <form action="/makeDeck" method="post" class="d-flex flex-wrap gap-3">
       <fieldset class="col-12 col-md-6 p-2">
-        <input type="hidden" name="hiddenImgUrl" value="" id="hiddenImgUrl" />
+        <input type="hidden" name="imgUrl" value="" id="imgUrl" />
         <img src="<%= deckImage %>" alt="<%= deckImage %>" id="deckImage" class="col-12" />
         <button type="button" class="btn btn-dark col-12 mt-2" data-bs-toggle="modal" data-bs-target="#imageModal">
           Selecteer deck afbeelding
@@ -11,7 +11,7 @@
       <fieldset class="col-12 col-md-5 d-flex flex-column justify-content-between">
         <div>
           <label for="deckName" class="form-label ch1 ctext-white fs-3">Decknaam</label>
-          <input type="text" name="deckName" id="deckName" class="form-control" value="<%= deckName %>" placeholder="Decknaam" required/>
+          <input type="text" name="deckName" id="deckName" class="form-control" value="<%= deckName %>" placeholder="Decknaam" required />
         </div>
         <button type="submit" class="btn btn-dark my-2">Maak deck</button>
       </fieldset>
@@ -23,22 +23,16 @@
             <h5 class="modal-title" id="imageModalLabel">
               Selecteer je deck afbeelding
             </h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close cbg-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
-            <form action="/editMakeDeck" method="post" , id="imageForm" class="d-flex flex-wrap gap-2 justify-content-center">
-              <input type="hidden" name="hiddenImgUrl" value="" id="editHiddenImgUrl" />
-              <% for( let i=1; i < 13; i++ ) { %>
-                <button type="submit" class="col-3 imgButton border border-0 cbg-transparent">
-                  <img class="col-12" src="/assets/images/decks/<%= i %>.webp" alt="DeckImage<%= i %>" />
-                </button>
-                <% } %>
-            </form>
+          <div class="modal-body d-flex flex-wrap gap-2 justify-content-center">
+            <% for( let i=1; i < 13; i++ ) { %>
+              <button type="click" class="col-3 imgButton border border-0 cbg-transparent" data-bs-dismiss="modal" aria-label="Close">
+                <img class="col-12" src="/assets/images/decks/<%= i %>.webp" alt="DeckImage<%= i %>" />
+              </button>
+              <% } %>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-              Close
-            </button>
           </div>
         </div>
       </div>

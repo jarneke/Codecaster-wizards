@@ -52,8 +52,6 @@ const saltRounds = parseInt(process.env.SALTROUNDS!) || 10;
 // initialize alltips array
 let allTips: Tip[] = [];
 
-let allDecks: Deck[] = [];
-
 // variable to store last selected deck on drawtest page
 let lastSelectedDeck: Deck;
 // variable to store selected deck
@@ -325,7 +323,7 @@ app.get("/noDeck", secureMiddleware, (req, res) => {
     // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
     tabToColor: 3,
     // The page it should redirect to after feedback form is submitted
-    toRedirectTo: "noDecks",
+    toRedirectTo: "noDeck",
   });
 });
 
@@ -454,8 +452,8 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
     // if selected deck is defined load this, else select first deck
     if (!lastSelectedDeck) {
       selectedDeck = await decksCollection.findOne({});
-      // if not found => no decks in database, so redirect to /noDecks
-      if (!selectedDeck) return res.redirect("/noDecks");
+      // if not found => no decks in database, so redirect to /noDeck
+      if (!selectedDeck) return res.redirect("/noDeck");
     } else {
       selectedDeck = lastSelectedDeck
     }
@@ -830,43 +828,13 @@ app.post("/addCardTooDeck/:deckName/:cardName", async (req, res) => {
 app.get("/makeDeck", secureMiddleware, (req, res) => {
   const deck: Deck = {
     userId: res.locals.user._id,
-    deckName: req.body.deckName ? req.body.deckName : "",
+    deckName: req.body.deckName,
     cards: [],
     deckImageUrl: req.body.hiddenImgUrl
       ? req.body.hiddenImgUrl
       : "/assets/images/decks/1.webp",
     favorited: false,
   };
-  res.render("makeDeck", {
-    // HEADER
-    user: res.locals.user,
-    // -- The names of the js files you want to load on the page.
-    jsFiles: [],
-    // -- The title of the page
-    title: "makeDeck",
-    // -- The Tab in the nav bar you want to have the orange color
-    // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
-    tabToColor: 1,
-    // The page it should redirect to after feedback form is submitted
-    toRedirectTo: "makeDeck",
-    // makeDeck form
-    deckName: deck.deckName,
-    deckImage: deck.deckImageUrl,
-  });
-});
-
-app.post("/editMakeDeck", secureMiddleware, (req, res) => {
-  // Make a temp deck item
-  const deck: Deck = {
-    userId: res.locals.user._id,
-    deckName: req.body.deckName ? req.body.deckName : "",
-    cards: [],
-    deckImageUrl: req.body.hiddenImgUrl
-      ? req.body.hiddenImgUrl
-      : "/assets/images/decks/1.webp",
-    favorited: false,
-  };
-  // and render the makeDeck page
   res.render("makeDeck", {
     // HEADER
     user: res.locals.user,
@@ -894,12 +862,13 @@ app.post("/deleteDeck", secureMiddleware, async (req, res) => {
 });
 
 app.post("/makeDeck", secureMiddleware, async (req, res) => {
-  let deckName = req.body.deckName;
+  console.log(req.body);
+
   let newDeck: Deck = {
     userId: res.locals.user._id,
     deckName: req.body.deckName,
     cards: [],
-    deckImageUrl: req.body.hiddenImgUrl,
+    deckImageUrl: req.body.imgUrl !== "" ? req.body.imgUrl : "/assets/images/decks/1.webp",
     favorited: false
   }
 
@@ -925,10 +894,10 @@ app.get("/404", secureMiddleware, (req, res) => {
 });
 
 //catch all paths that dont already exist.
-/*app.all("*", (req, res) => {
+app.all("*", (req, res) => {
   // and redirect to 404 not found.
   res.redirect("/404");
-});*/
+});
 
 app.listen(app.get("port"), async () => {
   console.clear();

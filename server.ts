@@ -767,7 +767,7 @@ app.get("/makeDeck", secureMiddleware, (req, res) => {
     userId: res.locals.user._id,
     deckName: req.body.deckName ? req.body.deckName : "",
     cards: [],
-    deckImageUrl: req.body.hiddenImgUrl ? req.body.hiddenImgUrl : "/assets/images/decks/Deck1.jpg"
+    deckImageUrl: req.body.hiddenImgUrl ? req.body.hiddenImgUrl : "/assets/images/decks/1.webp"
   }
   res.render("makeDeck", {
     // HEADER
@@ -793,7 +793,7 @@ app.post("/editMakeDeck", secureMiddleware, (req, res) => {
     userId: res.locals.user._id,
     deckName: req.body.deckName ? req.body.deckName : "",
     cards: [],
-    deckImageUrl: req.body.hiddenImgUrl ? req.body.hiddenImgUrl : "/assets/images/decks/Deck1.jpg"
+    deckImageUrl: req.body.hiddenImgUrl ? req.body.hiddenImgUrl : "/assets/images/decks/1.webp"
   }
   // and render the makeDeck page
   res.render("makeDeck", {

@@ -814,6 +814,15 @@ app.post("/editMakeDeck", secureMiddleware, (req, res) => {
   })
 });
 
+app.post("/deleteDeck", secureMiddleware, async (req, res) => {
+  let deckName = req.body.deckName;
+  console.log(deckName);
+  
+  await decksCollection.deleteOne({ deckName : deckName });
+
+  res.redirect("/decks");
+});
+
 // TODO: add app.post("/makeDeck", secureMiddleware, (req, res)=>{})
 
 app.get("/404", secureMiddleware, (req, res) => {
@@ -831,11 +840,13 @@ app.get("/404", secureMiddleware, (req, res) => {
     toRedirectTo: "404",
   });
 });
+
 //catch all paths that dont already exist.
 app.all("*", (req, res) => {
   // and redirect to 404 not found.
   res.redirect("/404")
 })
+
 app.listen(app.get("port"), async () => {
   console.clear();
   console.log("[ - SERVER - ]=> connecting to database");

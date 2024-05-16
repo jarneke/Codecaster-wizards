@@ -869,14 +869,26 @@ app.post("/editMakeDeck", secureMiddleware, (req, res) => {
 
 app.post("/deleteDeck", secureMiddleware, async (req, res) => {
   let deckName = req.body.deckName;
-  console.log(deckName);
   
   await decksCollection.deleteOne({ deckName : deckName });
 
   res.redirect("/decks");
 });
 
-// TODO: add app.post("/makeDeck", secureMiddleware, (req, res)=>{})
+app.post("/makeDeck", secureMiddleware, async(req, res)=>{
+  let deckName = req.body.deckName;
+  let newDeck : Deck = {
+    userId: res.locals.user.userId,
+    deckName: req.body.deckName,
+    cards: [],
+    deckImageUrl: req.body.hiddenImgUrl,
+    favorited: false
+  }
+  
+  await decksCollection.insertOne(newDeck);
+
+  res.redirect("/decks");
+});
 
 app.get("/404", secureMiddleware, (req, res) => {
   res.render("404", {

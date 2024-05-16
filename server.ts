@@ -1,13 +1,9 @@
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config;
-}
 import express from "express";
 import ejs from "ejs";
-import * as i from "./interfaces";
+import { Tip, Deck, Card, User, Feedback, PageData, Filter, filterTypes, filterRarities } from "./interfaces";
 import Magic = require("mtgsdk-ts");
-import * as f from "./functions";
-import { Rarity } from "mtgsdk-ts/out/IMagic";
-import * as db from "./db";
+import { getDecksOfUser, handlePageClickEvent, getCardsForPage, getTotalPages, getAvgManaCost, getCardWAmauntForPage, getRandomNumber, shuffleCards, getChance, filterAndSortCards } from "./functions";
+import { tipsCollection, login, usersCollection, feedbacksCollection, decksCollection, cardsCollection, connect } from "./db";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import session from "./session";
@@ -17,7 +13,7 @@ import bcrypt from "bcrypt";
  * A function to get and set all tips
  */
 async function getTips() {
-  allTips = await db.tipsCollection.find({}).toArray();
+  allTips = await tipsCollection.find({}).toArray();
 }
 // initialize express app
 const app = express();
@@ -25,19 +21,19 @@ const app = express();
 const saltRounds = parseInt(process.env.SALTROUNDS!) || 10;
 
 // initialize alltips array
-let allTips: i.Tip[] = [];
+let allTips: Tip[] = [];
 
-let allDecks: i.Deck[] = [];
+let allDecks: Deck[] = [];
 
 
 // variable to store last selected deck on drawtest page
-let lastSelectedDeck: i.Deck;
+let lastSelectedDeck: Deck;
 // variable to store selected deck
-let selectedDeck: i.Deck | null = null;
+let selectedDeck: Deck | null = null;
 // variable to store unpulled cards of drawtest page
-let unpulledCards: i.Card[] = [];
+let unpulledCards: Card[] = [];
 // variable to store pulled cards of drawtest page
-let pulledCards: i.Card[] = [];
+let pulledCards: Card[] = [];
 
 // set the port to use on the port specified in .env, or default to 3000
 app.set("port", process.env.PORT ?? 3000);
@@ -68,7 +64,7 @@ app.post("/login", async (req, res) => {
   const { loginEmail, loginPassword } = req.body;
 
   try {
-    let user: i.User | undefined = await db.login(loginEmail, loginPassword);
+    let user: User | undefined = await login(loginEmail, loginPassword);
     delete user!.password;
 
     req.session.user = user;
@@ -101,7 +97,7 @@ app.post("/register", async (req, res) => {
     })
   }
   // TODO: Schrijf check of e-mail nog niet bestaat, anders, geef alert
-  const newUser: i.User = {
+  const newUser: User = {
     firstName: registerFName,
     lastName: registerName,
     userName: registerUsername,
@@ -110,7 +106,7 @@ app.post("/register", async (req, res) => {
     password: await bcrypt.hash(registerPassword, saltRounds),
     role: "USER",
   };
-  await db.usersCollection.insertOne(newUser);
+  await usersCollection.insertOne(newUser);
   res.redirect("/login");
 });
 
@@ -134,21 +130,21 @@ app.post("/feedback", (req, res) => {
   const redirectPage = req.body.toRedirectTo;
 
   // make a feedback object
-  const feedBackItem: i.Feedback = {
+  const feedBackItem: Feedback = {
     feedbackType: feedbackType,
     feedback: feedback,
   };
 
   // insert it in database
   // no need to await, can run in background
-  db.feedbacksCollection.insertOne(feedBackItem);
+  feedbacksCollection.insertOne(feedBackItem);
   // redirect to specified page
   res.redirect(`/${redirectPage}`);
 });
 
 app.get("/home", secureMiddleware, async (req, res) => {
   // get all the decks of a user
-  const allDecks: i.Deck[] = await f.getDecksOfUser(res)
+  const allDecks: Deck[] = await getDecksOfUser(res)
   // store all the deckNames
   const deckNames: string[] = allDecks.map(e => e.deckName)
   // params from route
@@ -169,10 +165,10 @@ app.get("/home", secureMiddleware, async (req, res) => {
   // -- Set pageSize
   let pageSize: number = 12;
   // -- Get page and filterUrl
-  let pageData: i.PageData = f.handlePageClickEvent(req.query);
+  let pageData: PageData = handlePageClickEvent(req.query);
 
   // -- set filterparams for cards to load
-  const filterParam: i.Filter = {
+  const filterParam: Filter = {
     cardLookup: cardLookup,
     filterType: filterType,
     filterRarity: filterRarity,
@@ -186,7 +182,7 @@ app.get("/home", secureMiddleware, async (req, res) => {
     sortDirection: sortDirection,
   };
   // get cardsToLoad and totalpages
-  let cardsToLoadAndTotalPages = await f.getCardsForPage(
+  let cardsToLoadAndTotalPages = await getCardsForPage(
     filterParam,
     pageData.page,
     pageSize
@@ -210,9 +206,9 @@ app.get("/home", secureMiddleware, async (req, res) => {
     // -- filter system
     cardLookup: cardLookup,
     type: filterType,
-    types: i.filterTypes,
+    types: filterTypes,
     rarity: filterRarity,
-    rarities: i.filterRarities,
+    rarities: filterRarities,
     whiteManaChecked: whiteManaChecked == undefined ? "true" : whiteManaChecked,
     blueManaChecked: blueManaChecked == undefined ? "true" : blueManaChecked,
     blackManaChecked: blackManaChecked == undefined ? "true" : blackManaChecked,
@@ -236,13 +232,13 @@ app.get("/home", secureMiddleware, async (req, res) => {
 });
 
 app.get("/decks", secureMiddleware, async (req, res) => {
-  let decksForPage: i.Deck[] = await f.getDecksOfUser(res)
+  let decksForPage: Deck[] = await getDecksOfUser(res)
   // params from route
   // Pagination
   let pageSize: number = 9;
-  let pageData: i.PageData = f.handlePageClickEvent(req.query);
+  let pageData: PageData = handlePageClickEvent(req.query);
 
-  let totalPages = f.getTotalPages(decksForPage.length, pageSize);
+  let totalPages = getTotalPages(decksForPage.length, pageSize);
 
   res.render("decks", {
     // HEADER
@@ -288,14 +284,14 @@ app.get("/decks/:deckName", secureMiddleware, async (req, res) => {
   let sort = req.query.sort;
   let sortDirection = req.query.sortDirection;
 
-  const selectedDeck: i.Deck | null = await db.decksCollection.findOne({
+  const selectedDeck: Deck | null = await decksCollection.findOne({
     deckName: req.params.deckName,
   });
   if (selectedDeck == null) {
     res.redirect("/404");
   }
 
-  let amountMap = new Map<i.Card, number>();
+  let amountMap = new Map<Card, number>();
   for (const card of selectedDeck!.cards) {
     const existingCard = Array.from(amountMap.keys()).find(
       (c) => c.name === card.name
@@ -308,8 +304,8 @@ app.get("/decks/:deckName", secureMiddleware, async (req, res) => {
   }
   // Pagination
   let pageSize: number = 6;
-  let pageData: i.PageData = f.handlePageClickEvent(req.query);
-  let totalPages: number = f.getTotalPages(
+  let pageData: PageData = handlePageClickEvent(req.query);
+  let totalPages: number = getTotalPages(
     selectedDeck!.cards.length,
     pageSize
   );
@@ -319,11 +315,11 @@ app.get("/decks/:deckName", secureMiddleware, async (req, res) => {
   let avgManaCost: number | undefined = undefined;
 
   if (selectedDeck!.cards !== undefined) {
-    avgManaCost = f.getAvgManaCost(selectedDeck!.cards);
+    avgManaCost = getAvgManaCost(selectedDeck!.cards);
     amountLandcards = selectedDeck!.cards.filter((card) =>
       card.types.includes("Land")
     ).length;
-    amountMap = f.getCardWAmauntForPage(amountMap, pageData.page, pageSize);
+    amountMap = getCardWAmauntForPage(amountMap, pageData.page, pageSize);
   } else {
     console.log("[ - SERVER - ]=> selected deck cards = undefined");
   }
@@ -356,7 +352,7 @@ app.get("/decks/:deckName", secureMiddleware, async (req, res) => {
     // -- cards
     cards: amountMap,
     selectedDeck: selectedDeck,
-    tip: allTips[f.getRandomNumber(0, allTips.length - 1)],
+    tip: allTips[getRandomNumber(0, allTips.length - 1)],
     amountLandcards: amountLandcards,
     avgManaCost: avgManaCost,
   });
@@ -366,9 +362,9 @@ app.post("/changeDeckName", async (req, res) => {
   const name = req.body.deckNameInput;
   const oldName = req.body.oldDeckName;
 
-  const oldDeck = await db.decksCollection.findOne({ deckName: oldName });
+  const oldDeck = await decksCollection.findOne({ deckName: oldName });
 
-  db.decksCollection.updateOne(
+  decksCollection.updateOne(
     { _id: oldDeck?._id },
     { $set: { deckName: name } }
   );
@@ -402,7 +398,7 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
   // Find What Deck is selected
   console.log(selectedDeckQuery);
 
-  selectedDeck = await db.decksCollection.findOne({
+  selectedDeck = await decksCollection.findOne({
     deckName: `${selectedDeckQuery}`,
   });
   if (!selectedDeck) {
@@ -411,7 +407,7 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
   // if deck is not found,
   if (!selectedDeck) {
     if (!lastSelectedDeck) {
-      selectedDeck = await db.decksCollection.findOne({});
+      selectedDeck = await decksCollection.findOne({});
       if (!selectedDeck) {
         return res.redirect("/noDecks");
       }
@@ -422,7 +418,7 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
   if (!lastSelectedDeck) {
     lastSelectedDeck = selectedDeck;
   }
-  let cardLookupInDeckCard: i.Card | undefined = undefined;
+  let cardLookupInDeckCard: Card | undefined = undefined;
   let cardLookupInDeckCardChance: number | undefined = undefined;
   if (lastSelectedDeck) console.log(lastSelectedDeck.deckName);
   console.log(selectedDeck.deckName);
@@ -432,12 +428,12 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
     // set unpulledCards to cards of new deck
     unpulledCards = [...selectedDeck.cards];
     // Shuffle cards
-    unpulledCards = [...f.shuffleCards(unpulledCards)];
+    unpulledCards = [...shuffleCards(unpulledCards)];
     // clear pulledCards
     pulledCards = [];
   } else {
     if (unpulledCards.length === 0 && !whatToDo) {
-      unpulledCards = [...f.shuffleCards(selectedDeck.cards)];
+      unpulledCards = [...shuffleCards(selectedDeck.cards)];
     }
     // if clicked to pull a card
     if (whatToDo == "pull") {
@@ -454,7 +450,7 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
       // reset the unpulledcards to the cards of the selected deck
       unpulledCards = [...selectedDeck.cards];
       // shuffle the cards
-      unpulledCards = [...f.shuffleCards(unpulledCards)];
+      unpulledCards = [...shuffleCards(unpulledCards)];
       // empty the pulled cards
       pulledCards = [];
     }
@@ -467,7 +463,7 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
       // if card is found and there are cards in unpulledCards
       if (cardLookupInDeckCard != undefined && unpulledCards != undefined) {
         // calculate the chance u have to pull that card from the unpulledCards
-        cardLookupInDeckCardChance = f.getChance(
+        cardLookupInDeckCardChance = getChance(
           unpulledCards,
           cardLookupInDeckCard
         ).chance;
@@ -475,11 +471,11 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
     }
   }
   // --filter logic
-  let filterAndSortedCards: i.Card[] = pulledCards;
+  let filterAndSortedCards: Card[] = pulledCards;
 
   if (pulledCards !== undefined) {
     filterAndSortedCards = [
-      ...f.filterAndSortCards(
+      ...filterAndSortCards(
         pulledCards,
         cardLookup,
         filterType,
@@ -496,7 +492,7 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
     ];
   }
 
-  let amountMap = new Map<i.Card, number>();
+  let amountMap = new Map<Card, number>();
 
   for (const card of filterAndSortedCards) {
     const existingCard = Array.from(amountMap.keys()).find(
@@ -509,9 +505,9 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
     }
   }
   // get the cardToShow (always the first card in pulledCards)
-  let cardToShow: i.Card = pulledCards[0];
+  let cardToShow: Card = pulledCards[0];
   // initialize nextCard
-  let nextCard: i.Card | undefined = undefined;
+  let nextCard: Card | undefined = undefined;
   // if there is still a card in unpulled cards
   if (unpulledCards !== undefined) {
     // set nextCard to the last index of unpulledCards
@@ -519,20 +515,20 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
   }
 
   // calculate the chanceData of the cardToSHow
-  let chanceData = f.getChance(selectedDeck.cards, cardToShow);
+  let chanceData = getChance(selectedDeck.cards, cardToShow);
 
   // save selectedDeck to be used next load of page
   lastSelectedDeck = selectedDeck;
 
   // Pagination
   let pageSize: number = 6;
-  let pageData: i.PageData = f.handlePageClickEvent(req.query);
-  let totalPages = f.getTotalPages(
+  let pageData: PageData = handlePageClickEvent(req.query);
+  let totalPages = getTotalPages(
     Array.from(amountMap.keys()).length,
     pageSize
   );
 
-  amountMap = f.getCardWAmauntForPage(amountMap, pageData.page, pageSize);
+  amountMap = getCardWAmauntForPage(amountMap, pageData.page, pageSize);
 
   res.render("drawtest", {
     // HEADER
@@ -556,9 +552,9 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
     // -- filter system
     cardLookup: cardLookup,
     type: filterType,
-    types: i.filterTypes,
+    types: filterTypes,
     rarity: filterRarity,
-    rarities: i.filterRarities,
+    rarities: filterRarities,
     whiteManaChecked: whiteManaChecked == undefined ? "true" : whiteManaChecked,
     blueManaChecked: blueManaChecked == undefined ? "true" : blueManaChecked,
     blackManaChecked: blackManaChecked == undefined ? "true" : blackManaChecked,
@@ -580,7 +576,7 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
     cardLookupInDeckCard: cardLookupInDeckCard,
     cardLookupInDeckCardChance: cardLookupInDeckCardChance,
     // -- other
-    allDecks: await f.getDecksOfUser(res),
+    allDecks: await getDecksOfUser(res),
     selectedDeck: selectedDeck,
     unpulledCards: unpulledCards,
     pulledCards: pulledCards,
@@ -615,7 +611,7 @@ app.post("/profile", secureMiddleware, async (req, res) => {
   const userName: string = `${firstName === "" ? res.locals.user?.firstName : firstName
     }_${lastName === "" ? res.locals.user?.lastName : lastName}`;
 
-  const newUserDetails: i.User = {
+  const newUserDetails: User = {
     firstName:
       firstName === "" && res.locals.user
         ? res.locals.user.firstName
@@ -636,7 +632,7 @@ app.post("/profile", secureMiddleware, async (req, res) => {
     role: "USER",
   };
 
-  await db.usersCollection.updateOne(
+  await usersCollection.updateOne(
     { _id: res.locals.user?._id },
     { $set: newUserDetails }
   );
@@ -644,19 +640,19 @@ app.post("/profile", secureMiddleware, async (req, res) => {
 });
 
 app.post("/delete", secureMiddleware, async (req, res) => {
-  await db.usersCollection.deleteOne({ _id: res.locals.user?._id });
+  await usersCollection.deleteOne({ _id: res.locals.user?._id });
   res.redirect("/");
 });
 
 app.get("/editDeck/:deckName", secureMiddleware, async (req, res) => {
-  const selectedDeck: i.Deck | null = await db.decksCollection.findOne({
+  const selectedDeck: Deck | null = await decksCollection.findOne({
     deckName: req.params.deckName,
   });
   if (!selectedDeck) {
     return res.redirect("/404");
   }
 
-  let amountMap = new Map<i.Card, number>();
+  let amountMap = new Map<Card, number>();
   for (const card of selectedDeck!.cards) {
     const existingCard = Array.from(amountMap.keys()).find(
       (c) => c.name === card.name
@@ -670,8 +666,8 @@ app.get("/editDeck/:deckName", secureMiddleware, async (req, res) => {
 
   // Pagination
   let pageSize: number = 3;
-  let pageData: i.PageData = f.handlePageClickEvent(req.query);
-  let sorted: [i.Card, number][] = Array.from(amountMap).sort((a, b) => {
+  let pageData: PageData = handlePageClickEvent(req.query);
+  let sorted: [Card, number][] = Array.from(amountMap).sort((a, b) => {
     return a[0].name.localeCompare(b[0].name);
   });
   let sortedAmountMap = new Map();
@@ -679,9 +675,9 @@ app.get("/editDeck/:deckName", secureMiddleware, async (req, res) => {
   sorted.forEach(([card, number]) => {
     sortedAmountMap.set(card, number);
   });
-  let totalPages = f.getTotalPages(sortedAmountMap.size, pageSize);
+  let totalPages = getTotalPages(sortedAmountMap.size, pageSize);
 
-  sortedAmountMap = f.getCardWAmauntForPage(sortedAmountMap, pageData.page, pageSize);
+  sortedAmountMap = getCardWAmauntForPage(sortedAmountMap, pageData.page, pageSize);
 
 
   res.render("editDeck", {
@@ -708,7 +704,7 @@ app.get("/editDeck/:deckName", secureMiddleware, async (req, res) => {
 });
 
 app.post("/removeCardFromDeck/:deckName/:cardName", async (req, res) => {
-  const selectedDeck: i.Deck | null = await db.decksCollection.findOne({
+  const selectedDeck: Deck | null = await decksCollection.findOne({
     deckName: req.params.deckName,
   });
   if (!selectedDeck) {
@@ -725,7 +721,7 @@ app.post("/removeCardFromDeck/:deckName/:cardName", async (req, res) => {
     return true;
   });
 
-  await db.decksCollection.updateOne({
+  await decksCollection.updateOne({
     deckName: req.params.deckName
   }, {
     $set: { cards: newCards }
@@ -735,27 +731,27 @@ app.post("/removeCardFromDeck/:deckName/:cardName", async (req, res) => {
 });
 
 app.post("/addCardTooDeck/:deckName/:cardName", async (req, res) => {
-  const selectedDeck: i.Deck | null = await db.decksCollection.findOne({
+  const selectedDeck: Deck | null = await decksCollection.findOne({
     deckName: req.params.deckName,
   });
   if (!selectedDeck) {
     return res.redirect("/404");
   }
 
-  let cardTooAdd: i.Card | null = await db.cardsCollection.findOne({ name: req.params.cardName });
+  let cardTooAdd: Card | null = await cardsCollection.findOne({ name: req.params.cardName });
   if (!cardTooAdd) {
     return res.redirect("/404");
   }
   if (selectedDeck.cards.length < 60) {
     if (!cardTooAdd!.types.find(e => e == "Land")) {
       if (selectedDeck.cards.filter(e => e.name == cardTooAdd!.name).length < 4) {
-        await db.decksCollection.updateOne({ deckName: req.params.deckName }, { $push: { cards: cardTooAdd! } });
+        await decksCollection.updateOne({ deckName: req.params.deckName }, { $push: { cards: cardTooAdd! } });
       } else {
         console.log("4 or more cards");
       }
     } else {
       console.log("Is land card");
-      await db.decksCollection.updateOne({ deckName: req.params.deckName }, { $push: { cards: cardTooAdd! } });
+      await decksCollection.updateOne({ deckName: req.params.deckName }, { $push: { cards: cardTooAdd! } });
     }
   } else {
     console.log("Deck full");
@@ -767,7 +763,7 @@ app.post("/addCardTooDeck/:deckName/:cardName", async (req, res) => {
 });
 
 app.get("/makeDeck", secureMiddleware, (req, res) => {
-  const deck: i.Deck = {
+  const deck: Deck = {
     userId: res.locals.user._id,
     deckName: req.body.deckName ? req.body.deckName : "",
     cards: [],
@@ -792,14 +788,14 @@ app.get("/makeDeck", secureMiddleware, (req, res) => {
 });
 
 app.post("/editMakeDeck", secureMiddleware, (req, res) => {
-  console.log(req.body);
-
-  const deck: i.Deck = {
+  // Make a temp deck item
+  const deck: Deck = {
     userId: res.locals.user._id,
     deckName: req.body.deckName ? req.body.deckName : "",
     cards: [],
     deckImageUrl: req.body.hiddenImgUrl ? req.body.hiddenImgUrl : "/assets/images/decks/Deck1.jpg"
   }
+  // and render the makeDeck page
   res.render("makeDeck", {
     // HEADER
     user: res.locals.user,
@@ -818,6 +814,8 @@ app.post("/editMakeDeck", secureMiddleware, (req, res) => {
   })
 });
 
+// TODO: add app.post("/makeDeck", secureMiddleware, (req, res)=>{})
+
 app.get("/404", secureMiddleware, (req, res) => {
   res.render("404", {
     // HEADER
@@ -833,11 +831,15 @@ app.get("/404", secureMiddleware, (req, res) => {
     toRedirectTo: "404",
   });
 });
-
+//catch all paths that dont already exist.
+app.all("*", (req, res) => {
+  // and redirect to 404 not found.
+  res.redirect("/404")
+})
 app.listen(app.get("port"), async () => {
   console.clear();
   console.log("[ - SERVER - ]=> connecting to database");
-  await db.connect();
+  await connect();
   console.log("[ - SERVER - ]=> getting tips");
   await getTips();
   console.log("[ - SERVER - ]=> ! DONE !");

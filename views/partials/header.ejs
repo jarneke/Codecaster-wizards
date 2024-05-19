@@ -38,6 +38,12 @@
                     <li>
                         <a href="/drawtest" class="nav-link px-2 <%= tabToColor === 2? " ctext-secondary" : "ctext-white" %>">Deck simuleren</a>
                     </li>
+                    <% if (user.role==="ADMIN" ) { %>
+
+                        <li>
+                            <a href="/feedback" class="nav-link px-2 <%= tabToColor === 3? " ctext-secondary" : "ctext-white" %>">Feedback</a>
+                        </li>
+                        <% } %>
                 </ul>
                 <a data-bs-toggle="offcanvas" href="#miniProfile" role="button" aria-controls="miniProfile" class="d-flex align-items-center text-dark text-decoration-none">
                     <svg class="display-6" height="3rem" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">

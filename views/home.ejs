@@ -11,7 +11,7 @@
                                 <% for (const card of cards) {%>
                                     <article class="p-2 col-12 col-md-6 col-lg-4 col-xl-3">
                                         <article class="card mtg-card rounded-5 p-1 <%= card.rarity == 'Common' ? 'cbg-white' : card.rarity == 'Uncommon' ? 'cbg-warning-l' : card.rarity == 'Rare' ? 'cbg-yellow' : card.rarity == 'Mythic' ? 'cbg-danger' : 'cbg-success' %>">
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#cardModal" data-bs-name="<%= card.name %>" data-bs-manaCost="<%= card.manaCost %>" data-bs-cmc="<%= card.cmc %>" data-bs-colorId="<%= card.colorIdentity %>" data-bs-rarity="<%= card.rarity %>" data-bs-imageUrl="<%= card.imageUrl %>" class="p-0">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#cardModal" data-bs-_id="<%= card._id %>" data-bs-name="<%= card.name %>" data-bs-manaCost="<%= card.manaCost %>" data-bs-cmc="<%= card.cmc %>" data-bs-colorId="<%= card.colorIdentity %>" data-bs-rarity="<%= card.rarity %>" data-bs-imageUrl="<%= card.imageUrl %>" class="p-0">
                                                 <img src="<%= card.imageUrl %>" class="rounded-5" style="width: 100%;" alt="">
                                             </a>
                                         </article>

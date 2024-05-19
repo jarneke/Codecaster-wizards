@@ -18,17 +18,12 @@ export interface PageData {
   page: number;
   filterUrl: string;
 }
-// enum for feedbackType
-export enum feedbackType {
-  bug,
-  suggestion,
-  compliment,
-  general,
-}
 // interface for feedback
 export interface Feedback {
-  feedbackType: feedbackType;
-  feedback: string;
+  user: User,
+  feedbackType: "bug" | "suggestion" | "compliment" | "general",
+  feedback: string,
+  date: Date,
 }
 // interd-face for shertend cards
 export interface Card {

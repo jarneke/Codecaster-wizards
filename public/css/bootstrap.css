@@ -422,3 +422,17 @@ body,
 .cactive a {
   background-color: var(--secondary-color);
 }
+
+main .nav-item .nav-link.active {
+  background-color: var(--white-color);
+  border: var(--dark-color) 2px solid;
+  border-bottom: 0;
+  color: var(--dark-color);
+}
+
+main .nav-item .nav-link {
+  background-color: var(--dark-color);
+  border: var(--white-color) 1px solid;
+  border-bottom: 0;
+  color: var(--white-color);
+}

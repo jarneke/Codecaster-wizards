@@ -38,6 +38,7 @@ import cookieParser from "cookie-parser";
 import session from "./session";
 import { secureMiddleware } from "./secureMiddleware";
 import bcrypt from "bcrypt";
+import { ObjectId } from "mongodb";
 /**
  * A function to get and set all tips
  */
@@ -78,14 +79,12 @@ app.use(session);
 app.get("/", (req, res) => {
   res.render("landingspage");
 });
-
 app.post("/favorite/:deckName", secureMiddleware, async (req, res) => {
   // IMPORANT: This isnt gonna work,  need to filter by userId too, else 2 people with same deckName will conflict
   const selectedDeck: Deck | null = await decksCollection.findOne({
     deckName: req.params.deckName,
   });
   if (!selectedDeck) {
-    console.log(req.params.deckName);
     return res.redirect("/404");
   }
   if (selectedDeck.favorited) {
@@ -100,13 +99,12 @@ app.post("/favorite/:deckName", secureMiddleware, async (req, res) => {
 
   res.redirect(`/${req.body.favToRedirect}`);
 });
-app.get("/login", (req, res) => {
+app.get("/login", secureMiddleware, (req, res) => {
   return res.render("loginspage", {
     alert: false,
     alertMsg: "",
   });
 });
-
 app.post("/login", async (req, res) => {
   const { loginEmail, loginPassword } = req.body;
 
@@ -123,11 +121,9 @@ app.post("/login", async (req, res) => {
     });
   }
 });
-
 app.get("/register", (req, res) => {
   res.render("registerpage");
 });
-
 app.post("/register", async (req, res) => {
   const {
     registerFName,
@@ -137,13 +133,22 @@ app.post("/register", async (req, res) => {
     registerPassword,
     registerConfirmPassword,
   } = req.body;
+
   if (registerConfirmPassword !== registerPassword) {
     return res.render("registerpagina", {
       alert: true,
       alertMsg: "wachtwoorden komen niet overeen",
     });
   }
-  // TODO: Schrijf check of e-mail nog niet bestaat, anders, geef alert
+
+  const existingUser = await usersCollection.findOne({ email: registerEmail });
+  if (existingUser) {
+    return res.render("registerpagina", {
+      alert: true,
+      alertMsg: "E-mail bestaat al",
+    });
+  }
+
   const newUser: User = {
     firstName: registerFName,
     lastName: registerName,
@@ -154,15 +159,24 @@ app.post("/register", async (req, res) => {
     role: "USER",
   };
   await usersCollection.insertOne(newUser);
-  res.redirect("/login");
-});
 
+  try {
+    let user: User | undefined = await login(registerEmail, registerPassword);
+    delete user!.password;
+    req.session.user = user;
+    res.redirect("/home");
+  } catch (e: any) {
+    return res.render("loginspage", {
+      alert: true,
+      alertMsg: "Fout bij het aanmelden, probeer opnieuw.",
+    });
+  }
+});
 app.post("/logout", async (req, res) => {
   req.session.destroy(() => {
     res.redirect("/login");
   });
 });
-
 app.post("/dontShowPopup", async (req, res) => {
   // set a cookie that lasts a week
   res.cookie("dontShowInfo", "true", {
@@ -172,8 +186,28 @@ app.post("/dontShowPopup", async (req, res) => {
   // redirect to home page after setting cookie
   res.redirect("/home");
 });
+app.get("/feedback", secureMiddleware, async (req, res) => {
+  // if non admin goes to this route redirect to /home
+  if (res.locals.user.role !== "ADMIN") {
+    return res.redirect("/home")
+  }
 
-app.post("/feedback", (req, res) => {
+  res.render("feedback", {
+    // HEADER
+    user: res.locals.user,
+    // -- The names of the js files you want to load on the page.
+    jsFiles: [],
+    // -- The title of the page
+    title: "feedback",
+    // -- The Tab in the nav bar you want to have the orange color
+    // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
+    tabToColor: 3,
+    // The page it should redirect to after feedback form is submitted
+    toRedirectTo: "feedback",
+    allFeedback: await feedbacksCollection.find().toArray(),
+  })
+})
+app.post("/feedback", secureMiddleware, async (req, res) => {
   // params from route
   const feedbackType = req.body.feedbackType;
   const feedback = req.body.feedback;
@@ -181,17 +215,22 @@ app.post("/feedback", (req, res) => {
 
   // make a feedback object
   const feedBackItem: Feedback = {
+    user: res.locals.user,
     feedbackType: feedbackType,
     feedback: feedback,
+    date: new Date()
   };
 
   // insert it in database
-  // no need to await, can run in background
-  feedbacksCollection.insertOne(feedBackItem);
+  await feedbacksCollection.insertOne(feedBackItem);
   // redirect to specified page
   res.redirect(`/${redirectPage}`);
 });
-
+app.post("/feedback/delete/:feedbackId", secureMiddleware, async (req, res) => {
+  const feedbackId: ObjectId = new ObjectId(req.params.feedbackId);
+  await feedbacksCollection.deleteOne({ _id: feedbackId })
+  res.redirect("/feedback")
+})
 app.get("/home", secureMiddleware, async (req, res) => {
   // get all the decks of a user
   const allDecks: Deck[] = await getDecksOfUser(res);
@@ -280,7 +319,6 @@ app.get("/home", secureMiddleware, async (req, res) => {
     allDeckName: deckNames,
   });
 });
-
 app.get("/decks", secureMiddleware, async (req, res) => {
   let decksForPage: Deck[] = await getDecksOfUser(res);
   // params from route
@@ -311,7 +349,6 @@ app.get("/decks", secureMiddleware, async (req, res) => {
     decks: decksForPage,
   });
 });
-
 app.get("/noDeck", secureMiddleware, (req, res) => {
   res.render("noDeck", {
     // HEADER
@@ -322,12 +359,11 @@ app.get("/noDeck", secureMiddleware, (req, res) => {
     title: "! geen decks !",
     // -- The Tab in the nav bar you want to have the orange color
     // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
-    tabToColor: 3,
+    tabToColor: 4,
     // The page it should redirect to after feedback form is submitted
     toRedirectTo: "noDeck",
   });
 });
-
 app.get("/decks/:deckName", secureMiddleware, async (req, res) => {
   // params from route
   let cardLookup = req.query.cardLookup;
@@ -345,7 +381,7 @@ app.get("/decks/:deckName", secureMiddleware, async (req, res) => {
   let amountMap = new Map<Card, number>();
   for (const card of selectedDeck!.cards) {
     const existingCard = Array.from(amountMap.keys()).find(
-      (c) => c.name === card.name
+      (c) => c._id === card._id
     );
     if (existingCard) {
       amountMap.set(existingCard, amountMap.get(existingCard)! + 1);
@@ -368,12 +404,6 @@ app.get("/decks/:deckName", secureMiddleware, async (req, res) => {
       card.types.includes("Land")
     ).length;
     amountMap = getCardWAmauntForPage(amountMap, pageData.page, pageSize);
-  } else {
-    console.log("[ - SERVER - ]=> selected deck cards = undefined");
-  }
-
-  for (const [card, amount] of amountMap) {
-    console.log(`${card.name}: ${amount}`);
   }
 
   res.render("deckdetails", {
@@ -405,7 +435,6 @@ app.get("/decks/:deckName", secureMiddleware, async (req, res) => {
     avgManaCost: avgManaCost,
   });
 });
-
 app.post("/changeDeckName", async (req, res) => {
   const name = req.body.deckNameInput;
   const oldName = req.body.oldDeckName;
@@ -420,7 +449,6 @@ app.post("/changeDeckName", async (req, res) => {
 
   res.redirect(`/editDeck/${name}`);
 });
-
 app.get("/drawtest", secureMiddleware, async (req, res) => {
   // Query params
   // -- filter and sort
@@ -446,7 +474,6 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
   let cardLookupInDeckCard: Card | undefined = undefined;
   let cardLookupInDeckCardChance: number | undefined = undefined;
   // Logic
-  // TODO: Redo this entire logic part
 
   // Find What Deck is selected
   // -- if selectedDeckQuery is defined, look in deckscollection for this deck
@@ -472,9 +499,8 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
       selectedDeck = lastSelectedDeck
     }
   }
-
   // if deck is diffrent from last load
-  if (lastSelectedDeck && lastSelectedDeck.deckName !== selectedDeck.deckName) {
+  if (lastSelectedDeck?.deckName !== selectedDeck.deckName) {
     // set unpulledCards to cards of new deck and shuffle them
     unpulledCards = [...shuffleCards(selectedDeck.cards)];
     // clear pulledCards
@@ -498,7 +524,6 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
       pulledCards = [];
     }
     // CardLookup Logic
-    console.log(cardLookupInDeck);
 
     if (cardLookupInDeck !== "" && cardLookupInDeck) {
       // find the card they are looking for
@@ -584,6 +609,7 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
   amountMap = getCardWAmauntForPage(amountMap, pageData.page, pageSize);
   const allDecks: Deck[] = await getDecksOfUser(res);
   const allDeckNames: string[] = allDecks.map(e => e.deckName)
+
   res.render("drawtest", {
     // HEADER
     user: res.locals.user,
@@ -642,7 +668,6 @@ app.get("/drawtest", secureMiddleware, async (req, res) => {
     amount: chanceData.amount,
   });
 });
-
 app.get("/profile", secureMiddleware, async (req, res) => {
   // IMPORANT: This isnt gonna work,  need to filter by userId too, else 2 people with same deckName will conflict
   let allDecks: Deck[] = await decksCollection.find().toArray();
@@ -658,13 +683,11 @@ app.get("/profile", secureMiddleware, async (req, res) => {
     toRedirectTo: "profile",
     // -- The Tab in the nav bar you want to have the orange color
     // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
-    tabToColor: 3,
+    tabToColor: 4,
     favoriteDecks: favoritedDecks,
   });
 });
-
 app.post("/profile", secureMiddleware, async (req, res) => {
-  console.log(req.body);
   const { firstName, lastName, email, passwordFormLabel, description } =
     req.body;
   const userName: string = `${firstName === "" ? res.locals.user?.firstName : firstName
@@ -704,12 +727,10 @@ app.post("/profile", secureMiddleware, async (req, res) => {
   req.session.user = user;
   res.redirect("/profile");
 });
-
 app.post("/delete", secureMiddleware, async (req, res) => {
   await usersCollection.deleteOne({ _id: res.locals.user?._id });
   res.redirect("/");
 });
-
 app.get("/editDeck/:deckName", secureMiddleware, async (req, res) => {
   // IMPORANT: This isnt gonna work,  need to filter by userId too, else 2 people with same deckName will conflict
   const selectedDeck: Deck | null = await decksCollection.findOne({
@@ -722,7 +743,7 @@ app.get("/editDeck/:deckName", secureMiddleware, async (req, res) => {
   let amountMap = new Map<Card, number>();
   for (const card of selectedDeck!.cards) {
     const existingCard = Array.from(amountMap.keys()).find(
-      (c) => c.name === card.name
+      (c) => c._id === card._id
     );
     if (existingCard) {
       amountMap.set(existingCard, amountMap.get(existingCard)! + 1);
@@ -732,7 +753,7 @@ app.get("/editDeck/:deckName", secureMiddleware, async (req, res) => {
   }
 
   // Pagination
-  let pageSize: number = 3;
+  let pageSize: number = 6;
   let pageData: PageData = handlePageClickEvent(req.query);
   let sorted: [Card, number][] = Array.from(amountMap).sort((a, b) => {
     return a[0].name.localeCompare(b[0].name);
@@ -772,7 +793,6 @@ app.get("/editDeck/:deckName", secureMiddleware, async (req, res) => {
     selectedDeck: selectedDeck,
   });
 });
-
 app.post("/removeCardFromDeck/:deckName/:cardName", async (req, res) => {
   // IMPORANT: This isnt gonna work,  need to filter by userId too, else 2 people with same deckName will conflict
   const selectedDeck: Deck | null = await decksCollection.findOne({
@@ -802,8 +822,7 @@ app.post("/removeCardFromDeck/:deckName/:cardName", async (req, res) => {
   );
   res.redirect(`/editDeck/${req.params.deckName}`);
 });
-
-app.post("/addCardTooDeck/:deckName/:cardName", async (req, res) => {
+app.post("/addCardTooDeck/:deckName/:_id", async (req, res) => {
   // IMPORANT: This isnt gonna work,  need to filter by userId too, else 2 people with same deckName will conflict
   const selectedDeck: Deck | null = await decksCollection.findOne({
     deckName: req.params.deckName,
@@ -813,7 +832,7 @@ app.post("/addCardTooDeck/:deckName/:cardName", async (req, res) => {
   }
 
   let cardTooAdd: Card | null = await cardsCollection.findOne({
-    name: req.params.cardName,
+    _id: new ObjectId(req.params._id),
   });
   if (!cardTooAdd) {
     return res.redirect("/404");
@@ -845,7 +864,6 @@ app.post("/addCardTooDeck/:deckName/:cardName", async (req, res) => {
 
   res.redirect(`/editDeck/${req.params.deckName}`);
 });
-
 app.get("/makeDeck", secureMiddleware, (req, res) => {
   const deck: Deck = {
     userId: res.locals.user._id,
@@ -873,7 +891,6 @@ app.get("/makeDeck", secureMiddleware, (req, res) => {
     deckImage: deck.deckImageUrl,
   });
 });
-
 app.post("/deleteDeck", secureMiddleware, async (req, res) => {
   let deckName = req.body.deckName;
 
@@ -881,9 +898,7 @@ app.post("/deleteDeck", secureMiddleware, async (req, res) => {
 
   res.redirect("/decks");
 });
-
 app.post("/makeDeck", secureMiddleware, async (req, res) => {
-  console.log(req.body);
 
   let newDeck: Deck = {
     userId: res.locals.user._id,
@@ -897,7 +912,6 @@ app.post("/makeDeck", secureMiddleware, async (req, res) => {
 
   res.redirect("/decks");
 });
-
 app.get("/404", secureMiddleware, (req, res) => {
   res.render("404", {
     // HEADER
@@ -908,18 +922,16 @@ app.get("/404", secureMiddleware, (req, res) => {
     title: "! 404 - niet gevonden !",
     // -- The Tab in the nav bar you want to have the orange color
     // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
-    tabToColor: 3,
+    tabToColor: 4,
     // The page it should redirect to after feedback form is submitted
     toRedirectTo: "404",
   });
 });
-
 //catch all paths that dont already exist.
 app.all("*", (req, res) => {
   // and redirect to 404 not found.
   res.redirect("/404");
 });
-
 app.listen(app.get("port"), async () => {
   console.clear();
   console.log("[ - SERVER - ]=> connecting to database");

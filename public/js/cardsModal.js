@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // - get the card that was clicked
             const clicked = e.relatedTarget
             // - Get card data
+            const _id = clicked.getAttribute("data-bs-_id");
             const name = clicked.getAttribute('data-bs-name');
             const manaCost = clicked.getAttribute('data-bs-manaCost');
             const cmc = clicked.getAttribute("data-bs-cmc")
@@ -40,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.preventDefault();
 
                 const selectedDeck = document.getElementById("AddToDeckSubmit").value
-                addToDeckForm.action = `/addCardTooDeck/${selectedDeck}/${name}`
+                addToDeckForm.action = `/addCardTooDeck/${selectedDeck}/${_id}`
                 addToDeckForm.submit()
             })
         })

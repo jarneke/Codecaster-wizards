@@ -1,0 +1,131 @@
+<%- include('partials/header') %>
+    <main class="container py-5">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true"><i class="bi bi-list"></i> Alle feedback</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link ctext-dark" id="bugs-tab" data-bs-toggle="tab" data-bs-target="#bugs" type="button" role="tab" aria-controls="bugs" aria-selected="true"><i class="bi bi-bug-fill"></i> Bugs</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link ctext-dark" id="suggestions-tab" data-bs-toggle="tab" data-bs-target="#suggestions" type="button" role="tab" aria-controls="suggestions" aria-selected="false"><i class="bi bi-lightbulb-fill"></i> Suggesties</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link ctext-dark" id="compliment-tab" data-bs-toggle="tab" data-bs-target="#compliments" type="button" role="tab" aria-controls="compliments" aria-selected="false"><i class="bi bi-star-fill"></i> Complimenten</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link ctext-dark" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab" aria-controls="general" aria-selected="false"><i class="bi bi-megaphone-fill"></i> Algemene feedback</button>
+            </li>
+        </ul>
+        <div class="tab-content border border-top-0" id="feedbackTabContent">
+            <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+                <div class="d-flex flex-column gap-3 p-2">
+                    <% for( let i=allFeedback.length -1; i>= 0; i-- ) { %>
+                        <% const feedback=allFeedback[i]; %>
+                            <div class="p-2 rounded cbg-dark d-flex justify-content-between align-items-center ctext-white">
+                                <div class="">
+                                    <div>
+                                        <%= feedback.user.userName + "'s " + (feedback.feedbackType==="bug" ? "bug" : feedback.feedbackType==="suggestion" ? "suggestie" : feedback.feedbackType==="compliment" ? "compliment" : "algemene feedback" ) %>
+                                    </div>
+                                    <div>
+                                        <% if (feedback.feedback.length> 40) { %>
+                                            <%= feedback.feedback.substring(0, 40) + " . . ." %>
+                                                <% } else { %>
+                                                    <%= feedback.feedback %>
+                                                        <% } %>
+                                    </div>
+                                </div>
+                                <form class="" action="/feedback/delete/<%= feedback._id %>" method="post">
+                                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
+                                </form>
+                            </div>
+                            <% } %>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="bugs" role="tabpanel" aria-labelledby="bugs-tab">
+                <div class="d-flex flex-column gap-3 p-2">
+                    <% for( let i=allFeedback.length -1; i>= 0; i-- ) { %>
+                        <% const feedback=allFeedback[i]; %>
+                            <% if (feedback.feedbackType==="bug" ) { %>
+                                <div class="card p-2 rounded cbg-dark d-flex justify-content-between col-12 ctext-white">
+                                    <div>
+                                        <%= feedback.user.userName + "'s bug" %>
+                                    </div>
+                                    <div>
+                                        <% if (feedback.feedback.length> 40) { %>
+                                            <%= feedback.feedback.substring(0, 40) + " . . ." %>
+                                                <% } else { %>
+                                                    <%= feedback.feedback %>
+                                                        <% } %>
+                                    </div>
+                                </div>
+                                <% } %>
+                                    <% } %>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="suggestions" role="tabpanel" aria-labelledby="suggestions-tab">
+                <div class="d-flex flex-column gap-3 p-2">
+                    <% for( let i=allFeedback.length -1; i>= 0; i-- ) { %>
+                        <% const feedback=allFeedback[i]; %>
+                            <% if (feedback.feedbackType==="suggestion" ) { %>
+                                <div class="card p-2 rounded cbg-dark d-flex justify-content-between col-12 ctext-white">
+                                    <div>
+                                        <%= feedback.user.userName + "'s suggestie" %>
+                                    </div>
+                                    <div>
+                                        <% if (feedback.feedback.length> 40) { %>
+                                            <%= feedback.feedback.substring(0, 40) + " . . ." %>
+                                                <% } else { %>
+                                                    <%= feedback.feedback %>
+                                                        <% } %>
+                                    </div>
+                                </div>
+                                <% } %>
+                                    <% } %>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="compliments" role="tabpanel" aria-labelledby="compliment-tab">
+                <div class="d-flex flex-column gap-3 p-2">
+                    <% for( let i=allFeedback.length -1; i>= 0; i-- ) { %>
+                        <% const feedback=allFeedback[i]; %>
+                            <% if (feedback.feedbackType==="compliment" ) { %>
+                                <div class="card p-2 rounded cbg-dark d-flex justify-content-between col-12 ctext-white">
+                                    <div>
+                                        <%= feedback.user.userName + "'s compliment" %>
+                                    </div>
+                                    <div>
+                                        <% if (feedback.feedback.length> 40) { %>
+                                            <%= feedback.feedback.substring(0, 40) + " . . ." %>
+                                                <% } else { %>
+                                                    <%= feedback.feedback %>
+                                                        <% } %>
+                                    </div>
+                                </div>
+                                <% } %>
+                                    <% } %>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="general" role="tabpanel" aria-labelledby="general-tab">
+                <div class="d-flex flex-column gap-3 p-2">
+                    <% for( let i=allFeedback.length -1; i>= 0; i-- ) { %>
+                        <% const feedback=allFeedback[i]; %>
+                            <% if (feedback.feedbackType==="general" ) { %>
+                                <div class="card p-2 rounded cbg-dark d-flex justify-content-between col-12 ctext-white">
+                                    <div>
+                                        <%= feedback.user.userName + "'s algemene feedback" %>
+                                    </div>
+                                    <div>
+                                        <% if (feedback.feedback.length> 40) { %>
+                                            <%= feedback.feedback.substring(0, 40) + " . . ." %>
+                                                <% } else { %>
+                                                    <%= feedback.feedback %>
+                                                        <% } %>
+                                    </div>
+                                </div>
+                                <% } %>
+                                    <% } %>
+                </div>
+            </div>
+        </div>
+    </main>
+    <%- include('partials/footer') %>

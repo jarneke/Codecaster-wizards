@@ -9,6 +9,26 @@ dotenv.config();
 
 const saltRounds = parseInt(process.env.SALTROUNDS!) || 10;
 
+// a list of MTG sets ordered by release date
+const orderedSets = [
+  "LEA", "LEB", "2ED", "ARN", "ATQ", "3ED", "LEG", "DRK", "FEM", "4ED", "ICE", "CHR", "HML",
+  "ALL", "MIR", "VIS", "5ED", "POR", "WTH", "TMP", "STH", "EXO", "P02", "UGL", "USG", "ULG",
+  "6ED", "UDS", "PTK", "MMQ", "NMS", "PCY", "INV", "PLS", "APC", "7ED", "ODY", "TOR", "JUD",
+  "ONS", "LGN", "SCG", "8ED", "MRD", "DST", "5DN", "CHK", "BOK", "SOK", "9ED", "RAV", "GPT",
+  "DIS", "CSP", "TSP", "PLC", "FUT", "10E", "LRW", "MOR", "SHM", "EVE", "ALA", "CON", "ARB",
+  "M10", "ZEN", "WWK", "ROE", "M11", "SOM", "MBS", "NPH", "CMD", "M12", "ISD", "DKA", "AVR",
+  "M13", "RTR", "GTC", "DGM", "M14", "THS", "BNG", "JOU", "C14", "KTK", "FRF", "DTK", "ORI",
+  "BFZ", "OGW", "SOI", "EMN", "KLD", "AER", "AKH", "HOU", "C17", "XLN", "RIX", "DOM", "M19",
+  "GRN", "RNA", "WAR", "M20", "C19", "ELD", "THB", "IKO", "M21", "C20", "ZNR", "KHM", "STX",
+  "C21", "AFR", "MID", "VOW", "NEO", "SNC", "DMU", "BRO", "ONE", "MOM"
+];
+// initialize setOrderMap
+const setOrderMap: { [key: string]: number } = {};
+// make a map for easier comparison
+orderedSets.forEach((set, index) => {
+  setOrderMap[set] = index;
+});
+
 // all devTips
 const mtgTips: i.Tip[] = [
   {
@@ -93,6 +113,8 @@ async function seed(reseed?: boolean) {
   if (reseed) {
     await cardsCollection.deleteMany({});
   }
+  // uncomment below to delete all feedback
+  //await feedbacksCollection.deleteMany();
   // if there are no cards in database pull them from API, else pull them from database
   if (!(await cardsCollection.findOne({}))) {
     console.log("[ - SERVER - ]=> Fetching all cards from API");
@@ -106,26 +128,36 @@ async function seed(reseed?: boolean) {
             (e) => e.name == card.name
           );
           console.clear();
-          // log if card is already in allCard or not and show the amount of cards
-          console.log(
-            "Adding card..\t" + isNotInArray + `\t=>\tCount: ${allCards.length}`
-          );
-          // if card doesnt have a duplicate in allCards array
+          console.log("card count: " + allCards.length);
+
+
+          const temp: i.Card = {
+            id: card.id,
+            name: card.name,
+            manaCost: card.manaCost,
+            cmc: card.cmc,
+            colorIdentity: card.colorIdentity,
+            multiverseid: card.multiverseid,
+            types: card.types,
+            imageUrl: card.imageUrl,
+            rarity: card.rarity,
+          };
+          allCards.push(temp)
+          /*
           if (isNotInArray) {
-            const temp: i.Card = {
-              id: card.id,
-              name: card.name,
-              manaCost: card.manaCost,
-              cmc: card.cmc,
-              colorIdentity: card.colorIdentity,
-              multiverseid: card.multiverseid,
-              types: card.types,
-              imageUrl: card.imageUrl,
-              rarity: card.rarity,
-            };
             // push card to allCards array
             allCards.push(temp);
+          } else {
+            const index = allCards.findIndex(e => e.name == temp.name)
+            if (index !== -1) {
+              const existingCard = allCards[index];
+              if (setOrderMap[temp.set] > setOrderMap[existingCard.set]) {
+                // Update with the newer card
+                allCards[index] = temp;
+              }
+            }
           }
+          */
         }
       })
       .on("end", async () => {
@@ -204,9 +236,7 @@ async function createInitialUser() {
 
 export async function login(email: string, password: string) {
   if (email === "" || password === "") {
-    console.log(email + password);
-
-    //throw new Error("Email and password required");
+    throw new Error("Email and password required");
   }
   let user: i.User | null = await usersCollection.findOne<i.User>({
     email: email,

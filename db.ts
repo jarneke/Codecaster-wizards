@@ -1,4 +1,4 @@
-import { Db, Collection, MongoClient } from "mongodb";
+import { Db, Collection, MongoClient, ObjectId } from "mongodb";
 import * as i from "./interfaces";
 import * as f from "./functions";
 import Magic = require("mtgsdk-ts");
@@ -8,27 +8,6 @@ import bcrypt from "bcrypt";
 dotenv.config();
 
 const saltRounds = parseInt(process.env.SALTROUNDS!) || 10;
-
-// a list of MTG sets ordered by release date
-const orderedSets = [
-  "LEA", "LEB", "2ED", "ARN", "ATQ", "3ED", "LEG", "DRK", "FEM", "4ED", "ICE", "CHR", "HML",
-  "ALL", "MIR", "VIS", "5ED", "POR", "WTH", "TMP", "STH", "EXO", "P02", "UGL", "USG", "ULG",
-  "6ED", "UDS", "PTK", "MMQ", "NMS", "PCY", "INV", "PLS", "APC", "7ED", "ODY", "TOR", "JUD",
-  "ONS", "LGN", "SCG", "8ED", "MRD", "DST", "5DN", "CHK", "BOK", "SOK", "9ED", "RAV", "GPT",
-  "DIS", "CSP", "TSP", "PLC", "FUT", "10E", "LRW", "MOR", "SHM", "EVE", "ALA", "CON", "ARB",
-  "M10", "ZEN", "WWK", "ROE", "M11", "SOM", "MBS", "NPH", "CMD", "M12", "ISD", "DKA", "AVR",
-  "M13", "RTR", "GTC", "DGM", "M14", "THS", "BNG", "JOU", "C14", "KTK", "FRF", "DTK", "ORI",
-  "BFZ", "OGW", "SOI", "EMN", "KLD", "AER", "AKH", "HOU", "C17", "XLN", "RIX", "DOM", "M19",
-  "GRN", "RNA", "WAR", "M20", "C19", "ELD", "THB", "IKO", "M21", "C20", "ZNR", "KHM", "STX",
-  "C21", "AFR", "MID", "VOW", "NEO", "SNC", "DMU", "BRO", "ONE", "MOM"
-];
-// initialize setOrderMap
-const setOrderMap: { [key: string]: number } = {};
-// make a map for easier comparison
-orderedSets.forEach((set, index) => {
-  setOrderMap[set] = index;
-});
-
 // all devTips
 const mtgTips: i.Tip[] = [
   {
@@ -127,11 +106,8 @@ async function seed(reseed?: boolean) {
           const isNotInArray: boolean = !allCards.some(
             (e) => e.name == card.name
           );
-          console.clear();
-          console.log("card count: " + allCards.length);
-
-
           const temp: i.Card = {
+            _id: new ObjectId(),
             id: card.id,
             name: card.name,
             manaCost: card.manaCost,
@@ -143,21 +119,9 @@ async function seed(reseed?: boolean) {
             rarity: card.rarity,
           };
           allCards.push(temp)
-          /*
-          if (isNotInArray) {
-            // push card to allCards array
-            allCards.push(temp);
-          } else {
-            const index = allCards.findIndex(e => e.name == temp.name)
-            if (index !== -1) {
-              const existingCard = allCards[index];
-              if (setOrderMap[temp.set] > setOrderMap[existingCard.set]) {
-                // Update with the newer card
-                allCards[index] = temp;
-              }
-            }
-          }
-          */
+
+          console.clear();
+          console.log("card count: " + allCards.length);
         }
       })
       .on("end", async () => {
@@ -169,7 +133,7 @@ async function seed(reseed?: boolean) {
   }
 
   // populate the database if need be with mockDecks
-  await populateDecks();
+  await populateDecks(reseed);
   // populate the database if need be with tips
   await populateTips(mtgTips);
   // log that the db is seeded
@@ -180,15 +144,18 @@ async function seed(reseed?: boolean) {
  * a function to insert mock decks into database if needed
  * @param mockDecks array of mockDecks
  */
-async function populateDecks() {
-  // uncomment line beneath if you want to refresh decks in database
-  // decksCollection.deleteMany({});
+async function populateDecks(reseed?: boolean) {
+  if (reseed) {
+    decksCollection.deleteMany({});
+  }
 
   // if decksCollection is empty insert and log that its added
   if ((await decksCollection.countDocuments()) === 0) {
     if (allCards.length === 0) {
       allCards = await cardsCollection.find({}).toArray();
     }
+    console.log("[ - SERVER - ]=> Making mock decks for admin account");
+
     const mockDecks: i.Deck[] = await f.generateMockDecks(allCards);
     await decksCollection.insertMany(mockDecks);
     console.log("[ - SERVER - ]=> Mock decks inserted into database");
@@ -238,21 +205,17 @@ export async function login(email: string, password: string) {
   if (email === "" || password === "") {
     throw new Error("Email and password required");
   }
-  let user: i.User | null = await usersCollection.findOne<i.User>({
+  let user: i.User | null = await usersCollection.findOne({
     email: email,
   });
   if (user) {
     if (await bcrypt.compare(password, user.password!)) {
       return user;
     } else {
-      console.log("passwors incorrect");
-
-      //throw new Error("Password incorrect");
+      throw new Error("Password incorrect");
     }
   } else {
-    console.log("User not found");
-
-    //throw new Error("User not found");
+    throw new Error("User not found");
   }
 }
 // initialize usersCollection and export it to be used outside of db setup

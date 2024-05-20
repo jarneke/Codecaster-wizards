@@ -39,6 +39,7 @@ import session from "./session";
 import { secureMiddleware } from "./secureMiddleware";
 import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
+import { starterDeck } from "./starterDeck";
 /**
  * A function to get and set all tips
  */
@@ -99,7 +100,7 @@ app.post("/favorite/:deckName", secureMiddleware, async (req, res) => {
 
   res.redirect(`/${req.body.favToRedirect}`);
 });
-app.get("/login", secureMiddleware, (req, res) => {
+app.get("/login", (req, res) => {
   return res.render("loginspage", {
     alert: false,
     alertMsg: "",
@@ -135,7 +136,7 @@ app.post("/register", async (req, res) => {
   } = req.body;
 
   if (registerConfirmPassword !== registerPassword) {
-    return res.render("registerpagina", {
+    return res.render("registerpage", {
       alert: true,
       alertMsg: "wachtwoorden komen niet overeen",
     });
@@ -143,22 +144,32 @@ app.post("/register", async (req, res) => {
 
   const existingUser = await usersCollection.findOne({ email: registerEmail });
   if (existingUser) {
-    return res.render("registerpagina", {
+    return res.render("registerpage", {
       alert: true,
       alertMsg: "E-mail bestaat al",
     });
   }
 
   const newUser: User = {
+    _id: new ObjectId(),
     firstName: registerFName,
     lastName: registerName,
     userName: registerUsername,
     email: registerEmail,
-    description: "",
+    description: "Geen beschrijving",
     password: await bcrypt.hash(registerPassword, saltRounds),
     role: "USER",
   };
   await usersCollection.insertOne(newUser);
+  // make starterdeck
+  await decksCollection.insertOne({
+    _id: new ObjectId(),
+    userId: newUser._id!,
+    deckName: starterDeck.deckName,
+    cards: starterDeck.cards,
+    deckImageUrl: starterDeck.deckImageUrl,
+    favorited: true
+  })
 
   try {
     let user: User | undefined = await login(registerEmail, registerPassword);
@@ -381,7 +392,7 @@ app.get("/decks/:deckName", secureMiddleware, async (req, res) => {
   let amountMap = new Map<Card, number>();
   for (const card of selectedDeck!.cards) {
     const existingCard = Array.from(amountMap.keys()).find(
-      (c) => c._id === card._id
+      (c) => c.multiverseid === card.multiverseid
     );
     if (existingCard) {
       amountMap.set(existingCard, amountMap.get(existingCard)! + 1);
@@ -392,8 +403,7 @@ app.get("/decks/:deckName", secureMiddleware, async (req, res) => {
   // Pagination
   let pageSize: number = 6;
   let pageData: PageData = handlePageClickEvent(req.query);
-  let totalPages: number = getTotalPages(selectedDeck!.cards.length, pageSize);
-
+  let totalPages = getTotalPages(amountMap.size, pageSize);
   let amountLandcards: number | undefined = undefined;
 
   let avgManaCost: number | undefined = undefined;
@@ -743,8 +753,7 @@ app.get("/editDeck/:deckName", secureMiddleware, async (req, res) => {
   let amountMap = new Map<Card, number>();
   for (const card of selectedDeck!.cards) {
     const existingCard = Array.from(amountMap.keys()).find(
-      (c) => c._id === card._id
-    );
+      (c) => c.multiverseid === card.multiverseid);
     if (existingCard) {
       amountMap.set(existingCard, amountMap.get(existingCard)! + 1);
     } else {
@@ -793,39 +802,50 @@ app.get("/editDeck/:deckName", secureMiddleware, async (req, res) => {
     selectedDeck: selectedDeck,
   });
 });
-app.post("/removeCardFromDeck/:deckName/:cardName", async (req, res) => {
-  // IMPORANT: This isnt gonna work,  need to filter by userId too, else 2 people with same deckName will conflict
+app.post("/removeCardFromDeck/:deckName/:_id/:page", secureMiddleware, async (req, res) => {
+
   const selectedDeck: Deck | null = await decksCollection.findOne({
     deckName: req.params.deckName,
+    userId: res.locals.user._id
   });
   if (!selectedDeck) {
     return res.redirect("/404");
   }
-
-  let newCards = selectedDeck.cards;
-  let removed = false;
-  newCards = newCards.filter((card) => {
-    if (card.name === req.params.cardName && !removed) {
-      removed = true;
-      return false;
-    }
-    return true;
-  });
-
+  // Remove a card from the deck based on the card's _id
   await decksCollection.updateOne(
-    {
-      deckName: req.params.deckName,
-    },
-    {
-      $set: { cards: newCards },
-    }
+    selectedDeck, // The filter to identify the selected deck
+    [
+      {
+        $set: {
+          cards: {
+            $let: {
+              // Define variables for the let expression
+              vars: {
+                // Find the index of the card to be removed by its _id
+                index: { $indexOfArray: ["$cards._id", new ObjectId(req.params._id)] }
+              },
+              // Use the found index to create the new cards array without the specified card
+              in: {
+                $concatArrays: [
+                  // Include all cards before the one to be removed
+                  { $slice: ["$cards", 0, { $add: ["$$index", 0] }] },
+                  // Include all cards after the one to be removed
+                  { $slice: ["$cards", { $add: ["$$index", 1] }, { $size: "$cards" }] }
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
   );
-  res.redirect(`/editDeck/${req.params.deckName}`);
+
+  res.redirect(`/editDeck/${req.params.deckName}?&page=${req.params.page}`);
 });
-app.post("/addCardTooDeck/:deckName/:_id", async (req, res) => {
-  // IMPORANT: This isnt gonna work,  need to filter by userId too, else 2 people with same deckName will conflict
+app.post("/addCardTooDeck/:deckName/:_id/:page", secureMiddleware, async (req, res) => {
   const selectedDeck: Deck | null = await decksCollection.findOne({
     deckName: req.params.deckName,
+    userId: res.locals.user._id
   });
   if (!selectedDeck) {
     return res.redirect("/404");
@@ -843,7 +863,7 @@ app.post("/addCardTooDeck/:deckName/:_id", async (req, res) => {
         selectedDeck.cards.filter((e) => e.name == cardTooAdd!.name).length < 4
       ) {
         await decksCollection.updateOne(
-          { deckName: req.params.deckName },
+          selectedDeck,
           { $push: { cards: cardTooAdd! } }
         );
       } else {
@@ -852,7 +872,7 @@ app.post("/addCardTooDeck/:deckName/:_id", async (req, res) => {
     } else {
       console.log("Is land card");
       await decksCollection.updateOne(
-        { deckName: req.params.deckName },
+        selectedDeck,
         { $push: { cards: cardTooAdd! } }
       );
     }
@@ -862,7 +882,7 @@ app.post("/addCardTooDeck/:deckName/:_id", async (req, res) => {
     // handle alert
   }
 
-  res.redirect(`/editDeck/${req.params.deckName}`);
+  res.redirect(`/editDeck/${req.params.deckName}?&page=${req.params.page}`);
 });
 app.get("/makeDeck", secureMiddleware, (req, res) => {
   const deck: Deck = {

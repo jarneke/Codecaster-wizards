@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.preventDefault();
 
                 const selectedDeck = document.getElementById("AddToDeckSubmit").value
-                addToDeckForm.action = `/addCardTooDeck/${selectedDeck}/${_id}`
+                addToDeckForm.action = `/addCardTooDeck/${selectedDeck}/${_id}/1`
                 addToDeckForm.submit()
             })
         })

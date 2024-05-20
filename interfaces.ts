@@ -27,15 +27,16 @@ export interface Feedback {
 }
 // interd-face for shertend cards
 export interface Card {
-  [key: string]: any;
-  id: string;
-  name: string;
-  manaCost: string;
-  cmc: number;
-  colorIdentity: string[];
-  types: string[];
-  multiverseid: number;
-  imageUrl: string;
+  [key: string]: any,
+  _id: ObjectId,
+  id: string,
+  name: string,
+  manaCost: string,
+  cmc: number,
+  colorIdentity: string[],
+  types: string[],
+  multiverseid: number,
+  imageUrl: string,
 }
 // interface for decks
 export interface Deck {

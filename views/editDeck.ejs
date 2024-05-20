@@ -4,7 +4,9 @@
     <section class="rounded ctext-white col-12 p-5 col-lg-10 col-md-6 my-5 col-sm-8" style="background-color: #00000099">
       <article class="changeDeckName mb-3">
         <h5 id="deckName" class="text-center ch1 fs-1">
-          <%= selectedDeck.deckName %>
+          <a class="ctext-white" href="/decks/<%= selectedDeck.deckName %>">
+            <%= selectedDeck.deckName %>
+          </a>
         </h5>
 
         <form action="/changeDeckName" method="post" id="deckNameForm" class="deckNameForm d-flex flex-wrap">
@@ -27,42 +29,40 @@
           </p>
           <% } else { %>
             <div class="col-12"><%- include("partials/pagination") %></div>
-            <section class="cardsInDeck d-flex justify-content-center">
-              <section class="gx-4 gx-lg-5 mx-5 d-flex flex-wrap col-12 justify-content-center">
-                <% for (const [card, amount] of cards) { %>
-                  <article class="col-12 col-md-12 col-lg-4 col-xxl-4 mb-5 px-2 px-2">
-                    <article class="card h-100 p-3" style="
+            <section class="col-12 cardsInDeck d-flex flex-wrap justify-content-center">
+              <% for (const [card, amount] of cards) { %>
+                <article class="col-12 col-md-12 col-lg-4 col-xxl-4 mb-5 px-2 px-2">
+                  <article class="card h-100 p-3" style="
                 background-image: url(/assets/images/background/MTGTest.jpg);
                 background-size: cover;
               ">
-                      <article class="card mtg-card rounded-5 p-1 <%= card.rarity == 'Common' ? 'cbg-white' : card.rarity == 'Uncommon' ? 'cbg-warning-l' : card.rarity == 'Rare' ? 'cbg-yellow' : card.rarity == 'Mythic' ? 'cbg-danger' : 'cbg-success' %>">
-                        <a href="#" class="p-0">
-                          <img src="<%= card.imageUrl %>" class="rounded-5 col-12" style="width: 100%" alt="" />
-                        </a>
-                      </article>
-                      <h2 class="card-title text-white ch1 mt-2 text-center">
-                        aantal : <%= amount %>
-                      </h2>
-                      <div class="d-flex justify-content-center flex-wrap gap-3">
-                        <form action="/removeCardFromDeck/<%= selectedDeck.deckName %>/<%= encodeURIComponent(card.name) %>" method="post">
-                          <button type="submit" class="border border-0 cbg-transparent">
-                            <i class="bi bi-dash-circle-fill col-6 text-center fs-3 ctext-white"></i>
-                          </button>
-                        </form>
-                        <form action="/addCardTooDeck/<%= selectedDeck.deckName %>/<%= encodeURIComponent(card._id) %>" method="post">
-                          <button type="submit" class="border border-0 cbg-transparent">
-                            <i class="bi bi-plus-circle-fill col-6 text-center fs-3 ctext-white"></i>
-                          </button>
-                        </form>
-                      </div>
+                    <article class="card mtg-card rounded-5 p-1 <%= card.rarity == 'Common' ? 'cbg-white' : card.rarity == 'Uncommon' ? 'cbg-warning-l' : card.rarity == 'Rare' ? 'cbg-yellow' : card.rarity == 'Mythic' ? 'cbg-danger' : 'cbg-success' %>">
+                      <a href="#" class="p-0">
+                        <img src="<%= card.imageUrl %>" class="rounded-5 col-12" style="width: 100%" alt="" />
+                      </a>
                     </article>
+                    <h2 class="card-title text-white ch1 mt-2 text-center">
+                      aantal : <%= amount %>
+                    </h2>
+                    <div class="d-flex justify-content-center flex-wrap gap-3">
+                      <form action="/removeCardFromDeck/<%= selectedDeck.deckName %>/<%= encodeURIComponent(card._id) %>/<%= page %>" method="post">
+                        <button type="submit" class="border border-0 cbg-transparent">
+                          <i class="bi bi-dash-circle-fill col-6 text-center fs-3 ctext-white"></i>
+                        </button>
+                      </form>
+                      <form action="/addCardTooDeck/<%= selectedDeck.deckName %>/<%= encodeURIComponent(card._id)%>/<%= page %>" method="post">
+                        <button type="submit" class="border border-0 cbg-transparent">
+                          <i class="bi bi-plus-circle-fill col-6 text-center fs-3 ctext-white"></i>
+                        </button>
+                      </form>
+                    </div>
                   </article>
-                  <% } %>
-              </section>
+                </article>
+                <% } %>
             </section>
-            <div class="col-12"><%- include("partials/pagination") %></div>
-            <% } %>
       </section>
+      <div class="col-12"><%- include("partials/pagination") %></div>
+      <% } %>
     </section>
   </section>
 

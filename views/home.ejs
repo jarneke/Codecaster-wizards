@@ -30,7 +30,6 @@
                     <section class="modal-header cbg-dark border-0">
                         <h1 class="modal-title ctext-white fs-6 col-11" id="infoModalLabel">
                             Speluitleg</h1>
-                        <button type="button" class="btn-close cbg-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </section>
                     <section class="modal-body">
                         <h3 class="ch1 fs-2">Over Magic The Gathering</h3>
@@ -59,12 +58,12 @@
                         </p>
                     </section>
                     <section class="modal-footer">
-                        <form class="container d-flex justify-content-between" action="/dontShowPopup" method="post">
+                        <form class="container d-flex justify-content-between" action="/home/dontShowPopup" method="post" id="infoForm">
                             <div>
-                                <input type="checkbox" name="dontShowAgain" id="dontShowAgain" checked>
-                                <label for="dontShowAgain"> Laat dit bericht niet meer zien</label>
+                                <input type="checkbox" name="dontShowAgain" id="dontShowAgain">
+                                <label for="dontShowAgain"> Ik begrijp het</label>
                             </div>
-                            <button type="submit" class="btn btn-dark bg-dark">Ik begrijp het</button>
+                            <button type="button" class="btn btn-dark bg-dark" id="iUnderstand">sluiten</button>
                         </form>
                     </section>
                 </section>

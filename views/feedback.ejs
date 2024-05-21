@@ -23,16 +23,12 @@
                     <% for( let i=allFeedback.length -1; i>= 0; i-- ) { %>
                         <% const feedback=allFeedback[i]; %>
                             <div class="p-2 rounded cbg-dark d-flex justify-content-between align-items-center ctext-white">
-                                <div class="">
+                                <div class="col-11">
                                     <div>
                                         <%= feedback.user.userName + "'s " + (feedback.feedbackType==="bug" ? "bug" : feedback.feedbackType==="suggestion" ? "suggestie" : feedback.feedbackType==="compliment" ? "compliment" : "algemene feedback" ) %>
                                     </div>
                                     <div>
-                                        <% if (feedback.feedback.length> 40) { %>
-                                            <%= feedback.feedback.substring(0, 40) + " . . ." %>
-                                                <% } else { %>
-                                                    <%= feedback.feedback %>
-                                                        <% } %>
+                                        <%= feedback.feedback %>
                                     </div>
                                 </div>
                                 <form class="" action="/feedback/delete/<%= feedback._id %>" method="post">
@@ -47,20 +43,20 @@
                     <% for( let i=allFeedback.length -1; i>= 0; i-- ) { %>
                         <% const feedback=allFeedback[i]; %>
                             <% if (feedback.feedbackType==="bug" ) { %>
-                                <div class="card p-2 rounded cbg-dark d-flex justify-content-between col-12 ctext-white">
-                                    <div>
-                                        <%= feedback.user.userName + "'s bug" %>
+                                <div class="p-2 rounded cbg-dark d-flex justify-content-between align-items-center ctext-white">
+                                    <div class="col-11">
+                                        <div>
+                                            <%= feedback.user.userName + "'s " + (feedback.feedbackType==="bug" ? "bug" : feedback.feedbackType==="suggestion" ? "suggestie" : feedback.feedbackType==="compliment" ? "compliment" : "algemene feedback" ) %>
+                                        </div>
+                                        <div>
+                                            <%= feedback.feedback %>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <% if (feedback.feedback.length> 40) { %>
-                                            <%= feedback.feedback.substring(0, 40) + " . . ." %>
-                                                <% } else { %>
-                                                    <%= feedback.feedback %>
-                                                        <% } %>
-                                    </div>
+                                    <form class="" action="/feedback/delete/<%= feedback._id %>" method="post">
+                                        <button type="submit" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
+                                    </form>
                                 </div>
-                                <% } %>
-                                    <% } %>
+                                <% }} %>
                 </div>
             </div>
             <div class="tab-pane fade" id="suggestions" role="tabpanel" aria-labelledby="suggestions-tab">
@@ -68,20 +64,20 @@
                     <% for( let i=allFeedback.length -1; i>= 0; i-- ) { %>
                         <% const feedback=allFeedback[i]; %>
                             <% if (feedback.feedbackType==="suggestion" ) { %>
-                                <div class="card p-2 rounded cbg-dark d-flex justify-content-between col-12 ctext-white">
-                                    <div>
-                                        <%= feedback.user.userName + "'s suggestie" %>
+                                <div class="p-2 rounded cbg-dark d-flex justify-content-between align-items-center ctext-white">
+                                    <div class="col-11">
+                                        <div>
+                                            <%= feedback.user.userName + "'s " + (feedback.feedbackType==="bug" ? "bug" : feedback.feedbackType==="suggestion" ? "suggestie" : feedback.feedbackType==="compliment" ? "compliment" : "algemene feedback" ) %>
+                                        </div>
+                                        <div>
+                                            <%= feedback.feedback %>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <% if (feedback.feedback.length> 40) { %>
-                                            <%= feedback.feedback.substring(0, 40) + " . . ." %>
-                                                <% } else { %>
-                                                    <%= feedback.feedback %>
-                                                        <% } %>
-                                    </div>
+                                    <form class="" action="/feedback/delete/<%= feedback._id %>" method="post">
+                                        <button type="submit" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
+                                    </form>
                                 </div>
-                                <% } %>
-                                    <% } %>
+                                <% }} %>
                 </div>
             </div>
             <div class="tab-pane fade" id="compliments" role="tabpanel" aria-labelledby="compliment-tab">
@@ -89,20 +85,20 @@
                     <% for( let i=allFeedback.length -1; i>= 0; i-- ) { %>
                         <% const feedback=allFeedback[i]; %>
                             <% if (feedback.feedbackType==="compliment" ) { %>
-                                <div class="card p-2 rounded cbg-dark d-flex justify-content-between col-12 ctext-white">
-                                    <div>
-                                        <%= feedback.user.userName + "'s compliment" %>
+                                <div class="p-2 rounded cbg-dark d-flex justify-content-between align-items-center ctext-white">
+                                    <div class="col-11">
+                                        <div>
+                                            <%= feedback.user.userName + "'s " + (feedback.feedbackType==="bug" ? "bug" : feedback.feedbackType==="suggestion" ? "suggestie" : feedback.feedbackType==="compliment" ? "compliment" : "algemene feedback" ) %>
+                                        </div>
+                                        <div>
+                                            <%= feedback.feedback %>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <% if (feedback.feedback.length> 40) { %>
-                                            <%= feedback.feedback.substring(0, 40) + " . . ." %>
-                                                <% } else { %>
-                                                    <%= feedback.feedback %>
-                                                        <% } %>
-                                    </div>
+                                    <form class="" action="/feedback/delete/<%= feedback._id %>" method="post">
+                                        <button type="submit" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
+                                    </form>
                                 </div>
-                                <% } %>
-                                    <% } %>
+                                <% }} %>
                 </div>
             </div>
             <div class="tab-pane fade" id="general" role="tabpanel" aria-labelledby="general-tab">
@@ -110,20 +106,20 @@
                     <% for( let i=allFeedback.length -1; i>= 0; i-- ) { %>
                         <% const feedback=allFeedback[i]; %>
                             <% if (feedback.feedbackType==="general" ) { %>
-                                <div class="card p-2 rounded cbg-dark d-flex justify-content-between col-12 ctext-white">
-                                    <div>
-                                        <%= feedback.user.userName + "'s algemene feedback" %>
+                                <div class="p-2 rounded cbg-dark d-flex justify-content-between align-items-center ctext-white">
+                                    <div class="col-11">
+                                        <div>
+                                            <%= feedback.user.userName + "'s " + (feedback.feedbackType==="bug" ? "bug" : feedback.feedbackType==="suggestion" ? "suggestie" : feedback.feedbackType==="compliment" ? "compliment" : "algemene feedback" ) %>
+                                        </div>
+                                        <div>
+                                            <%= feedback.feedback %>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <% if (feedback.feedback.length> 40) { %>
-                                            <%= feedback.feedback.substring(0, 40) + " . . ." %>
-                                                <% } else { %>
-                                                    <%= feedback.feedback %>
-                                                        <% } %>
-                                    </div>
+                                    <form class="" action="/feedback/delete/<%= feedback._id %>" method="post">
+                                        <button type="submit" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
+                                    </form>
                                 </div>
-                                <% } %>
-                                    <% } %>
+                                <% }} %>
                 </div>
             </div>
         </div>

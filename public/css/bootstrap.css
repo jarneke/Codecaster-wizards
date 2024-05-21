@@ -436,3 +436,24 @@ main .nav-item .nav-link {
   border-bottom: 0;
   color: var(--white-color);
 }
+
+.blink-anim {
+  animation-name: blink;
+  animation-timing-function: linear;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-direction: normal;
+}
+
+@keyframes blink {
+  0% {
+    color: var(--white-color);
+  }
+  50% {
+    color: var(--danger-color);
+  }
+  100% {
+    color: var(--white-color);
+  }
+}

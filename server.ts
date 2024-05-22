@@ -42,6 +42,7 @@ import { ObjectId } from "mongodb";
 import { starterDeck } from "./starterDeck";
 import feedbackRouter from "./routers/feedback"
 import homeRouter from "./routers/home";
+import drawtestRouter from "./routers/drawtest";
 /**
  * A function to get and set all tips
  */
@@ -72,6 +73,7 @@ app.use(session);
 
 app.use("/feedback", feedbackRouter())
 app.use("/home", homeRouter())
+app.use("/drawtest", drawtestRouter());
 
 // landingspage
 app.get("/", (req, res) => {

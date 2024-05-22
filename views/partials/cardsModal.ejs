@@ -1,58 +1,78 @@
-<section class="modal fade" id="cardModal" tabindex="-1" aria-labelledby="cardModalLabel" aria-hidden="true">
-    <section class="modal-dialog modal-lg">
-        <section class="modal-content ctext-white cbg-primary">
-            <section class="modal-header cbg-dark border-0">
-                <h1 class="modal-title ctext-white fs-6 col-11" id="cardModalLabel">
-                </h1>
-                <button type="button" class="btn-close cbg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </section>
-            <section class="modal-body d-flex flex-wrap">
-                <section class="col-12 col-md-6">
-                    <article id="cardModalBorderElement">
-                        <img class="rounded-4" id="cardModalImage" style="width: 100%;" alt="">
-                    </article>
-                </section>
-                <section class="col-12 col-md-6 d-flex flex-column justify-content-between p-2">
-                    <article class="d-flex flex-column gap-2">
-                        <div>
-                            <p class="mb-0">kaartnaam: </p>
-                            <p id="cardModalCardname"></p>
-                        </div>
-                        <div>
-                            <p class="mb-0">manakost: </p>
-                            <div class="d-flex gap-2" id="cardModalManaCost"></div>
-                        </div>
-                        <div>
-                            <p class="mb-0">Omgevormde manakost: </p>
-                            <div class="d-flex gap-2" id="cardModalCmc"></div>
-                        </div>
-                        <div>
-                            <p class="mb-0">Kleur identiteit: </p>
-                            <div class="d-flex gap-2" id="cardModalColorId"></div>
-                        </div>
-                    </article>
-                    <article>
-                        <div class="mt-2" style="height: 3rem;" id="AlertPlaceHolder"></div>
-                    </article>
-                    <form id="AddToDeck" action="/" method="post"> <!-- action is set in cardsModal.js -->
-                        <label class="form-control-label" for="deck">Voeg toe aan deck</label>
-                        <select class="form-select" name="deck" id="AddToDeckSubmit">
-                            <% for(const deckName of allDeckName){%>
-                                <option value="<%= deckName%>">
-                                    <%= deckName %>
-                                </option>
-                                <%}%>
-                        </select>
-
-                        <button type="submit" class="w-100 btn btn-dark mt-3">
-                            <i class="bi bi-plus"></i>
-                            Voeg toe
-                        </button>
-                    </form>
-                </section>
-            </section>
-            <section class="modal-footer justify-content-between">
-            </section>
+<section
+  class="modal fade"
+  id="cardModal"
+  tabindex="-1"
+  aria-labelledby="cardModalLabel"
+  aria-hidden="true"
+>
+  <section class="modal-dialog modal-lg">
+    <section class="modal-content ctext-white cbg-primary">
+      <section class="modal-header cbg-dark border-0">
+        <h1
+          class="modal-title ctext-white fs-6 col-11"
+          id="cardModalLabel"
+        ></h1>
+        <button
+          type="button"
+          class="btn-close cbg-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </section>
+      <section class="modal-body d-flex flex-wrap">
+        <section class="col-12 col-md-6">
+          <article id="cardModalBorderElement">
+            <img
+              class="rounded-4"
+              id="cardModalImage"
+              style="width: 100%"
+              alt=""
+            />
+          </article>
         </section>
+        <section
+          class="col-12 col-md-6 d-flex flex-column justify-content-between p-2"
+        >
+          <article class="d-flex flex-column gap-2">
+            <div>
+              <p class="mb-0">Kaartnaam:</p>
+              <p id="cardModalCardname"></p>
+            </div>
+            <div>
+              <p class="mb-0">Manakost:</p>
+              <div class="d-flex gap-2" id="cardModalManaCost"></div>
+            </div>
+            <div>
+              <p class="mb-0">Omgevormde manakost:</p>
+              <div class="d-flex gap-2" id="cardModalCmc"></div>
+            </div>
+            <div>
+              <p class="mb-0">Kleur identiteit:</p>
+              <div class="d-flex gap-2" id="cardModalColorId"></div>
+            </div>
+          </article>
+          <article>
+            <div class="mt-2" style="height: 3rem" id="AlertPlaceHolder"></div>
+          </article>
+          <form id="AddToDeck" action="/" method="post">
+            <!-- action is set in cardsModal.js -->
+            <label class="form-control-label" for="deck"
+              >Voeg toe aan deck</label
+            >
+            <select class="form-select" name="deck" id="AddToDeckSubmit">
+              <% for(const deckName of allDeckName){%>
+              <option value="<%= deckName%>"><%= deckName %></option>
+              <%}%>
+            </select>
+
+            <button type="submit" class="w-100 btn btn-dark mt-3">
+              <i class="bi bi-plus"></i>
+              Voeg toe
+            </button>
+          </form>
+        </section>
+      </section>
+      <section class="modal-footer justify-content-between"></section>
     </section>
+  </section>
 </section>

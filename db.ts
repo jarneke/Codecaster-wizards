@@ -118,7 +118,7 @@ async function seed(reseed?: boolean) {
             imageUrl: card.imageUrl,
             rarity: card.rarity,
           };
-          allCards.push(temp)
+          allCards.push(temp);
 
           console.clear();
           console.log("card count: " + allCards.length);
@@ -203,7 +203,7 @@ async function createInitialUser() {
 
 export async function login(email: string, password: string) {
   if (email === "" || password === "") {
-    throw new Error("Email and password required");
+    throw new Error("E-mail en wachtwoord vereist");
   }
   let user: i.User | null = await usersCollection.findOne({
     email: email,
@@ -212,10 +212,10 @@ export async function login(email: string, password: string) {
     if (await bcrypt.compare(password, user.password!)) {
       return user;
     } else {
-      throw new Error("Password incorrect");
+      throw new Error("E-mail en/of wachtwoord onjuist");
     }
   } else {
-    throw new Error("User not found");
+    throw new Error("Gebruiker niet gevonden");
   }
 }
 // initialize usersCollection and export it to be used outside of db setup

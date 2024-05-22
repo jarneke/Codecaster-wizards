@@ -16,7 +16,7 @@ export default function drawtestRouter() {
     let unpulledCards: Card[] = [];
     // variable to store pulled cards of drawtest page
     let pulledCards: Card[] = [];
-    router.get("/drawtest", secureMiddleware, async (req, res) => {
+    router.get("/", secureMiddleware, async (req, res) => {
         // Query params
         // -- filter and sort
         let cardLookup = req.query.cardLookup;

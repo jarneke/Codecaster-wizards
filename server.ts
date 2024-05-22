@@ -24,17 +24,14 @@ import homeRouter from "./routers/home";
 import drawtestRouter from "./routers/drawtest";
 import loginRouter from "./routers/login";
 import profileRouter from "./routers/profile";
-/**
- * A function to get and set all tips
- */
-async function getTips() {
-  allTips = await tipsCollection.find({}).toArray();
-}
+import deckRouter from "./routers/decks";
+
 // initialize express app
 const app = express();
 
-// initialize alltips array
-let allTips: Tip[] = [];
+const saltRounds = parseInt(process.env.SALTROUNDS!) || 10;
+
+
 
 // set the port to use on the port specified in .env, or default to 3000
 app.set("port", process.env.PORT ?? 3000);
@@ -49,9 +46,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session);
 
+async function setupDecksRouter() {
+  let router = await deckRouter()
+  app.use(router)
+}
+
 app.use("/feedback", feedbackRouter());
 app.use("/home", homeRouter());
 app.use("/drawtest", drawtestRouter());
+setupDecksRouter().catch(err => console.log(err))
 app.use(loginRouter());
 app.use(profileRouter());
 
@@ -432,16 +435,14 @@ app.get("/404", secureMiddleware, (req, res) => {
   });
 });
 //catch all paths that dont already exist.
-app.all("*", (req, res) => {
-  // and redirect to 404 not found.
-  res.redirect("/404");
-});
+// app.all("*", (req, res) => {
+//   // and redirect to 404 not found.
+//   res.redirect("/404");
+// });
 app.listen(app.get("port"), async () => {
   console.clear();
   console.log("[ - SERVER - ]=> connecting to database");
   await connect();
-  console.log("[ - SERVER - ]=> getting tips");
-  await getTips();
   console.log("[ - SERVER - ]=> ! DONE !");
   console.log(
     "[ - SERVER - ]=> Listening at http://localhost:" + app.get("port")

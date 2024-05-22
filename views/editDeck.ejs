@@ -1,5 +1,5 @@
 <%- include("partials/header") %>
-
+<main>
   <section class="d-flex justify-content-center align-items-center">
     <section class="rounded ctext-white col-12 p-5 col-lg-10 col-md-6 my-5 col-sm-8" style="background-color: #00000099">
       <article class="changeDeckName mb-3">
@@ -10,7 +10,7 @@
         </h5>
 
         <form action="/changeDeckName" method="post" id="deckNameForm" class="deckNameForm d-flex flex-wrap">
-          <label for="deckNameInput" class="col-12 mb-3 ch1 fs-4 form-label">Decknaam veranderen</label>
+          <label for="deckNameInput" class="col-12 mb-3 ch1 fs-4 form-label">Decknaam wijzigen</label>
 
           <input type="text" name="deckNameInput" id="deckNameInput" placeholder="Mijn deck" class="rounded-start col-10 py-2 ps-2" />
 
@@ -65,5 +65,5 @@
       <% } %>
     </section>
   </section>
-
+</main>
   <%- include("partials/footer") %>

@@ -479,7 +479,7 @@ export function updateLoadingBar(progress: number): string {
   return "[" + "=".repeat(filledLength) + " ".repeat(emptyLength) + "]";
 }
 
-export function deleteCard() {}
+export function deleteCard() { }
 
 /**
  * A function to get and set all tips

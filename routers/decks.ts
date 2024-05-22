@@ -17,9 +17,14 @@ import {
 import { getTotalPages } from "../functions";
 import { cardsCollection, decksCollection } from "../db";
 import { ObjectId } from "mongodb";
+import { flashMiddleware } from "../fleshMiddleware";
+import e from "express";
+
 
 export default async function deckRouter() {
   const router = express.Router();
+
+  router.use(flashMiddleware);
 
   // initialize alltips array
   let allTips: Tip[] = await getTips();
@@ -290,9 +295,7 @@ export default async function deckRouter() {
   });
   router.get("/makeDeck", secureMiddleware, async(req, res) => {
     // to-do: make alert when deck exists
-    if (await decksCollection.findOne({deckName : req.body.deckName, userId : res.locals.user._id})) {
-        return res.redirect("/makeDeck");
-    }
+    
     const deck: Deck = {
       userId: res.locals.user._id,
       deckName: req.body.deckName,
@@ -327,7 +330,11 @@ export default async function deckRouter() {
     res.redirect("/decks");
   });
   router.post("/makeDeck", secureMiddleware, async (req, res) => {
-  
+    if (await decksCollection.findOne({deckName : req.body.deckName, userId : res.locals.user._id})) {
+        req.session.message = { type : "error", message : "Je kan geen 2 decks met eenzelfde naam hebben"}
+        return res.redirect("/makeDeck");
+    };
+
     let newDeck: Deck = {
       userId: res.locals.user._id,
       deckName: req.body.deckName,

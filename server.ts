@@ -29,10 +29,6 @@ import deckRouter from "./routers/decks";
 // initialize express app
 const app = express();
 
-const saltRounds = parseInt(process.env.SALTROUNDS!) || 10;
-
-
-
 // set the port to use on the port specified in .env, or default to 3000
 app.set("port", process.env.PORT ?? 3000);
 // set the viewengine to ejs
@@ -47,14 +43,13 @@ app.use(cookieParser());
 app.use(session);
 
 async function setupDecksRouter() {
-  let router = await deckRouter()
-  app.use(router)
+  let router = await deckRouter();
+  app.use(router);
 }
-
 app.use("/feedback", feedbackRouter());
 app.use("/home", homeRouter());
 app.use("/drawtest", drawtestRouter());
-setupDecksRouter().catch(err => console.log(err))
+setupDecksRouter().catch((err) => console.log(err));
 app.use(loginRouter());
 app.use(profileRouter());
 

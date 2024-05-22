@@ -3,16 +3,12 @@ import { secureMiddleware } from "../secureMiddleware";
 import {
   Deck,
   PageData,
-  Filter,
-  filterTypes,
-  filterRarities,
   Card,
   Tip,
 } from "../interfaces";
 import {
   getDecksOfUser,
   handlePageClickEvent,
-  getCardsForPage,
   getAvgManaCost,
   getCardWAmauntForPage,
   getRandomNumber,

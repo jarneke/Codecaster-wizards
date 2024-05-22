@@ -2,6 +2,8 @@ import express from "express"
 import { secureMiddleware } from "../secureMiddleware";
 import { Deck, PageData, Filter, filterTypes, filterRarities } from "../interfaces"
 import { getDecksOfUser, handlePageClickEvent, getCardsForPage } from "../functions"
+
+
 export default function homeRouter() {
     const router = express.Router();
     router.post("/dontShowPopup", async (req, res) => {

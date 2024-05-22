@@ -480,3 +480,10 @@ export function updateLoadingBar(progress: number): string {
 }
 
 export function deleteCard() {}
+
+/**
+ * A function to get and set all tips
+ */
+export async function getTips(): Promise<i.Tip[]> {
+  return await db.tipsCollection.find({}).toArray();
+}

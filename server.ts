@@ -50,8 +50,6 @@ const app = express();
 
 const saltRounds = parseInt(process.env.SALTROUNDS!) || 10;
 
-
-
 // set the port to use on the port specified in .env, or default to 3000
 app.set("port", process.env.PORT ?? 3000);
 // set the viewengine to ejs

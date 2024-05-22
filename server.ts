@@ -1,34 +1,15 @@
 import express from "express";
-import ejs from "ejs";
-import {
-  Tip,
-  Deck,
-  Card,
-  User,
-  Feedback,
-  PageData,
-  Filter,
-  filterTypes,
-  filterRarities,
-} from "./interfaces";
-import Magic = require("mtgsdk-ts");
+import { Tip, Deck, Card, PageData } from "./interfaces";
 import {
   getDecksOfUser,
   handlePageClickEvent,
-  getCardsForPage,
   getTotalPages,
   getAvgManaCost,
   getCardWAmauntForPage,
   getRandomNumber,
-  shuffleCards,
-  getChance,
-  filterAndSortCards,
 } from "./functions";
 import {
   tipsCollection,
-  login,
-  usersCollection,
-  feedbacksCollection,
   decksCollection,
   cardsCollection,
   connect,
@@ -37,12 +18,12 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import session from "./session";
 import { secureMiddleware } from "./secureMiddleware";
-import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
-import { starterDeck } from "./starterDeck";
-import feedbackRouter from "./routers/feedback"
+import feedbackRouter from "./routers/feedback";
 import homeRouter from "./routers/home";
 import drawtestRouter from "./routers/drawtest";
+import loginRouter from "./routers/login";
+import profileRouter from "./routers/profile";
 /**
  * A function to get and set all tips
  */
@@ -51,8 +32,6 @@ async function getTips() {
 }
 // initialize express app
 const app = express();
-
-const saltRounds = parseInt(process.env.SALTROUNDS!) || 10;
 
 // initialize alltips array
 let allTips: Tip[] = [];
@@ -70,10 +49,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session);
 
-
-app.use("/feedback", feedbackRouter())
-app.use("/home", homeRouter())
+app.use("/feedback", feedbackRouter());
+app.use("/home", homeRouter());
 app.use("/drawtest", drawtestRouter());
+app.use(loginRouter());
+app.use(profileRouter());
 
 // landingspage
 app.get("/", (req, res) => {
@@ -98,94 +78,6 @@ app.post("/favorite/:deckName", secureMiddleware, async (req, res) => {
   }
 
   res.redirect(`/${req.body.favToRedirect}`);
-});
-app.get("/login", (req, res) => {
-  return res.render("loginspage", {
-    alert: false,
-    alertMsg: "",
-  });
-});
-app.post("/login", async (req, res) => {
-  const { loginEmail, loginPassword } = req.body;
-
-  try {
-    let user: User | undefined = await login(loginEmail, loginPassword);
-    delete user!.password;
-
-    req.session.user = user;
-    res.redirect("/home");
-  } catch (e: any) {
-    return res.render("loginspage", {
-      alert: true,
-      alertMsg: "E-mail of wachtwoord is onjuist!",
-    });
-  }
-});
-app.get("/register", (req, res) => {
-  res.render("registerpage");
-});
-app.post("/register", async (req, res) => {
-  const {
-    registerFName,
-    registerName,
-    registerUsername,
-    registerEmail,
-    registerPassword,
-    registerConfirmPassword,
-  } = req.body;
-
-  if (registerConfirmPassword !== registerPassword) {
-    return res.render("registerpage", {
-      alert: true,
-      alertMsg: "wachtwoorden komen niet overeen",
-    });
-  }
-
-  const existingUser = await usersCollection.findOne({ email: registerEmail });
-  if (existingUser) {
-    return res.render("registerpage", {
-      alert: true,
-      alertMsg: "E-mail bestaat al",
-    });
-  }
-
-  const newUser: User = {
-    _id: new ObjectId(),
-    firstName: registerFName,
-    lastName: registerName,
-    userName: registerUsername,
-    email: registerEmail,
-    description: "Geen beschrijving",
-    password: await bcrypt.hash(registerPassword, saltRounds),
-    role: "USER",
-  };
-  await usersCollection.insertOne(newUser);
-  // make starterdeck
-  await decksCollection.insertOne({
-    _id: new ObjectId(),
-    userId: newUser._id!,
-    deckName: starterDeck.deckName,
-    cards: starterDeck.cards,
-    deckImageUrl: starterDeck.deckImageUrl,
-    favorited: true
-  })
-
-  try {
-    let user: User | undefined = await login(registerEmail, registerPassword);
-    delete user!.password;
-    req.session.user = user;
-    res.redirect("/home");
-  } catch (e: any) {
-    return res.render("loginspage", {
-      alert: true,
-      alertMsg: "Fout bij het aanmelden, probeer opnieuw.",
-    });
-  }
-});
-app.post("/logout", async (req, res) => {
-  req.session.destroy(() => {
-    res.redirect("/login");
-  });
 });
 
 app.get("/decks", secureMiddleware, async (req, res) => {
@@ -318,69 +210,6 @@ app.post("/changeDeckName", async (req, res) => {
   res.redirect(`/editDeck/${name}`);
 });
 
-app.get("/profile", secureMiddleware, async (req, res) => {
-  // IMPORANT: This isnt gonna work,  need to filter by userId too, else 2 people with same deckName will conflict
-  let allDecks: Deck[] = await decksCollection.find().toArray();
-  let favoritedDecks: Deck[] = allDecks.filter((e) => e.favorited);
-
-  res.render("profile", {
-    // HEADER
-    user: res.locals.user,
-    // -- The names of the js files you want to load on the page.
-    jsFiles: ["editProfile"],
-    // -- The title of the page
-    title: "Profile Page",
-    toRedirectTo: "profile",
-    // -- The Tab in the nav bar you want to have the orange color
-    // -- (0 = home, 1 = decks nakijken, 2 = deck simuleren, all other values lead to no change in color)
-    tabToColor: 4,
-    favoriteDecks: favoritedDecks,
-  });
-});
-app.post("/profile", secureMiddleware, async (req, res) => {
-  const { firstName, lastName, email, passwordFormLabel, description } =
-    req.body;
-  const userName: string = `${firstName === "" ? res.locals.user?.firstName : firstName
-    }_${lastName === "" ? res.locals.user?.lastName : lastName}`;
-
-  const newUserDetails: User = {
-    firstName:
-      firstName === "" && res.locals.user
-        ? res.locals.user.firstName
-        : firstName,
-    lastName:
-      lastName === "" && res.locals.user ? res.locals.user?.lastName : lastName,
-    userName:
-      userName === "" && res.locals.user ? res.locals.user?.userName : userName,
-    email: email === "" && res.locals.user ? res.locals.user?.email : email,
-    description:
-      description === "" && res.locals.user
-        ? res.locals.user.description
-        : description,
-    password:
-      passwordFormLabel === "" && res.locals.user
-        ? res.locals.user.password
-        : await bcrypt.hash(passwordFormLabel, saltRounds),
-    role: "USER",
-  };
-
-  await usersCollection.updateOne(
-    { _id: res.locals.user?._id },
-    { $set: newUserDetails }
-  );
-
-  let user: User | undefined = await login(
-    newUserDetails.email,
-    req.body.passwordFormLabel
-  );
-  delete user!.password;
-  req.session.user = user;
-  res.redirect("/profile");
-});
-app.post("/delete", secureMiddleware, async (req, res) => {
-  await usersCollection.deleteOne({ _id: res.locals.user?._id });
-  res.redirect("/");
-});
 app.get("/editDeck/:deckName", secureMiddleware, async (req, res) => {
   // IMPORANT: This isnt gonna work,  need to filter by userId too, else 2 people with same deckName will conflict
   const selectedDeck: Deck | null = await decksCollection.findOne({
@@ -393,7 +222,8 @@ app.get("/editDeck/:deckName", secureMiddleware, async (req, res) => {
   let amountMap = new Map<Card, number>();
   for (const card of selectedDeck!.cards) {
     const existingCard = Array.from(amountMap.keys()).find(
-      (c) => c.multiverseid === card.multiverseid);
+      (c) => c.multiverseid === card.multiverseid
+    );
     if (existingCard) {
       amountMap.set(existingCard, amountMap.get(existingCard)! + 1);
     } else {
@@ -442,88 +272,102 @@ app.get("/editDeck/:deckName", secureMiddleware, async (req, res) => {
     selectedDeck: selectedDeck,
   });
 });
-app.post("/removeCardFromDeck/:deckName/:_id/:page", secureMiddleware, async (req, res) => {
-
-  const selectedDeck: Deck | null = await decksCollection.findOne({
-    deckName: req.params.deckName,
-    userId: res.locals.user._id
-  });
-  if (!selectedDeck) {
-    return res.redirect("/404");
-  }
-  // Remove a card from the deck based on the card's _id
-  await decksCollection.updateOne(
-    selectedDeck, // The filter to identify the selected deck
-    [
-      {
-        $set: {
-          cards: {
-            $let: {
-              // Define variables for the let expression
-              vars: {
-                // Find the index of the card to be removed by its _id
-                index: { $indexOfArray: ["$cards._id", new ObjectId(req.params._id)] }
+app.post(
+  "/removeCardFromDeck/:deckName/:_id/:page",
+  secureMiddleware,
+  async (req, res) => {
+    const selectedDeck: Deck | null = await decksCollection.findOne({
+      deckName: req.params.deckName,
+      userId: res.locals.user._id,
+    });
+    if (!selectedDeck) {
+      return res.redirect("/404");
+    }
+    // Remove a card from the deck based on the card's _id
+    await decksCollection.updateOne(
+      selectedDeck, // The filter to identify the selected deck
+      [
+        {
+          $set: {
+            cards: {
+              $let: {
+                // Define variables for the let expression
+                vars: {
+                  // Find the index of the card to be removed by its _id
+                  index: {
+                    $indexOfArray: ["$cards._id", new ObjectId(req.params._id)],
+                  },
+                },
+                // Use the found index to create the new cards array without the specified card
+                in: {
+                  $concatArrays: [
+                    // Include all cards before the one to be removed
+                    { $slice: ["$cards", 0, { $add: ["$$index", 0] }] },
+                    // Include all cards after the one to be removed
+                    {
+                      $slice: [
+                        "$cards",
+                        { $add: ["$$index", 1] },
+                        { $size: "$cards" },
+                      ],
+                    },
+                  ],
+                },
               },
-              // Use the found index to create the new cards array without the specified card
-              in: {
-                $concatArrays: [
-                  // Include all cards before the one to be removed
-                  { $slice: ["$cards", 0, { $add: ["$$index", 0] }] },
-                  // Include all cards after the one to be removed
-                  { $slice: ["$cards", { $add: ["$$index", 1] }, { $size: "$cards" }] }
-                ]
-              }
-            }
-          }
+            },
+          },
+        },
+      ]
+    );
+
+    res.redirect(`/editDeck/${req.params.deckName}?&page=${req.params.page}`);
+  }
+);
+app.post(
+  "/addCardTooDeck/:deckName/:_id/:page",
+  secureMiddleware,
+  async (req, res) => {
+    const selectedDeck: Deck | null = await decksCollection.findOne({
+      deckName: req.params.deckName,
+      userId: res.locals.user._id,
+    });
+    if (!selectedDeck) {
+      return res.redirect("/404");
+    }
+
+    let cardTooAdd: Card | null = await cardsCollection.findOne({
+      _id: new ObjectId(req.params._id),
+    });
+    if (!cardTooAdd) {
+      return res.redirect("/404");
+    }
+    if (selectedDeck.cards.length < 60) {
+      if (!cardTooAdd!.types.find((e) => e == "Land")) {
+        if (
+          selectedDeck.cards.filter((e) => e.name == cardTooAdd!.name).length <
+          4
+        ) {
+          await decksCollection.updateOne(selectedDeck, {
+            $push: { cards: cardTooAdd! },
+          });
+        } else {
+          console.log("4 or more cards");
         }
-      }
-    ]
-  );
-
-  res.redirect(`/editDeck/${req.params.deckName}?&page=${req.params.page}`);
-});
-app.post("/addCardTooDeck/:deckName/:_id/:page", secureMiddleware, async (req, res) => {
-  const selectedDeck: Deck | null = await decksCollection.findOne({
-    deckName: req.params.deckName,
-    userId: res.locals.user._id
-  });
-  if (!selectedDeck) {
-    return res.redirect("/404");
-  }
-
-  let cardTooAdd: Card | null = await cardsCollection.findOne({
-    _id: new ObjectId(req.params._id),
-  });
-  if (!cardTooAdd) {
-    return res.redirect("/404");
-  }
-  if (selectedDeck.cards.length < 60) {
-    if (!cardTooAdd!.types.find((e) => e == "Land")) {
-      if (
-        selectedDeck.cards.filter((e) => e.name == cardTooAdd!.name).length < 4
-      ) {
-        await decksCollection.updateOne(
-          selectedDeck,
-          { $push: { cards: cardTooAdd! } }
-        );
       } else {
-        console.log("4 or more cards");
+        console.log("Is land card");
+        await decksCollection.updateOne(selectedDeck, {
+          $push: { cards: cardTooAdd! },
+        });
       }
     } else {
-      console.log("Is land card");
-      await decksCollection.updateOne(
-        selectedDeck,
-        { $push: { cards: cardTooAdd! } }
-      );
+      console.log("Deck full");
+
+      // handle alert
     }
-  } else {
-    console.log("Deck full");
 
-    // handle alert
+    res.redirect(`/editDeck/${req.params.deckName}?&page=${req.params.page}`);
   }
-
-  res.redirect(`/editDeck/${req.params.deckName}?&page=${req.params.page}`);
-});
+);
 app.get("/makeDeck", secureMiddleware, (req, res) => {
   const deck: Deck = {
     userId: res.locals.user._id,
@@ -559,14 +403,14 @@ app.post("/deleteDeck", secureMiddleware, async (req, res) => {
   res.redirect("/decks");
 });
 app.post("/makeDeck", secureMiddleware, async (req, res) => {
-
   let newDeck: Deck = {
     userId: res.locals.user._id,
     deckName: req.body.deckName,
     cards: [],
-    deckImageUrl: req.body.imgUrl !== "" ? req.body.imgUrl : "/assets/images/decks/1.webp",
-    favorited: false
-  }
+    deckImageUrl:
+      req.body.imgUrl !== "" ? req.body.imgUrl : "/assets/images/decks/1.webp",
+    favorited: false,
+  };
 
   await decksCollection.insertOne(newDeck);
 

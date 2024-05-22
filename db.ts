@@ -177,9 +177,8 @@ export async function populateTips(allTips: i.Tip[]) {
 
 async function createInitialUser() {
   // await usersCollection.deleteMany({});
-  if ((await usersCollection.countDocuments()) > 0) {
+  if (await usersCollection.findOne({ email: process.env.ADMIN_EMAIL })) {
     console.log("[ - SERVER - ]=> Initial user exists");
-
     return;
   }
   console.log("[ - SERVER - ]=> making Initial user");

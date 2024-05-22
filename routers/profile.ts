@@ -72,7 +72,11 @@ export default function profileRouter() {
   });
   router.post("/delete", secureMiddleware, async (req, res) => {
     // delete all decks of user
-    await decksCollection.deleteMany({ userId: res.locals.user._id })
+    const deleteQuery = await decksCollection.deleteMany({ userId: res.locals.user._id })
+    console.log(deleteQuery.acknowledged);
+
+    console.log(deleteQuery.deletedCount);
+
     // delete User
     await usersCollection.deleteOne({ _id: res.locals.user._id });
 

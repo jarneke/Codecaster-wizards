@@ -36,7 +36,7 @@ export default function drawtestRouter() {
 
         // -- other
         let whatToDo = req.query.action;
-        let selectedDeckQuery = req.query.decks;
+        let selectedDeckQuery = req.query.deck;
 
         let cardLookupInDeckCard: Card | undefined = undefined;
         let cardLookupInDeckCardChance: number | undefined = undefined;

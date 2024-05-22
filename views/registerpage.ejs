@@ -1,132 +1,58 @@
 <%- include("partials/landingsheader") %>
 
-<main
-  class="d-flex align-items-center d-flex flex-column col-12"
-  style="min-height: 72vh"
->
-  <form action="/register" method="POST" class="px-4 py-3" class="height-75">
-    <fieldset class="text-center mb-3">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="#ffffff"
-        width="130"
-        height="130"
-        fill="currentColor"
-        class="bi bi-person-circle"
-        viewBox="0 0 16 16"
-      >
-        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-        <path
-          fill-rule="evenodd"
-          d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
-        />
-      </svg>
-    </fieldset>
-    <fieldset class="row mb-3">
-      <section class="col">
-        <label for="registerFName" class="form-label ctext-white"
-          >Voornaam</label
-        >
-        <input
-          type="text"
-          name="registerFName"
-          id="registerFName"
-          class="form-control"
-          placeholder="Voornaam"
-          aria-label="First name"
-        />
-      </section>
-      <section class="col">
-        <label for="registerName" class="form-label ctext-white">Naam</label>
-        <input
-          type="text"
-          name="registerName"
-          id="registerName"
-          class="form-control"
-          placeholder="Naam"
-          aria-label="Last name"
-        />
-      </section>
-    </fieldset>
-    <fieldset class="mb-3">
-      <label for="registerUsername" class="form-label ctext-white"
-        >Gebruikersnaam</label
-      >
-      <input
-        type="text"
-        name="registerUsername"
-        id="registerUsername"
-        class="form-control"
-        placeholder="gebruikersnaam"
-        aria-label="Username"
-      />
-    </fieldset>
-    <fieldset class="mb-3">
-      <label for="registerEmail" class="form-label ctext-white">E-mail</label>
-      <input
-        type="email"
-        name="registerEmail"
-        id="registerEmail"
-        class="form-control"
-        placeholder="e-mail@voorbeeld.com"
-        aria-label="e-mail"
-      />
-    </fieldset>
-    <fieldset class="mb-3">
-      <label for="registerPassword" class="form-label ctext-white"
-        >Wachtwoord</label
-      >
-      <input
-        type="password"
-        name="registerPassword"
-        id="registerPassword"
-        class="form-control"
-        placeholder="Wachtwoord"
-        aria-label="password"
-      />
-    </fieldset>
-    <fieldset class="mb-3">
-      <label for="registerConfirmPassword" class="form-label ctext-white"
-        >Bevestig wachtwoord</label
-      >
-      <input
-        type="password"
-        name="registerConfirmPassword"
-        id="registerConfirmPassword"
-        class="form-control"
-        placeholder="Bevestig wachtwoord"
-        aria-label="confirmPassword"
-      />
-    </fieldset>
-    <fieldset class="d-flex justify-content-between">
-      <button type="submit" class="btn btn-primary btn-dark cbg-dark col-3">
-        Registreer
-      </button>
-      <a href="/login" class="btn btn-link ctext-white ms-4 text-nowrap"
-        >Al een account, log in</a
-      >
-    </fieldset>
-  </form>
-  <% if (message) { %>
-  <div
-    class="alert alert-danger alert-dismissible fade show col-12"
-    role="alert"
-  >
-    <button
-      type="button"
-      class="btn-close"
-      data-bs-dismiss="alert"
-      aria-label="Close"
-    ></button>
-    <strong><%= message.type %></strong> <%= message.message %>
-  </div>
-  <% } %>
-  <script>
-    var alertList = document.querySelectorAll(".alert");
-    alertList.forEach(function (alert) {
-      new bootstrap.Alert(alert);
-    });
-  </script>
-</main>
+  <main class="d-flex align-items-center d-flex flex-column col-12" style="min-height: 72vh">
+    <form action="/register" method="POST" class="px-4 py-3" class="height-75">
+      <fieldset class="text-center mb-3">
+        <i class="bi bi-person-circle text-white" style="font-size: 10rem;"></i>
+      </fieldset>
+      <fieldset class="row mb-3">
+        <section class="col">
+          <label for="registerFName" class="form-label ctext-white">Voornaam</label>
+          <input type="text" name="registerFName" id="registerFName" class="form-control" placeholder="Voornaam" aria-label="First name" />
+        </section>
+        <section class="col">
+          <label for="registerName" class="form-label ctext-white">Naam</label>
+          <input type="text" name="registerName" id="registerName" class="form-control" placeholder="Naam" aria-label="Last name" />
+        </section>
+      </fieldset>
+      <fieldset class="mb-3">
+        <label for="registerUsername" class="form-label ctext-white">Gebruikersnaam</label>
+        <input type="text" name="registerUsername" id="registerUsername" class="form-control" placeholder="gebruikersnaam" aria-label="Username" />
+      </fieldset>
+      <fieldset class="mb-3">
+        <label for="registerEmail" class="form-label ctext-white">E-mail</label>
+        <input type="email" name="registerEmail" id="registerEmail" class="form-control" placeholder="e-mail@voorbeeld.com" aria-label="e-mail" />
+      </fieldset>
+      <fieldset class="mb-3">
+        <label for="registerPassword" class="form-label ctext-white">Wachtwoord</label>
+        <input type="password" name="registerPassword" id="registerPassword" class="form-control" placeholder="Wachtwoord" aria-label="password" />
+      </fieldset>
+      <fieldset class="mb-3">
+        <label for="registerConfirmPassword" class="form-label ctext-white">Bevestig wachtwoord</label>
+        <input type="password" name="registerConfirmPassword" id="registerConfirmPassword" class="form-control" placeholder="Bevestig wachtwoord" aria-label="confirmPassword" />
+      </fieldset>
+      <fieldset class="d-flex justify-content-between">
+        <button type="submit" class="btn btn-primary btn-dark cbg-dark col-3">
+          Registreer
+        </button>
+        <a href="/login" class="btn btn-link ctext-white ms-4 text-nowrap">Al een account, log in</a>
+      </fieldset>
+    </form>
+    <% if (message) { %>
+      <div class="alert alert-danger alert-dismissible fade show col-12" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <strong>
+          <%= message.type %>
+        </strong>
+        <%= message.message %>
+      </div>
+      <% } %>
+        <script>
+          var alertList = document.querySelectorAll(".alert");
+          alertList.forEach(function (alert) {
+            new bootstrap.Alert(alert);
+          });
+        </script>
+  </main>
 
-<%- include("partials/landingsfooter") %>
+  <%- include("partials/landingsfooter") %>

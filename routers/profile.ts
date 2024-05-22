@@ -29,9 +29,8 @@ export default function profileRouter() {
   router.post("/profile", secureMiddleware, async (req, res) => {
     const { firstName, lastName, email, passwordFormLabel, description } =
       req.body;
-    const userName: string = `${
-      firstName === "" ? res.locals.user?.firstName : firstName
-    }_${lastName === "" ? res.locals.user?.lastName : lastName}`;
+    const userName: string = `${firstName === "" ? res.locals.user?.firstName : firstName
+      }_${lastName === "" ? res.locals.user?.lastName : lastName}`;
 
     const newUserDetails: User = {
       firstName:
@@ -72,7 +71,11 @@ export default function profileRouter() {
     res.redirect("/profile");
   });
   router.post("/delete", secureMiddleware, async (req, res) => {
-    await usersCollection.deleteOne({ _id: res.locals.user?._id });
+    // delete all decks of user
+    await decksCollection.deleteMany({ userId: res.locals.user._id })
+    // delete User
+    await usersCollection.deleteOne({ _id: res.locals.user._id });
+
     res.redirect("/");
   });
   return router;

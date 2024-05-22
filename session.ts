@@ -1,6 +1,6 @@
 import session, { MemoryStore } from "express-session";
-import * as i from "./interfaces";
 import mongoDbSession from "connect-mongodb-session";
+import { FlashMessage, User } from "./interfaces";
 
 const MongoDbStore = mongoDbSession(session);
 
@@ -12,7 +12,8 @@ const mongoStore = new MongoDbStore({
 
 declare module "express-session" {
   export interface SessionData {
-    user?: i.User;
+    user?: User,
+    message?: FlashMessage
   }
 }
 

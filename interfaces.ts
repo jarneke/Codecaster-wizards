@@ -87,7 +87,6 @@ export const filterTypes: string[] = [
   "Scheme",
   "Stickers",
   "Eaturecray",
-  "instant",
 ];
 // all rarities
 export const filterRarities: string[] = [
@@ -97,3 +96,7 @@ export const filterRarities: string[] = [
   "Mythic",
   "Special",
 ];
+export interface FlashMessage {
+  type: "error" | "success"
+  message: string;
+}

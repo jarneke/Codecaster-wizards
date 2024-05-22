@@ -51,7 +51,7 @@
     <a href="/register" class="btn btn-link ctext-white ms-4 col-3 text-nowrap">
       Nog geen account, registreer
     </a>
-    <% if (alert) { %>
+    <% if (message) { %>
     <div
       class="col-12 mt-3 alert alert-danger alert-dismissible fade show"
       role="alert"
@@ -62,7 +62,7 @@
         data-bs-dismiss="alert"
         aria-label="Close"
       ></button>
-      <%= alertMsg %>
+      <strong><%= message.type %></strong> <%= message.message %>
     </div>
 
     <script>

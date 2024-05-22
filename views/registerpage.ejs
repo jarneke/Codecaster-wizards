@@ -1,7 +1,10 @@
 <%- include("partials/landingsheader") %>
 
-<main class="d-flex w-100 justify-content-center" style="min-height: 72vh">
-  <form action="/register" method="POST" class="px-4 py-3">
+<main
+  class="d-flex align-items-center d-flex flex-column col-12"
+  style="min-height: 72vh"
+>
+  <form action="/register" method="POST" class="px-4 py-3" class="height-75">
     <fieldset class="text-center mb-3">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -104,6 +107,26 @@
       >
     </fieldset>
   </form>
+  <% if (message) { %>
+  <div
+    class="alert alert-danger alert-dismissible fade show col-12"
+    role="alert"
+  >
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+    <strong><%= message.type %></strong> <%= message.message %>
+  </div>
+  <% } %>
+  <script>
+    var alertList = document.querySelectorAll(".alert");
+    alertList.forEach(function (alert) {
+      new bootstrap.Alert(alert);
+    });
+  </script>
 </main>
 
 <%- include("partials/landingsfooter") %>

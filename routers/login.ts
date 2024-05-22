@@ -5,6 +5,9 @@ import { login, usersCollection, decksCollection } from "../db";
 import { starterDeck } from "../starterDeck";
 import bcrypt from "bcrypt";
 import { appendFile } from "fs";
+import { flashMiddleware } from "../fleshMiddleware";
+import e from "express";
+import { error } from "console";
 
 export default function loginRouter() {
   const router = express.Router();
@@ -24,7 +27,8 @@ export default function loginRouter() {
       req.session.user = user;
       res.redirect("/home");
     } catch (e: any) {
-      return res.render("loginspage");
+      req.session.message = { type: "error", message: e.message };
+      return res.redirect("/login");
     }
   });
   router.get("/register", (req, res) => {
@@ -40,11 +44,13 @@ export default function loginRouter() {
       registerConfirmPassword,
     } = req.body;
 
-    if (registerConfirmPassword !== registerPassword) {
-      return res.render("registerpage", {
-        alert: true,
-        alertMsg: "wachtwoorden komen niet overeen",
-      });
+    try {
+      if (registerConfirmPassword !== registerPassword) {
+        throw new Error("Wachtwoorden komen niet overeen");
+      }
+    } catch (e: any) {
+      req.session.message = { type: "error", message: e.message };
+      return res.redirect("/register");
     }
 
     const existingUser = await usersCollection.findOne({

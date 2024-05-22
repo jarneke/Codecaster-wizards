@@ -33,6 +33,11 @@ export default async function deckRouter() {
 
     let totalPages = getTotalPages(decksForPage.length, pageSize);
 
+
+    if (decksForPage.length === 0) {
+        return res.redirect("/noDeck");
+    }
+    
     res.render("decks", {
       // HEADER
       user: res.locals.user,
@@ -223,34 +228,21 @@ export default async function deckRouter() {
     if (!selectedDeck) {
       return res.redirect("/404");
     }
-    // Remove a card from the deck based on the card's _id
-    await decksCollection.updateOne(
-      selectedDeck, // The filter to identify the selected deck
-      [
-        {
-          $set: {
-            cards: {
-              $let: {
-                // Define variables for the let expression
-                vars: {
-                  // Find the index of the card to be removed by its _id
-                  index: { $indexOfArray: ["$cards._id", new ObjectId(req.params._id)] }
-                },
-                // Use the found index to create the new cards array without the specified card
-                in: {
-                  $concatArrays: [
-                    // Include all cards before the one to be removed
-                    { $slice: ["$cards", 0, { $add: ["$$index", 0] }] },
-                    // Include all cards after the one to be removed
-                    { $slice: ["$cards", { $add: ["$$index", 1] }, { $size: "$cards" }] }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      ]
-    );
+    let newCards = selectedDeck.cards;
+  let removed = false;
+  newCards = newCards.filter((card) => {
+    if (`${card._id}` === req.params._id && !removed) {
+      removed = true;
+      return false;
+    }
+    return true;
+  });
+
+  await decksCollection.updateOne(
+    selectedDeck, {
+    $set: { cards: newCards }
+  }
+  );
   
     res.redirect(`/editDeck/${req.params.deckName}?&page=${req.params.page}`);
   });
@@ -296,7 +288,11 @@ export default async function deckRouter() {
   
     res.redirect(`/editDeck/${req.params.deckName}?&page=${req.params.page}`);
   });
-  router.get("/makeDeck", secureMiddleware, (req, res) => {
+  router.get("/makeDeck", secureMiddleware, async(req, res) => {
+    // to-do: make alert when deck exists
+    if (await decksCollection.findOne({deckName : req.body.deckName, userId : res.locals.user._id})) {
+        return res.redirect("/makeDeck");
+    }
     const deck: Deck = {
       userId: res.locals.user._id,
       deckName: req.body.deckName,

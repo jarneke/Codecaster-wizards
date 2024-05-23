@@ -42,14 +42,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session);
 
-async function setupDecksRouter() {
-  let router = await deckRouter();
-  app.use(router);
-}
 app.use("/feedback", feedbackRouter());
 app.use("/home", homeRouter());
 app.use("/drawtest", drawtestRouter());
-setupDecksRouter().catch((err) => console.log(err));
+app.use(deckRouter())
 app.use(loginRouter());
 app.use(profileRouter());
 

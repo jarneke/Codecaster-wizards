@@ -4,10 +4,7 @@ import { ObjectId } from "mongodb";
 import { login, usersCollection, decksCollection } from "../db";
 import { starterDeck } from "../starterDeck";
 import bcrypt from "bcrypt";
-import { appendFile } from "fs";
 import { flashMiddleware } from "../fleshMiddleware";
-import e from "express";
-import { error } from "console";
 
 export default function loginRouter() {
   const router = express.Router();

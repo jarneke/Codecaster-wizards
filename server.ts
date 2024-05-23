@@ -92,11 +92,11 @@ app.get("/404", secureMiddleware, (req, res) => {
     toRedirectTo: "404",
   });
 });
-//catch all paths that dont already exist.
-// app.all("*", (req, res) => {
-//   // and redirect to 404 not found.
-//   res.redirect("/404");
-// });
+// catch all paths that dont already exist.
+app.all("*", (req, res) => {
+  // and redirect to 404 not found.
+  res.redirect("/404");
+});
 app.listen(app.get("port"), async () => {
   console.clear();
   console.log("[ - SERVER - ]=> connecting to database");

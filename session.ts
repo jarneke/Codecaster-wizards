@@ -1,6 +1,9 @@
 import session, { MemoryStore } from "express-session";
 import mongoDbSession from "connect-mongodb-session";
 import { FlashMessage, User } from "./interfaces";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const MongoDbStore = mongoDbSession(session);
 
@@ -16,6 +19,10 @@ declare module "express-session" {
     message?: FlashMessage
   }
 }
+
+mongoStore.on("error", (error) => {
+  console.error(error);
+});
 
 export default session({
   secret: process.env.SESSION_SECRET ?? "my-super-secret-secret",

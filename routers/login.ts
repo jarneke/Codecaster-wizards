@@ -53,11 +53,14 @@ export default function loginRouter() {
     const existingUser = await usersCollection.findOne({
       email: registerEmail,
     });
-    if (existingUser) {
-      return res.render("registerpage", {
-        alert: true,
-        alertMsg: "E-mail bestaat al",
-      });
+
+    try {
+      if (existingUser) {
+        throw new Error("Account bestaat al, login");
+      }
+    } catch (e: any) {
+      req.session.message = { type: "error", message: e.message };
+      return res.redirect("/login");
     }
 
     const newUser: User = {

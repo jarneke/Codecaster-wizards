@@ -1,69 +1,61 @@
 <%- include("partials/header") %>
 
-<main
-  class="album py-5 bg-light d-flex flex-wrap"
-  style="
+  <main class="album py-5 bg-light d-flex flex-wrap" style="
     background-image: url(assets/images/background/MTGBackground.jpg);
     background-size: cover;
   ">
-<section class="container">
-  <section class="col-12 d-flex justify-content-end">
-    <a class="ctext-white ch1 btn btn-dark" href="/makeDeck"><i class="bi bi-plus"></i> Maak een deck</a>
-  </section>
-    <section>
-      <%- include("partials/paginationShort") %>
-  
-      <section class="cards">
-      <section class="container" id="cards_animation">
-        <section class="row">
-          <% for (const deck of decks) { %>
-          <section class="col-md-6 col-lg-4">
-            <a href="/decks/<%= deck.deckName %>" class="text-decoration-none">
-              <section
-                class="card mb-4 box-shadow card-flyer"
-                style="
+    <section class="container">
+      <section class="col-12 d-flex justify-content-end">
+        <a class="ctext-white ch1 btn btn-dark" href="/makeDeck"><i class="bi bi-plus"></i> Maak een deck</a>
+      </section>
+      <section>
+        <%- include("partials/paginationShort") %>
+
+          <section class="cards">
+            <section class="container" id="cards_animation">
+              <section class="row">
+                <% for (const deck of decks) { %>
+                  <section class="col-md-6 col-lg-4">
+                    <a href="/decks/<%= deck.deckName %>" class="text-decoration-none">
+                      <section class="card mb-4 box-shadow card-flyer" style="
                   background-image: url(assets/images/background/MTGTest.jpg);
                   background-size: cover;
-                "
-              >
-                <img
-                  class="deckImage"
-                  src="<%= deck.deckImageUrl %>"
-                  alt="image of deck"
-                />
-                <section class="card-body purplebg d-flex justify-content-center">
-                  <p
-                    class="card-text ctext-white ch1 text-center fs-3 flex-grow-1"
-                  >
-                    <%= deck.deckName %>
-                  </p>
-                  <form
-                    class="justify-self-end"
-                    action="/favorite/<%= deck.deckName %>"
-                    method="post"
-                  >
-                    <input type="hidden" name="favToRedirect" value="decks" />
-                    <% if (deck.favorited) { %>
-                    <button type="submit" class="border border-0 cbg-transparent">
-                      <i class="bi bi-heart-fill ctext-secondary fs-4"></i>
-                    </button>
-                    <% } else { %>
-                    <button type="submit" class="border border-0 cbg-transparent">
-                      <i class="bi bi-heartbreak-fill ctext-secondary-d fs-4"></i>
-                    </button>
-                    <% } %>
-                  </form>
-                </section>
+                ">
+                        <img class="deckImage" src="<%= deck.deckImageUrl %>" alt="image of deck" />
+                        <section class="card-body purplebg d-flex justify-content-center">
+                          <p class="card-text ctext-white ch1 text-center fs-3 flex-grow-1">
+                            <%= deck.deckName %>
+                          </p>
+                          <form class="justify-self-end" action="/favorite/<%= deck.deckName %>" method="post">
+                            <input type="hidden" name="favToRedirect" value="decks" />
+                            <% if (deck.favorited) { %>
+                              <button type="submit" class="border border-0 cbg-transparent">
+                                <i class="bi bi-heart-fill ctext-secondary fs-4"></i>
+                              </button>
+                              <% } else { %>
+                                <button type="submit" class="border border-0 cbg-transparent">
+                                  <i class="bi bi-heartbreak-fill ctext-secondary-d fs-4"></i>
+                                </button>
+                                <% } %>
+                          </form>
+                        </section>
+                      </section>
+                    </a>
+                  </section>
+                  <% } %>
               </section>
-            </a>
+            </section>
           </section>
-          <% } %>
-        </section>
+          <%- include("partials/paginationShort") %>
       </section>
     </section>
-    <%- include("partials/paginationShort") %>
-  </section>
-</section>
-</main>
+    <% if (message) { %>
+      <div class="message message-success p-2 rounded">
+        <strong>
+          <%= message.message %>
+        </strong>
+      </div>
+      <% } %>
+  </main>
 
-<%- include("partials/footer") %>
+  <%- include("partials/footer") %>

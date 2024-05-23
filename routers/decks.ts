@@ -89,11 +89,10 @@ export default function deckRouter() {
       deckName: req.params.deckName,
     });
     if (!selectedDeck) {
-      res.redirect("/404");
+      return res.redirect("/404");
     }
-
     let amountMap = new Map<Card, number>();
-    for (const card of selectedDeck!.cards) {
+    for (const card of selectedDeck.cards) {
       const existingCard = Array.from(amountMap.keys()).find(
         (c) => c.multiverseid === card.multiverseid
       );
@@ -111,7 +110,7 @@ export default function deckRouter() {
 
     let avgManaCost: number | undefined = undefined;
 
-    if (selectedDeck!.cards !== undefined) {
+    if (selectedDeck.cards.length === 0) {
       avgManaCost = getAvgManaCost(selectedDeck!.cards);
       amountLandcards = selectedDeck!.cards.filter((card) =>
         card.types.includes("Land")
@@ -324,33 +323,45 @@ export default function deckRouter() {
   router.post("/deleteDeck", secureMiddleware, async (req, res) => {
     let deckName = req.body.deckName;
 
-    await decksCollection.deleteOne({ deckName: deckName });
+    try {
+      const deleteQuery = await decksCollection.deleteOne({ deckName: deckName });
+      if (deleteQuery.deletedCount === 0) {
+        throw new Error("Fout bij het verwijderen van een deck")
+      }
+      req.session.message = { type: "success", message: "Deck verwijderd" }
+      res.redirect("/decks");
+    } catch (e: any) {
+      req.session.message = { type: "error", message: e.message }
+      res.redirect("/decks")
+    }
 
-    res.redirect("/decks");
   });
   router.post("/makeDeck", secureMiddleware, async (req, res) => {
     try {
       if (await decksCollection.findOne({ deckName: req.body.deckName, userId: res.locals.user._id })) {
         throw new Error("Je kan geen 2 decks met eenzelfde naam hebben")
       };
-    } catch (e: any) {
-      console.log(e);
+      const specialCharRegEx = /[?#@!$%^&*()]/
+      if (specialCharRegEx.test(req.body.deckName)) {
+        throw new Error("Je decknaam mag geen van de volgende characters bevatten: ?#@!$%^&*()");
+      }
 
+      let newDeck: Deck = {
+        userId: res.locals.user._id,
+        deckName: req.body.deckName,
+        cards: [],
+        deckImageUrl: req.body.imgUrl !== "" ? req.body.imgUrl : "/assets/images/decks/1.webp",
+        favorited: false
+      }
+
+      await decksCollection.insertOne(newDeck);
+
+      req.session.message = { type: "success", message: "Deck toegevoegd" }
+      res.redirect("/decks");
+    } catch (e: any) {
       req.session.message = { type: "error", message: e.message }
       return res.redirect("/makeDeck");
     }
-
-    let newDeck: Deck = {
-      userId: res.locals.user._id,
-      deckName: req.body.deckName,
-      cards: [],
-      deckImageUrl: req.body.imgUrl !== "" ? req.body.imgUrl : "/assets/images/decks/1.webp",
-      favorited: false
-    }
-
-    await decksCollection.insertOne(newDeck);
-
-    res.redirect("/decks");
   });
   return router;
 }

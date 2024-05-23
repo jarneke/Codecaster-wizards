@@ -329,10 +329,16 @@ export default function deckRouter() {
     res.redirect("/decks");
   });
   router.post("/makeDeck", secureMiddleware, async (req, res) => {
-    if (await decksCollection.findOne({ deckName: req.body.deckName, userId: res.locals.user._id })) {
-      req.session.message = { type: "error", message: "Je kan geen 2 decks met eenzelfde naam hebben" }
+    try {
+      if (await decksCollection.findOne({ deckName: req.body.deckName, userId: res.locals.user._id })) {
+        throw new Error("Je kan geen 2 decks met eenzelfde naam hebben")
+      };
+    } catch (e: any) {
+      console.log(e);
+
+      req.session.message = { type: "error", message: e.message }
       return res.redirect("/makeDeck");
-    };
+    }
 
     let newDeck: Deck = {
       userId: res.locals.user._id,

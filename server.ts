@@ -18,7 +18,6 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import session from "./session";
 import { secureMiddleware } from "./secureMiddleware";
-import { ObjectId } from "mongodb";
 import feedbackRouter from "./routers/feedback";
 import homeRouter from "./routers/home";
 import drawtestRouter from "./routers/drawtest";
@@ -42,14 +41,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session);
 
-async function setupDecksRouter() {
-  let router = await deckRouter();
-  app.use(router);
-}
 app.use("/feedback", feedbackRouter());
 app.use("/home", homeRouter());
 app.use("/drawtest", drawtestRouter());
-setupDecksRouter().catch((err) => console.log(err));
+app.use(deckRouter())
 app.use(loginRouter());
 app.use(profileRouter());
 

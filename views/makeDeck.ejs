@@ -1,120 +1,70 @@
 <%- include('partials/header') %>
-<main class="container d-flex py-5">
-  <form action="/makeDeck" method="post" class="d-flex flex-wrap gap-3">
-    <fieldset class="col-12 col-md-6 p-2">
-      <input type="hidden" name="imgUrl" value="" id="imgUrl" />
-      <img
-        src="<%= deckImage %>"
-        alt="<%= deckImage %>"
-        id="deckImage"
-        class="col-12"
-      />
-      <button
-        type="button"
-        class="btn btn-dark col-12 mt-2"
-        data-bs-toggle="modal"
-        data-bs-target="#imageModal"
-      >
-        Selecteer deck afbeelding
-      </button>
-    </fieldset>
-    <fieldset
-      class="col-12 col-md-5 d-flex flex-column justify-content-between"
-    >
-      <div>
-        <label for="deckName" class="form-label ch1 ctext-white fs-3"
-          >Decknaam</label
-        >
-        <input
-          type="text"
-          name="deckName"
-          id="deckName"
-          class="form-control"
-          value="<%= deckName %>"
-          placeholder="Decknaam"
-          required
-        />
-      </div>
-      <div>
-        <% if (message) { %> <% if (message.type === "error") { %>
-        <div
-          class="alert alert-danger alert-dismissible fade show"
-          role="alert"
-        >
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="alert"
-            aria-label="Close"
-          ></button>
-          <strong><%= message.type %></strong> <%= message.message %>
+  <main class="container d-flex py-5">
+    <form action="/makeDeck" method="post" class="d-flex flex-wrap gap-3">
+      <fieldset class="col-12 col-md-6 p-2">
+        <input type="hidden" name="imgUrl" value="" id="imgUrl" />
+        <img src="<%= deckImage %>" alt="<%= deckImage %>" id="deckImage" class="col-12" />
+        <button type="button" class="btn btn-dark col-12 mt-2" data-bs-toggle="modal" data-bs-target="#imageModal">
+          Selecteer deck afbeelding
+        </button>
+      </fieldset>
+      <fieldset class="col-12 col-md-5 d-flex flex-column justify-content-between">
+        <div>
+          <label for="deckName" class="form-label ch1 ctext-white fs-3">Decknaam</label>
+          <input type="text" name="deckName" id="deckName" class="form-control" value="<%= deckName %>" placeholder="Decknaam" required />
         </div>
+        <div>
+          <% if (message) { %>
+            <% if (message.type==="error" ) { %>
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <strong>
+                  <%= message.type %>
+                </strong>
+                <%= message.message %>
+              </div>
 
-        <% } else { %>
-        <div
-          class="alert alert-success alert-dismissible fade show"
-          role="alert"
-        >
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="alert"
-            aria-label="Close"
-          ></button>
-          <strong><%= message.type %></strong> <%= message.message %>
-        </div>
+              <% } else { %>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  <strong>
+                    <%= message.type %>
+                  </strong>
+                  <%= message.message %>
+                </div>
 
-        <% } %> <% } %>
-      </div>
-      <button type="submit" class="btn btn-dark my-2">Maak deck</button>
-      
-    </fieldset>
-  </form>
-  <div
-    class="modal fade"
-    id="imageModal"
-    tabindex="-1"
-    aria-labelledby="imageModalLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="imageModalLabel">
-            Selecteer je deck afbeelding
-          </h5>
-          <button
-            type="button"
-            class="btn-close cbg-white"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+                <% } %>
+                  <% } %>
         </div>
-        <div class="modal-body d-flex flex-wrap gap-2 justify-content-center">
-          <% for( let i=1; i < 13; i++ ) { %>
-          <button
-            type="click"
-            class="col-3 imgButton border border-0 cbg-transparent"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          >
-            <img
-              class="col-12"
-              src="/assets/images/decks/<%= i %>.webp"
-              alt="DeckImage<%= i %>"
-            />
-          </button>
-          <% } %>
+        <button type="submit" class="btn btn-dark my-2">Maak deck</button>
+
+      </fieldset>
+    </form>
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header cbg-dark border-0">
+            <h5 class="modal- ctext-white fs-6 col-11" id="imageModalLabel">
+              Selecteer je deck afbeelding
+            </h5>
+            <button type="button" class="btn-close cbg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body d-flex flex-wrap gap-2 justify-content-center">
+            <% for( let i=1; i < 13; i++ ) { %>
+              <button type="click" class="col-3 imgButton border border-0 cbg-transparent" data-bs-dismiss="modal" aria-label="Close">
+                <img class="col-12" src="/assets/images/decks/<%= i %>.webp" alt="DeckImage<%= i %>" />
+              </button>
+              <% } %>
+          </div>
+          <div class="modal-footer"></div>
         </div>
-        <div class="modal-footer"></div>
       </div>
     </div>
-  </div>
-</main>
-<script>
-  var alertList = document.querySelectorAll(".alert");
-  alertList.forEach(function (alert) {
-    new bootstrap.Alert(alert);
-  });
-</script>
-<%- include('partials/footer') %>
+  </main>
+  <script>
+    var alertList = document.querySelectorAll(".alert");
+    alertList.forEach(function (alert) {
+      new bootstrap.Alert(alert);
+    });
+  </script>
+  <%- include('partials/footer') %>

@@ -49,14 +49,14 @@
             </h5>
             <button type="button" class="btn-close cbg-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body d-flex flex-wrap gap-2 justify-content-center">
+          <div class="modal-body d-flex flex-wrap gap-2 justify-content-center cbg-primary">
             <% for( let i=1; i < 13; i++ ) { %>
               <button type="click" class="col-3 imgButton border border-0 cbg-transparent" data-bs-dismiss="modal" aria-label="Close">
                 <img class="col-12" src="/assets/images/decks/<%= i %>.webp" alt="DeckImage<%= i %>" />
               </button>
               <% } %>
           </div>
-          <div class="modal-footer"></div>
+          <div class="modal-footer cbg-primary"></div>
         </div>
       </div>
     </div>

@@ -135,10 +135,6 @@ export default function drawtestRouter() {
         // Map cards so we filter out duplicates and keep count of how many of them are duplicate
         // -- initialize map
         let amountMap = new Map<Card, number>();
-        // -- if length is 0 skip cause unneeded
-        if (filterAndSortedCards.length !== 0) {
-
-        }
         // -- loop over array
         for (const card of filterAndSortedCards) {
             // -- if card already exists in map or undefined if not
@@ -155,7 +151,6 @@ export default function drawtestRouter() {
                 amountMap.set(card, 1);
             }
         }
-
         // get the cardToShow (always the first card in pulledCards)
         let cardToShow: Card = pulledCards[0];
         // initialize nextCard
@@ -178,8 +173,6 @@ export default function drawtestRouter() {
         const allDeckNames: string[] = allDecks.map(e => e.deckName)
 
         res.render("drawtest", {
-            // HEADER
-            user: res.locals.user,
             // -- The names of the js files you want to load on the page.
             jsFiles: [
                 "submitOnChange",

@@ -6,6 +6,10 @@ import { getDecksOfUser, handlePageClickEvent, getCardsForPage } from "../functi
 
 export default function homeRouter() {
     const router = express.Router();
+    router.use((req, res, next) => {
+        //res.locals.
+        next();
+    })
     router.post("/dontShowPopup", async (req, res) => {
         // set a cookie that lasts a week
         res.cookie("dontShowInfo", "true", {

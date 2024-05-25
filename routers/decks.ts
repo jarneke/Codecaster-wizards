@@ -13,6 +13,7 @@ import {
   getCardWAmauntForPage,
   getRandomNumber,
   getTips,
+  getDecksForPage,
 } from "../functions";
 import { getTotalPages } from "../functions";
 import { cardsCollection, decksCollection } from "../db";
@@ -26,14 +27,14 @@ export default function deckRouter() {
   router.use(flashMiddleware);
 
   router.get("/decks", secureMiddleware, async (req, res) => {
-    let decksForPage: Deck[] = await getDecksOfUser(res);
     // params from route
     // Pagination
     let pageSize: number = 9;
     let pageData: PageData = handlePageClickEvent(req.query);
+    let allDecksOfUser = await getDecksOfUser(res)
+    let decksForPage = getDecksForPage(allDecksOfUser, pageData.page, pageSize)
 
-    let totalPages = getTotalPages(decksForPage.length, pageSize);
-
+    let totalPages = getTotalPages(allDecksOfUser.length, pageSize);
 
     if (decksForPage.length === 0) {
       return res.redirect("/noDeck");

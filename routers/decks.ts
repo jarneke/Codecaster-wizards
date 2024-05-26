@@ -106,9 +106,22 @@ export default function deckRouter() {
     // Pagination
     let pageSize: number = 6;
     let pageData: PageData = handlePageClickEvent(req.query);
-    let totalPages = getTotalPages(amountMap.size, pageSize);
     let amountLandcards: number | undefined = undefined;
+    let sorted: [Card, number][] = Array.from(amountMap).sort((a, b) => {
+      return a[0].name.localeCompare(b[0].name);
+    });
+    let sortedAmountMap = new Map();
 
+    sorted.forEach(([card, number]) => {
+      sortedAmountMap.set(card, number);
+    });
+    let totalPages = getTotalPages(sortedAmountMap.size, pageSize);
+
+    sortedAmountMap = getCardWAmauntForPage(
+      sortedAmountMap,
+      pageData.page,
+      pageSize
+    );
     let avgManaCost: number | undefined = undefined;
 
     if (selectedDeck.cards.length === 0) {
@@ -141,7 +154,7 @@ export default function deckRouter() {
       totalPages: totalPages,
       filterUrl: pageData.filterUrl,
       // -- cards
-      cards: amountMap,
+      cards: sortedAmountMap,
       selectedDeck: selectedDeck,
       tip: allTips[getRandomNumber(0, allTips.length - 1)],
       amountLandcards: amountLandcards,

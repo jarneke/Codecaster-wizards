@@ -5,7 +5,7 @@ import { decksCollection } from "../db";
 import { shuffleCards, getChance, filterAndSortCards, handlePageClickEvent, getTotalPages, getCardWAmauntForPage, getDecksOfUser, } from "../functions";
 
 export default function drawtestRouter() {
-
+    // initialize router
     const router = express.Router();
 
     // variable to store last selected deck on drawtest page
@@ -16,6 +16,7 @@ export default function drawtestRouter() {
     let unpulledCards: Card[] = [];
     // variable to store pulled cards of drawtest page
     let pulledCards: Card[] = [];
+
     router.get("/", secureMiddleware, async (req, res) => {
         // Query params
         // -- filter and sort
@@ -40,16 +41,16 @@ export default function drawtestRouter() {
 
         let cardLookupInDeckCard: Card | undefined = undefined;
         let cardLookupInDeckCardChance: number | undefined = undefined;
-        // Logic
 
-        // Find What Deck is selected
+        // Logic
+        // - Find What Deck is selected
         // -- if selectedDeckQuery is defined, look in deckscollection for this deck
         if (selectedDeckQuery) {
             selectedDeck = await decksCollection.findOne({
                 deckName: `${selectedDeckQuery}`,
                 userId: res.locals.user._id
             });
-            // if this is not found, render 404 not found page
+            // -- if this is not found, render 404 not found page
             if (!selectedDeck) {
                 return res.redirect("/404")
             }

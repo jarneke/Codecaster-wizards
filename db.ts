@@ -75,7 +75,6 @@ export async function connect() {
   try {
     await client.connect();
     console.log("[ - SERVER - ]=> Connected to database");
-    await createInitialUser();
     await seed();
     // if application is exited, close connection
     process.on("SIGINT", exit); // For manually stopping the server
@@ -88,10 +87,10 @@ export async function connect() {
 /**
  * A function to seed the database if needed
  */
-async function seed(reseed?: boolean) {
-  if (reseed) {
-    await cardsCollection.deleteMany({});
-  }
+async function seed() {
+
+  // uncomment below to delete all cards
+  // await cardsCollection.deleteMany();
   // uncomment below to delete all feedback
   //await feedbacksCollection.deleteMany();
   // if there are no cards in database pull them from API, else pull them from database
@@ -133,6 +132,7 @@ async function seed(reseed?: boolean) {
   }
 
   // populate the database if need be with mockDecks
+  await createInitialUser();
   await populateDecks(true);
   // populate the database if need be with tips
   await populateTips(mtgTips);
@@ -198,8 +198,8 @@ async function createInitialUser() {
     role: "ADMIN",
     password: await bcrypt.hash(password, saltRounds),
   });
+  console.log("[ - SERVER - ]=> Done creating initial users");
 }
-
 export async function login(email: string, password: string) {
   if (email === "" || password === "") {
     throw new Error("E-mail en wachtwoord vereist");

@@ -5,13 +5,15 @@ import { feedbacksCollection } from "../db";
 import { Feedback } from "../interfaces";
 export default function feedbackRouter() {
     const router = express.Router();
-
-    router.get("/", secureMiddleware, async (req, res) => {
+    // restricted access to anyone except admin role
+    router.use((req, res, next) => {
         // if non admin goes to this route redirect to /home
         if (res.locals.user.role !== "ADMIN") {
             return res.redirect("/home")
         }
-
+        next();
+    })
+    router.get("/", secureMiddleware, async (req, res) => {
         res.render("feedback", {
             // HEADER
             user: res.locals.user,
@@ -51,6 +53,5 @@ export default function feedbackRouter() {
         await feedbacksCollection.deleteOne({ _id: feedbackId })
         res.redirect("/feedback")
     })
-
     return router;
 }

@@ -208,10 +208,22 @@ export async function login(email: string, password: string) {
     email: email,
   });
   if (user) {
-    if (await bcrypt.compare(password, user.password!)) {
-      return user;
-    } else {
-      throw new Error("E-mail en/of wachtwoord onjuist");
+    try {
+      let passwordCheck;
+      try {
+        passwordCheck = await bcrypt.compare(password, user.password!);
+      } catch (error) {
+        console.log("passwordcheck error");
+        console.log(error);
+      }
+
+      if (passwordCheck) {
+        return user;
+      } else {
+        throw new Error("E-mail en/of wachtwoord onjuist");
+      }
+    } catch (error) {
+      console.log(error);
     }
   } else {
     throw new Error("Gebruiker niet gevonden");

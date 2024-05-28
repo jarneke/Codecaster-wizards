@@ -24,25 +24,18 @@
     <header class="p-3 cbg-primary text-dark">
         <section class="container">
             <article class="d-flex flex-wrap align-items-center justify-content-between gapx-1">
-                <img height="100px" src="/assets/images/header/CcW_Logo.png">
-                <section>
-                    <h1 class="ch1 ctext-secondary">Magic The Gathering</h1>
-                </section>
-                <ul class="nav">
-                    <li>
-                        <a href="/home" class="nav-link px-2 <%= tabToColor === 0? " ctext-secondary" : "ctext-white" %>">Home</a>
-                    </li>
-                    <li>
-                        <a href="/decks" class="nav-link px-2 <%= tabToColor === 1? " ctext-secondary" : "ctext-white" %>">Decks nakijken</a>
-                    </li>
-                    <li>
-                        <a href="/drawtest" class="nav-link px-2 <%= tabToColor === 2? " ctext-secondary" : "ctext-white" %>">Deck simuleren</a>
-                    </li>
+                <a href="/home" class="d-flex text-decoration-none align-items-center">
+                    <img height="100px" src="/assets/images/header/CcW_Logo.png">
+                    <section class="">
+                        <h1 class="ch1 ctext-secondary">Magic The Gathering</h1>
+                    </section>
+                </a>
+                <ul class="d-flex flex-wrap">
+                    <a href="/home" class="nav-link px-2 <%= tabToColor === 0? " ctext-secondary" : "ctext-white" %>">Home</a>
+                    <a href="/decks" class="nav-link px-2 <%= tabToColor === 1? " ctext-secondary" : "ctext-white" %>">Decks nakijken</a>
+                    <a href="/drawtest" class="nav-link px-2 <%= tabToColor === 2? " ctext-secondary" : "ctext-white" %>">Deck simuleren</a>
                     <% if (user.role==="ADMIN" ) { %>
-
-                        <li>
-                            <a href="/feedback" class="nav-link px-2 <%= tabToColor === 3? " ctext-secondary" : "ctext-white" %>">Feedback</a>
-                        </li>
+                        <a href="/feedback" class="nav-link px-2 d-none d-sm-block <%= tabToColor === 3? " ctext-secondary" : "ctext-white" %>">Feedback</a>
                         <% } %>
                 </ul>
                 <a data-bs-toggle="offcanvas" href="#miniProfile" role="button" aria-controls="miniProfile" class="d-flex align-items-center text-dark text-decoration-none">

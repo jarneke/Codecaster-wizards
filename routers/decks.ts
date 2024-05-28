@@ -13,36 +13,33 @@ import {
   getCardWAmauntForPage,
   getRandomNumber,
   getTips,
+  getDecksForPage,
 } from "../functions";
 import { getTotalPages } from "../functions";
 import { cardsCollection, decksCollection } from "../db";
 import { ObjectId } from "mongodb";
 import { flashMiddleware } from "../fleshMiddleware";
-import e from "express";
 
 
-export default async function deckRouter() {
+export default function deckRouter() {
   const router = express.Router();
 
   router.use(flashMiddleware);
 
-  // initialize alltips array
-  let allTips: Tip[] = await getTips();
-
   router.get("/decks", secureMiddleware, async (req, res) => {
-    let decksForPage: Deck[] = await getDecksOfUser(res);
     // params from route
     // Pagination
     let pageSize: number = 9;
     let pageData: PageData = handlePageClickEvent(req.query);
+    let allDecksOfUser = await getDecksOfUser(res)
+    let decksForPage = getDecksForPage(allDecksOfUser, pageData.page, pageSize)
 
-    let totalPages = getTotalPages(decksForPage.length, pageSize);
-
+    let totalPages = getTotalPages(allDecksOfUser.length, pageSize);
 
     if (decksForPage.length === 0) {
-        return res.redirect("/noDeck");
+      return res.redirect("/noDeck");
     }
-    
+
     res.render("decks", {
       // HEADER
       user: res.locals.user,
@@ -85,16 +82,18 @@ export default async function deckRouter() {
     let sort = req.query.sort;
     let sortDirection = req.query.sortDirection;
 
+    // initialize alltips array
+    let allTips: Tip[] = await getTips();
+
     // IMPORANT: This isnt gonna work,  need to filter by userId too, else 2 people with same deckName will conflict
     const selectedDeck: Deck | null = await decksCollection.findOne({
       deckName: req.params.deckName,
     });
     if (!selectedDeck) {
-      res.redirect("/404");
+      return res.redirect("/404");
     }
-
     let amountMap = new Map<Card, number>();
-    for (const card of selectedDeck!.cards) {
+    for (const card of selectedDeck.cards) {
       const existingCard = Array.from(amountMap.keys()).find(
         (c) => c.multiverseid === card.multiverseid
       );
@@ -107,12 +106,25 @@ export default async function deckRouter() {
     // Pagination
     let pageSize: number = 6;
     let pageData: PageData = handlePageClickEvent(req.query);
-    let totalPages = getTotalPages(amountMap.size, pageSize);
     let amountLandcards: number | undefined = undefined;
+    let sorted: [Card, number][] = Array.from(amountMap).sort((a, b) => {
+      return a[0].name.localeCompare(b[0].name);
+    });
+    let sortedAmountMap = new Map();
 
+    sorted.forEach(([card, number]) => {
+      sortedAmountMap.set(card, number);
+    });
+    let totalPages = getTotalPages(sortedAmountMap.size, pageSize);
+
+    sortedAmountMap = getCardWAmauntForPage(
+      sortedAmountMap,
+      pageData.page,
+      pageSize
+    );
     let avgManaCost: number | undefined = undefined;
 
-    if (selectedDeck!.cards !== undefined) {
+    if (selectedDeck.cards.length === 0) {
       avgManaCost = getAvgManaCost(selectedDeck!.cards);
       amountLandcards = selectedDeck!.cards.filter((card) =>
         card.types.includes("Land")
@@ -142,7 +154,7 @@ export default async function deckRouter() {
       totalPages: totalPages,
       filterUrl: pageData.filterUrl,
       // -- cards
-      cards: amountMap,
+      cards: sortedAmountMap,
       selectedDeck: selectedDeck,
       tip: allTips[getRandomNumber(0, allTips.length - 1)],
       amountLandcards: amountLandcards,
@@ -171,7 +183,7 @@ export default async function deckRouter() {
     if (!selectedDeck) {
       return res.redirect("/404");
     }
-  
+
     let amountMap = new Map<Card, number>();
     for (const card of selectedDeck!.cards) {
       const existingCard = Array.from(amountMap.keys()).find(
@@ -182,7 +194,7 @@ export default async function deckRouter() {
         amountMap.set(card, 1);
       }
     }
-  
+
     // Pagination
     let pageSize: number = 6;
     let pageData: PageData = handlePageClickEvent(req.query);
@@ -190,18 +202,18 @@ export default async function deckRouter() {
       return a[0].name.localeCompare(b[0].name);
     });
     let sortedAmountMap = new Map();
-  
+
     sorted.forEach(([card, number]) => {
       sortedAmountMap.set(card, number);
     });
     let totalPages = getTotalPages(sortedAmountMap.size, pageSize);
-  
+
     sortedAmountMap = getCardWAmauntForPage(
       sortedAmountMap,
       pageData.page,
       pageSize
     );
-  
+
     res.render("editDeck", {
       // HEADER
       user: res.locals.user,
@@ -225,7 +237,7 @@ export default async function deckRouter() {
     });
   });
   router.post("/removeCardFromDeck/:deckName/:_id/:page", secureMiddleware, async (req, res) => {
-  
+
     const selectedDeck: Deck | null = await decksCollection.findOne({
       deckName: req.params.deckName,
       userId: res.locals.user._id
@@ -234,21 +246,21 @@ export default async function deckRouter() {
       return res.redirect("/404");
     }
     let newCards = selectedDeck.cards;
-  let removed = false;
-  newCards = newCards.filter((card) => {
-    if (`${card._id}` === req.params._id && !removed) {
-      removed = true;
-      return false;
-    }
-    return true;
-  });
+    let removed = false;
+    newCards = newCards.filter((card) => {
+      if (`${card._id}` === req.params._id && !removed) {
+        removed = true;
+        return false;
+      }
+      return true;
+    });
 
-  await decksCollection.updateOne(
-    selectedDeck, {
-    $set: { cards: newCards }
-  }
-  );
-  
+    await decksCollection.updateOne(
+      selectedDeck, {
+      $set: { cards: newCards }
+    }
+    );
+
     res.redirect(`/editDeck/${req.params.deckName}?&page=${req.params.page}`);
   });
   router.post("/addCardTooDeck/:deckName/:_id/:page", secureMiddleware, async (req, res) => {
@@ -259,7 +271,7 @@ export default async function deckRouter() {
     if (!selectedDeck) {
       return res.redirect("/404");
     }
-  
+
     let cardTooAdd: Card | null = await cardsCollection.findOne({
       _id: new ObjectId(req.params._id),
     });
@@ -287,15 +299,15 @@ export default async function deckRouter() {
       }
     } else {
       console.log("Deck full");
-  
+
       // handle alert
     }
-  
+
     res.redirect(`/editDeck/${req.params.deckName}?&page=${req.params.page}`);
   });
-  router.get("/makeDeck", secureMiddleware, async(req, res) => {
+  router.get("/makeDeck", secureMiddleware, async (req, res) => {
     // to-do: make alert when deck exists
-    
+
     const deck: Deck = {
       userId: res.locals.user._id,
       deckName: req.body.deckName,
@@ -324,28 +336,46 @@ export default async function deckRouter() {
   });
   router.post("/deleteDeck", secureMiddleware, async (req, res) => {
     let deckName = req.body.deckName;
-  
-    await decksCollection.deleteOne({ deckName: deckName });
-  
-    res.redirect("/decks");
+
+    try {
+      const deleteQuery = await decksCollection.deleteOne({ deckName: deckName });
+      if (deleteQuery.deletedCount === 0) {
+        throw new Error("Fout bij het verwijderen van een deck")
+      }
+      req.session.message = { type: "success", message: "Deck verwijderd" }
+      res.redirect("/decks");
+    } catch (e: any) {
+      req.session.message = { type: "error", message: e.message }
+      res.redirect("/decks")
+    }
+
   });
   router.post("/makeDeck", secureMiddleware, async (req, res) => {
-    if (await decksCollection.findOne({deckName : req.body.deckName, userId : res.locals.user._id})) {
-        req.session.message = { type : "error", message : "Je kan geen 2 decks met eenzelfde naam hebben"}
-        return res.redirect("/makeDeck");
-    };
+    try {
+      if (await decksCollection.findOne({ deckName: req.body.deckName, userId: res.locals.user._id })) {
+        throw new Error("Je kan geen 2 decks met eenzelfde naam hebben")
+      };
+      const specialCharRegEx = /[?#@!$%^&*()]/
+      if (specialCharRegEx.test(req.body.deckName)) {
+        throw new Error("Je decknaam mag geen van de volgende characters bevatten: ?#@!$%^&*()");
+      }
 
-    let newDeck: Deck = {
-      userId: res.locals.user._id,
-      deckName: req.body.deckName,
-      cards: [],
-      deckImageUrl: req.body.imgUrl !== "" ? req.body.imgUrl : "/assets/images/decks/1.webp",
-      favorited: false
+      let newDeck: Deck = {
+        userId: res.locals.user._id,
+        deckName: req.body.deckName,
+        cards: [],
+        deckImageUrl: req.body.imgUrl !== "" ? req.body.imgUrl : "/assets/images/decks/1.webp",
+        favorited: false
+      }
+
+      await decksCollection.insertOne(newDeck);
+
+      req.session.message = { type: "success", message: "Deck toegevoegd" }
+      res.redirect("/decks");
+    } catch (e: any) {
+      req.session.message = { type: "error", message: e.message }
+      return res.redirect("/makeDeck");
     }
-  
-    await decksCollection.insertOne(newDeck);
-  
-    res.redirect("/decks");
   });
   return router;
 }

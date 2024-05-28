@@ -5,7 +5,7 @@ import { decksCollection } from "../db";
 import { shuffleCards, getChance, filterAndSortCards, handlePageClickEvent, getTotalPages, getCardWAmauntForPage, getDecksOfUser, } from "../functions";
 
 export default function drawtestRouter() {
-
+    // initialize router
     const router = express.Router();
 
     // variable to store last selected deck on drawtest page
@@ -16,6 +16,7 @@ export default function drawtestRouter() {
     let unpulledCards: Card[] = [];
     // variable to store pulled cards of drawtest page
     let pulledCards: Card[] = [];
+
     router.get("/", secureMiddleware, async (req, res) => {
         // Query params
         // -- filter and sort
@@ -40,16 +41,16 @@ export default function drawtestRouter() {
 
         let cardLookupInDeckCard: Card | undefined = undefined;
         let cardLookupInDeckCardChance: number | undefined = undefined;
-        // Logic
 
-        // Find What Deck is selected
+        // Logic
+        // - Find What Deck is selected
         // -- if selectedDeckQuery is defined, look in deckscollection for this deck
         if (selectedDeckQuery) {
             selectedDeck = await decksCollection.findOne({
                 deckName: `${selectedDeckQuery}`,
                 userId: res.locals.user._id
             });
-            // if this is not found, render 404 not found page
+            // -- if this is not found, render 404 not found page
             if (!selectedDeck) {
                 return res.redirect("/404")
             }
@@ -135,10 +136,6 @@ export default function drawtestRouter() {
         // Map cards so we filter out duplicates and keep count of how many of them are duplicate
         // -- initialize map
         let amountMap = new Map<Card, number>();
-        // -- if length is 0 skip cause unneeded
-        if (filterAndSortedCards.length !== 0) {
-
-        }
         // -- loop over array
         for (const card of filterAndSortedCards) {
             // -- if card already exists in map or undefined if not
@@ -155,7 +152,6 @@ export default function drawtestRouter() {
                 amountMap.set(card, 1);
             }
         }
-
         // get the cardToShow (always the first card in pulledCards)
         let cardToShow: Card = pulledCards[0];
         // initialize nextCard
@@ -178,8 +174,6 @@ export default function drawtestRouter() {
         const allDeckNames: string[] = allDecks.map(e => e.deckName)
 
         res.render("drawtest", {
-            // HEADER
-            user: res.locals.user,
             // -- The names of the js files you want to load on the page.
             jsFiles: [
                 "submitOnChange",

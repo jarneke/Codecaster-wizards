@@ -457,3 +457,34 @@ main .nav-item .nav-link {
     color: var(--white-color);
   }
 }
+.message {
+  position: fixed;
+  bottom: 5%;
+  right: 5%;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  animation: hideMessage forwards 5s ease-in-out;
+}
+.message-error {
+  background-color: var(--danger-color);
+}
+
+.message-success {
+  background-color: var(--success-color);
+}
+
+@keyframes hideMessage {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

@@ -63,6 +63,7 @@ export default function loginRouter() {
       return res.redirect("/login");
     }
 
+
     const newUser: User = {
       _id: new ObjectId(),
       firstName: registerFName,

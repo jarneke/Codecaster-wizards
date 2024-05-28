@@ -14,6 +14,7 @@ export default function loginRouter() {
   router.get("/login", (req, res) => {
     return res.render("loginspage");
   });
+
   router.post("/login", async (req, res) => {
     const { loginEmail, loginPassword } = req.body;
 
@@ -28,9 +29,11 @@ export default function loginRouter() {
       return res.redirect("/login");
     }
   });
+
   router.get("/register", (req, res) => {
     res.render("registerpage");
   });
+
   router.post("/register", async (req, res) => {
     const {
       registerFName,
@@ -73,7 +76,9 @@ export default function loginRouter() {
       password: await bcrypt.hash(registerPassword, saltRounds),
       role: "USER",
     };
+
     await usersCollection.insertOne(newUser);
+
     // make starterdeck
     await decksCollection.insertOne({
       _id: new ObjectId(),
@@ -96,10 +101,12 @@ export default function loginRouter() {
       });
     }
   });
+
   router.post("/logout", async (req, res) => {
     req.session.destroy(() => {
       res.redirect("/login");
     });
   });
+
   return router;
 }

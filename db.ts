@@ -209,22 +209,13 @@ export async function login(email: string, password: string) {
     email: email,
   });
   if (user) {
-    try {
-      let passwordCheck;
-      try {
-        passwordCheck = await bcrypt.compare(password, user.password!);
-      } catch (error) {
-        console.log("passwordcheck error");
-        console.log(error);
-      }
+    let passwordCheck;
+    passwordCheck = await bcrypt.compare(password, user.password!);
 
-      if (passwordCheck) {
-        return user;
-      } else {
-        throw new Error("E-mail en/of wachtwoord onjuist");
-      }
-    } catch (error) {
-      console.log(error);
+    if (passwordCheck) {
+      return user;
+    } else {
+      throw new Error("E-mail en/of wachtwoord onjuist");
     }
   } else {
     throw new Error("Gebruiker niet gevonden");

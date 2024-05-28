@@ -1,10 +1,17 @@
 <%- include('partials/header') %>
-<main class=" container d-flex py-5">
-    <img class="col-4" src="/assets/images/header/404-not-found.png" alt="logo">
-    <article class="col-6 ctext-white">
-        <h1 class="ch1 col-12">Je Hebt nog geen decks</h1>
-        <p class="col-12">Het spijt ons, we konden Geen decks vinden.</p>
-        <a href="/makeDeck" class="btn btn-dark">Maak een deck</a>
-    </article>
-</main>
-<%- include('partials/footer') %>
+    <main class=" container d-flex py-5">
+        <img class="col-4" src="/assets/images/header/404-not-found.png" alt="logo">
+        <article class="col-6 ctext-white">
+            <h1 class="ch1 col-12">Je Hebt nog geen decks</h1>
+            <p class="col-12">Het spijt ons, we konden Geen decks vinden.</p>
+            <a href="/makeDeck" class="btn btn-dark">Maak een deck</a>
+        </article>
+    </main>
+    <% if (message) { %>
+        <div class="message message-success p-2 rounded">
+            <strong>
+                <%= message.message %>
+            </strong>
+        </div>
+        <% } %>
+            <%- include('partials/footer') %>

@@ -57,22 +57,25 @@ export default function profileRouter() {
           : await bcrypt.hash(passwordFormLabel, saltRounds),
       role: "USER",
     };
-
-    await usersCollection.updateOne(
-      { _id: res.locals.user?._id },
-      { $set: newUserDetails }
-    );
-
-    let user: User | undefined = await login(
-      newUserDetails.email,
-      req.body.passwordFormLabel
-    );
-    delete user!.password;
-    req.session.user = user;
-    res.redirect("/profile");
+    if (req.body.passwordFormLabel !== "") {
+      await usersCollection.updateOne(
+        { _id: res.locals.user?._id },
+        { $set: newUserDetails }
+      );
+      let user: User | undefined = await login(
+        newUserDetails.email,
+        req.body.passwordFormLabel
+      );
+      delete user!.password;
+      req.session.user = user;
+      res.redirect("/profile");
+    } else {
+      // TODO: maak editFail pagina en editFail routes
+      return res.redirect("/editFail");
+    }
   });
   router.post("/delete", secureMiddleware, async (req, res) => {
-    await usersCollection.deleteOne({ _id: res.locals.user?._id });
+    await usersCollection.deleteOne({ _id: res.locals.user._id });
     res.redirect("/");
   });
   return router;

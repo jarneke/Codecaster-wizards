@@ -12,7 +12,11 @@ export default function loginRouter() {
   const saltRounds = parseInt(process.env.SALTROUNDS!) || 10;
 
   router.get("/login", (req, res) => {
-    return res.render("loginspage");
+    return res.render("loginspage", {
+      alert: false,
+      alertType: "none",
+      message: "",
+    });
   });
 
   router.post("/login", async (req, res) => {
@@ -26,12 +30,20 @@ export default function loginRouter() {
       res.redirect("/home");
     } catch (e: any) {
       req.session.message = { type: "error", message: e.message };
-      return res.redirect("/login");
+      return res.render("loginspage", {
+        alert: "true",
+        alertType: "error",
+        message: e.message,
+      });
     }
   });
 
   router.get("/register", (req, res) => {
-    res.render("registerpage");
+    res.render("registerpage", {
+      alert: false,
+      alertType: "none",
+      message: "",
+    });
   });
 
   router.post("/register", async (req, res) => {
@@ -50,7 +62,11 @@ export default function loginRouter() {
       }
     } catch (e: any) {
       req.session.message = { type: "error", message: e.message };
-      return res.redirect("/register");
+      return res.render("registerpage", {
+        alert: true,
+        alertType: "error",
+        message: e.message,
+      });
     }
 
     const existingUser = await usersCollection.findOne({
@@ -63,9 +79,12 @@ export default function loginRouter() {
       }
     } catch (e: any) {
       req.session.message = { type: "error", message: e.message };
-      return res.redirect("/login");
+      return res.render("loginspage", {
+        alert: true,
+        alertType: "error",
+        message: e.message,
+      });
     }
-
 
     const newUser: User = {
       _id: new ObjectId(),

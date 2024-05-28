@@ -30,8 +30,8 @@ export default function profileRouter() {
   router.post("/profile", secureMiddleware, async (req, res) => {
     const { firstName, lastName, email, passwordFormLabel, description } =
       req.body;
-    const userName: string = `${firstName === "" ? res.locals.user?.firstName : firstName
-      }_${lastName === "" ? res.locals.user?.lastName : lastName}`;
+    const userName: string = `${firstName === "" ? res.locals.user.firstName : firstName
+      }_${lastName === "" ? res.locals.user.lastName : lastName}`;
 
     const newUserDetails: User = {
       firstName:
@@ -40,13 +40,13 @@ export default function profileRouter() {
           : firstName,
       lastName:
         lastName === "" && res.locals.user
-          ? res.locals.user?.lastName
+          ? res.locals.user.lastName
           : lastName,
       userName:
         userName === "" && res.locals.user
-          ? res.locals.user?.userName
+          ? res.locals.user.userName
           : userName,
-      email: email === "" && res.locals.user ? res.locals.user?.email : email,
+      email: email === "" && res.locals.user ? res.locals.user.email : email,
       description:
         description === "" && res.locals.user
           ? res.locals.user.description
@@ -55,12 +55,12 @@ export default function profileRouter() {
         passwordFormLabel === "" && res.locals.user
           ? res.locals.user.password
           : await bcrypt.hash(passwordFormLabel, saltRounds),
-      role: "USER",
+      role: res.locals.user.role,
     };
 
     if (req.body.passwordFormLabel !== "") {
       await usersCollection.updateOne(
-        { _id: res.locals.user?._id },
+        { _id: res.locals.user._id },
         { $set: newUserDetails }
       );
       let user: User | undefined = await login(

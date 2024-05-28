@@ -7,6 +7,7 @@ import bcrypt from "bcrypt";
 export default function profileRouter() {
   const router = express.Router();
   const saltRounds = parseInt(process.env.SALTROUNDS!) || 10;
+
   router.get("/profile", secureMiddleware, async (req, res) => {
     let favoritedDecks: Deck[] = await decksCollection
       .find({ favorited: true, userId: res.locals.user._id })
@@ -14,7 +15,6 @@ export default function profileRouter() {
 
     res.render("profile", {
       // HEADER
-      user: res.locals.user,
       // -- The names of the js files you want to load on the page.
       jsFiles: ["editProfile"],
       // -- The title of the page
@@ -26,6 +26,7 @@ export default function profileRouter() {
       favoriteDecks: favoritedDecks,
     });
   });
+
   router.post("/profile", secureMiddleware, async (req, res) => {
     const { firstName, lastName, email, passwordFormLabel, description } =
       req.body;
@@ -56,6 +57,7 @@ export default function profileRouter() {
           : await bcrypt.hash(passwordFormLabel, saltRounds),
       role: "USER",
     };
+
     if (req.body.passwordFormLabel !== "") {
       await usersCollection.updateOne(
         { _id: res.locals.user?._id },
@@ -69,10 +71,19 @@ export default function profileRouter() {
       req.session.user = user;
       res.redirect("/profile");
     } else {
-      // TODO: maak editFail pagina en editFail routes
       return res.redirect("/editFail");
     }
   });
+
+  router.get("/editFail", secureMiddleware, async (req, res) => {
+    res.render("editFail", {
+      title: "editFail",
+      jsFiles: [],
+      toRedirectTo: "profile",
+      tabToColor: 4,
+    });
+  });
+
   router.post("/delete", secureMiddleware, async (req, res) => {
     // delete all decks of user
     const deleteQuery = await decksCollection.deleteMany({ userId: res.locals.user._id })
@@ -85,5 +96,6 @@ export default function profileRouter() {
 
     res.redirect("/");
   });
+
   return router;
 }

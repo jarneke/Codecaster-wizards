@@ -1,38 +1,65 @@
 <%- include("partials/landingsheader") %>
-  <main class="d-flex flex-wrap w-100 justify-content-center" style="min-height: 72vh">
-    <form action="/login" method="post" class="px-4 py-3 col-12 col-md-9 col-lg-4">
-      <fieldset class="text-center mb-3 d-flex justify-content-center">
-        <i class="bi bi-person-circle text-white" style="font-size: 10rem;"></i>
-      </fieldset>
-      <fieldset class="mb-3">
-        <label for="loginEmail" class="form-label ctext-white">E-mail</label>
-        <input type="e-mail" class="form-control" name="loginEmail" id="loginEmail" placeholder="E-mail@voorbeeld.com" />
-      </fieldset>
-      <fieldset class="mb-3">
-        <label for="loginPassword" class="form-label ctext-white">Wachtwoord</label>
-        <input type="password" class="form-control" name="loginPassword" id="loginPassword" placeholder="Wachtwoord" />
-      </fieldset>
-      <button type="submit" class="btn btn-dark cbg-dark col-3">Login</button>
-      <a href="/register" class="btn btn-link ctext-white ms-4 col-3 text-nowrap">
-        Nog geen account, registreer
-      </a>
-      <% if (message) { %>
-        <div class="col-12 mt-3 alert alert-danger alert-dismissible fade show" role="alert">
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          <strong>
-            <%= message.type %>
-          </strong>
-          <%= message.message %>
-        </div>
+<main
+  class="d-flex flex-wrap w-100 justify-content-center"
+  style="min-height: 72vh"
+>
+  <form
+    action="/login"
+    method="post"
+    class="px-4 py-3 col-12 col-md-9 col-lg-4"
+  >
+    <fieldset class="text-center mb-3 d-flex justify-content-center">
+      <i class="bi bi-person-circle text-white" style="font-size: 10rem"></i>
+    </fieldset>
+    <fieldset class="mb-3">
+      <label for="loginEmail" class="form-label ctext-white">E-mail</label>
+      <input
+        type="e-mail"
+        class="form-control"
+        name="loginEmail"
+        id="loginEmail"
+        placeholder="E-mail@voorbeeld.com"
+      />
+    </fieldset>
+    <fieldset class="mb-3">
+      <label for="loginPassword" class="form-label ctext-white"
+        >Wachtwoord</label
+      >
+      <input
+        type="password"
+        class="form-control"
+        name="loginPassword"
+        id="loginPassword"
+        placeholder="Wachtwoord"
+      />
+    </fieldset>
+    <button type="submit" class="btn btn-dark cbg-dark col-3">Login</button>
+    <a href="/register" class="btn btn-link ctext-white ms-4 col-3 text-nowrap">
+      Nog geen account, registreer
+    </a>
+    <% if (alert) { %>
+    <div
+      class="col-12 mt-3 alert alert-danger alert-dismissible fade show"
+      role="alert"
+    >
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+      <strong> <%= alertType %> </strong>
+      <%= message %>
+    </div>
 
-        <script>
-          var alertList = document.querySelectorAll(".alert");
-          alertList.forEach(function (alert) {
-            new bootstrap.Alert(alert);
-          });
-        </script>
-        <% } %>
-    </form>
-  </main>
+    <script>
+      var alertList = document.querySelectorAll(".alert");
+      alertList.forEach(function (alert) {
+        new bootstrap.Alert(alert);
+      });
+    </script>
+    <% } %>
+  </form>
+</main>
 
-  <%- include("partials/landingsfooter") %>
+<%- include("partials/landingsfooter") %>

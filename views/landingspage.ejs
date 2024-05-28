@@ -1,42 +1,6 @@
 <%- include("partials/landingsheader") %>
   <section class="container d-flex flex-wrap justify-content-center align-items-center min-vh-50 col-sm-12 gap-3">
     <section id="cards_animation_b">
-      <h1 class="text-nowrap text-center ctext-white">Fifa</h1>
-      <article class="card card-flyer_b cbg-warning p-2">
-        <img height="300rem" src="assets/images/landingspage/fifa.webp" class="rounded mb-2">
-        <a href="#errorModal" class="btn btn-dark cbg-dark" data-bs-toggle="modal">
-          Aanmelden
-        </a>
-      </article>
-    </section>
-    <section id="cards_animation_b">
-      <h1 class="text-nowrap text-center ctext-white">Fortnite</h1>
-      <article class="card card-flyer_b cbg-warning p-2">
-        <img height="300rem" src="assets/images/landingspage/fornite.webp" class="rounded mb-2">
-        <a href="#errorModal" class="btn btn-dark cbg-dark" data-bs-toggle="modal">
-          Aanmelden
-        </a>
-      </article>
-    </section>
-    <section id="cards_animation_b">
-      <h1 class="text-nowrap text-center ctext-white">LegoMasters</h1>
-      <article class="card card-flyer_b cbg-warning p-2">
-        <img height="300rem" src="assets/images/landingspage/lego.webp" class="rounded mb-2">
-        <a href="#errorModal" class="btn btn-dark cbg-dark" data-bs-toggle="modal">
-          Aanmelden
-        </a>
-      </article>
-    </section>
-    <section id="cards_animation_b">
-      <h1 class="text-nowrap text-center ctext-white">LOTR</h1>
-      <article class="card card-flyer_b cbg-warning p-2">
-        <img height="300rem" src="assets/images/landingspage/lotr.webp" class="rounded mb-2">
-        <a href="#errorModal" class="btn btn-dark cbg-dark" data-bs-toggle="modal">
-          Aanmelden
-        </a>
-      </article>
-    </section>
-    <section id="cards_animation_b">
       <h1 class="text-nowrap text-center ctext-white">MTG</h1>
       <article class="card card-flyer_b cbg-warning p-2">
         <img height="300rem" src="assets/images/landingspage/mtg.webp" class="rounded mb-2">
@@ -45,125 +9,35 @@
         </a>
       </article>
     </section>
-    <section id="cards_animation_b">
-      <h1 class="text-nowrap text-center ctext-white">Pokémon</h1>
-      <article class="card card-flyer_b cbg-warning p-2">
-        <img height="300rem" src="assets/images/landingspage/pokemon.webp" class="rounded mb-2">
-        <a href="#errorModal" class="btn btn-dark cbg-dark" data-bs-toggle="modal">
-          Aanmelden
-        </a>
-      </article>
-    </section>
-  </section>
-  </main>
-  <%- include("partials/landingsfooter") %>
-    <!-- Modals -->
-    <section class="modal fade" id="loginModal" aria-hidden="true" aria-labelledby="loginModalLabel" tabindex="-1">
-      <section class="modal-dialog modal-dialog-centered">
-        <section class="modal-content">
-          <section class="modal-header cbg-dark text-white border-0">
-            <h1 class="modal-title fs-5" id="loginModalLabel">Login</h1>
-            <button type="button" class="btn-close cbg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </section>
-          <section class="modal-body cbg-primary">
-            <form action="/login" method="POST" class="px-4 py-3">
-              <fieldset class="text-center mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" width="130" height="130" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                  <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                </svg>
-              </fieldset>
-              <fieldset class="mb-3">
-                <label for="loginE-mail" class="form-label ctext-white">E-mail</label>
-                <input type="e-mail" class="form-control" id="loginE-mail" placeholder="e-mail@voorbeeld.com">
-              </fieldset>
-              <fieldset class="mb-3">
-                <label for="loginPassword" class="form-label ctext-white">Wachtwoord</label>
-                <input type="password" class="form-control" id="loginPassword" placeholder="Wachtwoord">
-              </fieldset>
-              <fieldset class="mb-3">
-                <section class="form-check">
-                  <input type="checkbox" class="form-check-input" id="dropdownCheck">
-                  <label class="form-check-label ctext-white" for="dropdownCheck">
-                    Onthoud mij!
-                  </label>
-                </section>
-              </fieldset>
-              <button type="submit" class="btn btn-dark cbg-dark col-3">Login</button>
-            </form>
-          </section>
-          <section class="modal-footer cbg-primary d-flex justify-content-start">
-            <button class="btn btn-link ctext-white ms-4 col-3 text-nowrap" data-bs-target="#registerModal" data-bs-toggle="modal">Nog
-              geen account, registreer</button>
-          </section>
-        </section>
-      </section>
-    </section>
-    <section class="modal fade" id="registerModal" aria-hidden="true" aria-labelledby="registerModalLabel" tabindex="-1">
-      <section class="modal-dialog modal-dialog-centered">
-        <section class="modal-content">
-          <section class="modal-header cbg-dark ctext-white border-0">
-            <h1 class="modal-title fs-5" id="registerModalLabel">Registreer</h1>
-            <button type="button" class="btn-close  cbg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </section>
-          <section class="modal-body cbg-primary">
-            <form action="/register" method="POST" class="px-4 py-3">
-              <fieldset class="text-center mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" width="130" height="130" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                  <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                </svg>
-              </fieldset>
-              <fieldset class="row mb-3">
-                <section class="col">
-                  <label for="registerFName" class="form-label ctext-white">Voornaam</label>
-                  <input type="text" name="registerFName" id="registerFName" class="form-control" placeholder="Voornaam" aria-label="First name">
-                </section>
-                <section class="col">
-                  <label for="registerName" class="form-label ctext-white">Naam</label>
-                  <input type="text" name="registerName" id="registerName" class="form-control" placeholder="Naam" aria-label="Last name">
-                </section>
-              </fieldset>
-              <fieldset class="mb-3">
-                <label for="registerUsername" class="form-label ctext-white">Gebruikersnaam</label>
-                <input type="text" name="registerUsername" id="registerUsername" class="form-control" placeholder="gebruikersnaam" aria-label="Username">
-              </fieldset>
-              <fieldset class="mb-3">
-                <label for="registerEmail" class="form-label ctext-white">E-mail</label>
-                <input type="email" name="registerEmail" id="registerEmail" class="form-control" placeholder="e-mail@voorbeeld.com" aria-label="e-mail">
-              </fieldset>
-              <fieldset class="mb-3">
-                <label for="registerPassword" class="form-label ctext-white">Wachtwoord</label>
-                <input type="password" name="registerPassword" id="registerPassword" class="form-control" placeholder="Wachtwoord" aria-label="password">
-              </fieldset>
-              <fieldset class="mb-3">
-                <label for="registerConfirmPassword" class="form-label ctext-white">Bevestig wachtwoord</label>
-                <input type="password" name="registerConfirmPassword" id="registerConfirmPassword" class="form-control" placeholder="Bevestig wachtwoord" aria-label="confirmPassword">
-              </fieldset>
-              <button type="submit" class="btn btn-primary btn-dark cbg-dark col-3">Registreer</button>
-            </form>
-          </section>
-          <section class="modal-footer justify-content-between cbg-primary">
-            <button class="btn btn-link ctext-white ms-4 col-3 text-nowrap" data-bs-target="#loginModal" data-bs-toggle="modal">Al een account, log in</button>
-          </section>
-        </section>
-      </section>
-    </section>
-    <section class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-      <section class="modal-dialog modal-dialog-centered">
-        <section class="modal-content">
-          <article class="modal-header bg-danger border-0">
-            <h5 class="modal-title text-white" id="errorModalLabel">Fout!</h5>
-            <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </article>
-          <article class="modal-body cbg-dark-l ctext-white">
-            <p>U heeft geen toegang tot deze pagina!</p>
-          </article>
-          <article class="modal-footer cbg-primary border-0">
+    <% const projectNames=["Fifa", "Fortnite" , "LegoMasters" , "LOTR" , "Pokémon" ] %>
+      <% for (const project of projectNames) { %>
+        <section id="cards_animation_b">
+          <h1 class="text-nowrap text-center ctext-white">
+            <%= project %>
+          </h1>
+          <article class="card card-flyer_b cbg-warning p-2">
+            <img height="300rem" src="assets/images/landingspage/<%= project.toLowerCase() %>.webp" class="rounded mb-2">
+            <a href="#errorModal" class="btn btn-dark cbg-dark" data-bs-toggle="modal">
+              Aanmelden
+            </a>
           </article>
         </section>
-      </section>
-    </section>
-    </body>
+        <% } %>
+          <section class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+            <section class="modal-dialog modal-dialog-centered">
+              <section class="modal-content">
+                <article class="modal-header bg-danger border-0">
+                  <h5 class="modal-title text-white" id="errorModalLabel">Fout!</h5>
+                  <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </article>
+                <article class="modal-body cbg-dark-l ctext-white">
+                  <p>U heeft geen toegang tot deze pagina!</p>
+                </article>
+                <article class="modal-footer cbg-primary border-0">
+                </article>
+              </section>
+            </section>
+          </section>
+          </body>
 
-    </html>
+          </html>

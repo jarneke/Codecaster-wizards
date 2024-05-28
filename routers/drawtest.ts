@@ -18,6 +18,8 @@ export default function drawtestRouter() {
     let pulledCards: Card[] = [];
 
     router.get("/", secureMiddleware, async (req, res) => {
+        console.log(req.query);
+
         // Query params
         // -- filter and sort
         let cardLookup = req.query.cardLookup;
@@ -31,7 +33,7 @@ export default function drawtestRouter() {
         let colorlessManaChecked = req.query.colorlessManaChecked;
         let sort = req.query.sort;
         let sortDirection = req.query.sortDirection;
-        let deck = req.query.decks;
+        let deck = req.query.deck;
         let cardLookupInDeck = req.query.cardLookupInDeck;
         let cardLookupInDeckInput = req.query.cardLookupInDeckInput;
 
@@ -205,7 +207,6 @@ export default function drawtestRouter() {
                 colorlessManaChecked == undefined ? "true" : colorlessManaChecked,
             sort: sort,
             sortDirection: sortDirection,
-            deck: deck,
             pageLink: "drawtest",
             // -- pagination
             page: pageData.page,

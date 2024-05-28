@@ -133,7 +133,7 @@ async function seed() {
 
   // populate the database if need be with mockDecks
   await createInitialUser();
-  await populateDecks(true);
+  await populateDecks();
   // populate the database if need be with tips
   await populateTips(mtgTips);
   // log that the db is seeded

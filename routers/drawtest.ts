@@ -18,28 +18,8 @@ export default function drawtestRouter() {
     let pulledCards: Card[] = [];
 
     router.get("/", secureMiddleware, async (req, res) => {
-        console.log(req.query);
-
         // Query params
-        // -- filter and sort
-        let cardLookup = req.query.cardLookup;
-        let filterType = req.query.filterType;
-        let filterRarity = req.query.filterRarity;
-        let whiteManaChecked = req.query.whiteManaChecked;
-        let blueManaChecked = req.query.blueManaChecked;
-        let blackManaChecked = req.query.blackManaChecked;
-        let greenManaChecked = req.query.greenManaChecked;
-        let redManaChecked = req.query.redManaChecked;
-        let colorlessManaChecked = req.query.colorlessManaChecked;
-        let sort = req.query.sort;
-        let sortDirection = req.query.sortDirection;
-        let deck = req.query.deck;
-        let cardLookupInDeck = req.query.cardLookupInDeck;
-        let cardLookupInDeckInput = req.query.cardLookupInDeckInput;
-
-        // -- other
-        let whatToDo = req.query.action;
-        let selectedDeckQuery = req.query.decks;
+        let { cardLookup, filterType, filterRarity, whiteManaChecked, blueManaChecked, blackManaChecked, greenManaChecked, redManaChecked, colorlessManaChecked, sort, sortDirection, cardLookupInDeck, cardLookupInDeckInput, action, decks } = req.query
 
         let cardLookupInDeckCard: Card | undefined = undefined;
         let cardLookupInDeckCardChance: number | undefined = undefined;
@@ -47,9 +27,9 @@ export default function drawtestRouter() {
         // Logic
         // - Find What Deck is selected
         // -- if selectedDeckQuery is defined, look in deckscollection for this deck
-        if (selectedDeckQuery) {
+        if (decks) {
             selectedDeck = await decksCollection.findOne({
-                deckName: `${selectedDeckQuery}`,
+                deckName: `${decks}`,
                 userId: res.locals.user._id
             });
             // -- if this is not found, render 404 not found page
@@ -78,7 +58,7 @@ export default function drawtestRouter() {
         } else {
             // pull and reset logic
             // -- if pull is asked
-            if (whatToDo === "pull") {
+            if (action === "pull") {
                 // -- get last card of unpulledCards
                 let card = unpulledCards.pop()
                 // -- if this card is found
@@ -87,7 +67,7 @@ export default function drawtestRouter() {
                     pulledCards.unshift(card)
                 }
                 // -- id reset is asked
-            } else if (whatToDo === "reset") {
+            } else if (action === "reset") {
                 // reset unpulledCards and shuffle them
                 unpulledCards = [...shuffleCards(selectedDeck.cards)];
                 // reset pulledCards

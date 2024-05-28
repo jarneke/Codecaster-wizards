@@ -2,6 +2,9 @@ import Magic = require("mtgsdk-ts");
 import * as i from "./interfaces";
 import { Filter, Sort, Condition, ObjectId } from "mongodb";
 import * as db from "./db";
+import dotenv from "dotenv"
+
+dotenv.config();
 
 export async function getDecksOfUser(res: any): Promise<i.Deck[]> {
   return await db.decksCollection
@@ -444,7 +447,10 @@ export async function generateMockDecks(allCards: i.Card[]): Promise<i.Deck[]> {
 
   // Generate 9 mock decks
   for (let i = 1; i <= 9; i++) {
-    const user = await db.usersCollection.findOne();
+    const user = await db.usersCollection.findOne({ email: process.env.ADMIN_EMAIL });
+    if (!user) {
+      console.log("No user found");
+    }
     const userId: ObjectId = user?._id!;
     const deckName = `Deck ${i}`;
     const deckImageUrl = `/assets/images/decks/${i}.webp`;
@@ -463,7 +469,7 @@ export async function generateMockDecks(allCards: i.Card[]): Promise<i.Deck[]> {
       deckName: deckName,
       cards: cards,
       deckImageUrl: deckImageUrl,
-      favorited: false,
+      favorited: i % 2 === 0,
     };
 
     // Push the deck to the array of mock decks

@@ -146,13 +146,22 @@ async function seed() {
  */
 async function populateDecks(reseed?: boolean) {
   if (reseed) {
-    decksCollection.deleteMany({});
+    let user = await usersCollection.findOne({ email: process.env.ADMIN_EMAIL })
+
+    if (user) {
+      console.log("[ - SERVER - ]=> Repopulating admin decks");
+
+      decksCollection.deleteMany({ userId: user._id });
+    } else {
+      console.log("[ - SERVER - ]=> Could not repopulate decks, Admin not found");
+
+    }
   }
 
   // if decksCollection is empty insert and log that its added
   if ((await decksCollection.countDocuments()) === 0) {
     if (allCards.length === 0) {
-      allCards = await cardsCollection.find({}).toArray();
+      allCards = await cardsCollection.find().toArray();
     }
     console.log("[ - SERVER - ]=> Making mock decks for admin account");
 

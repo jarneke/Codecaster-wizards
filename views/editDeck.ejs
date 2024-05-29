@@ -65,5 +65,20 @@
       <% } %>
     </section>
   </section>
+  <% if (message) { %>
+    <% if (message.type === "error") { %>
+      <div class="message message-error p-2 rounded">
+        <strong>
+          <%= message.message %>
+        </strong>
+      </div>
+    <% } else { %>
+      <div class="message message-success p-2 rounded">
+        <strong>
+          <%= message.message %>
+        </strong>
+      </div>
+    <% } %>
+    <% } %>
 </main>
   <%- include("partials/footer") %>

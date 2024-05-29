@@ -162,12 +162,23 @@ export default function deckRouter() {
       avgManaCost: avgManaCost,
     });
   });
-  router.post("/changeDeckName", async (req, res) => {
+  router.post("/changeDeckName", secureMiddleware, async (req, res) => {
     const name = req.body.deckNameInput;
     const oldName = req.body.oldDeckName;
 
-    // IMPORANT: This isnt gonna work,  need to filter by userId too, else 2 people with same deckName will conflict
-    const oldDeck = await decksCollection.findOne({ deckName: oldName });
+    try {
+      if (name.includes(' ')) {
+        throw new Error("Deck naam mag geen spaties bevatten")
+      }
+      const specialCharRegEx = /[?#@!$%^&*()]/
+      if (specialCharRegEx.test(name)) {
+        throw new Error("Je decknaam mag geen van de volgende characters bevatten: ?#@!$%^&*()");
+      }
+    } catch (e: any) {
+      req.session.message = { type: "error", message: e.message}
+      return res.redirect(`/editDeck/${oldName}`)
+    }
+    const oldDeck = await decksCollection.findOne({ deckName: oldName, userId: res.locals.user._id });
 
     decksCollection.updateOne(
       { _id: oldDeck?._id },

@@ -145,8 +145,8 @@ async function seed() {
  * @param mockDecks array of mockDecks
  */
 async function populateDecks(reseed?: boolean) {
+  let user = await usersCollection.findOne({ email: process.env.ADMIN_EMAIL })
   if (reseed) {
-    let user = await usersCollection.findOne({ email: process.env.ADMIN_EMAIL })
 
     if (user) {
       console.log("[ - SERVER - ]=> Repopulating admin decks");
@@ -159,7 +159,7 @@ async function populateDecks(reseed?: boolean) {
   }
 
   // if decksCollection is empty insert and log that its added
-  if ((await decksCollection.countDocuments()) === 0) {
+  if ((await decksCollection.countDocuments({userId: user!._id})) === 0) {
     if (allCards.length === 0) {
       allCards = await cardsCollection.find().toArray();
     }

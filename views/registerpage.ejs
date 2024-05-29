@@ -98,22 +98,23 @@
         >Al een account, log in</a
       >
     </fieldset>
+    <% if (alert) { %>
+      <div
+        class="alert alert-danger alert-dismissible fade show col-12 mt-2"
+        role="alert"
+      >
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+        <strong> <%= alertType %> </strong>
+        <%= message %>
+      </div>
+      <% } %>
   </form>
-  <% if (alert) { %>
-  <div
-    class="alert alert-danger alert-dismissible fade show col-12"
-    role="alert"
-  >
-    <button
-      type="button"
-      class="btn-close"
-      data-bs-dismiss="alert"
-      aria-label="Close"
-    ></button>
-    <strong> <%= alertType %> </strong>
-    <%= message %>
-  </div>
-  <% } %>
+  
   <script>
     var alertList = document.querySelectorAll(".alert");
     alertList.forEach(function (alert) {

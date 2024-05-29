@@ -19,6 +19,7 @@ import { getTotalPages } from "../functions";
 import { cardsCollection, decksCollection } from "../db";
 import { ObjectId } from "mongodb";
 import { flashMiddleware } from "../fleshMiddleware";
+import e from "express";
 
 
 export default function deckRouter() {
@@ -260,6 +261,8 @@ export default function deckRouter() {
       $set: { cards: newCards }
     }
     );
+
+    req.session.message = { type : "success", message : "Kaart verwijderd"};
 
     res.redirect(`/editDeck/${req.params.deckName}?&page=${req.params.page}`);
   });

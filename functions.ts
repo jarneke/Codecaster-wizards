@@ -452,7 +452,7 @@ export async function generateMockDecks(allCards: i.Card[]): Promise<i.Deck[]> {
       console.log("No user found");
     }
     const userId: ObjectId = user?._id!;
-    const deckName = `Deck ${i}`;
+    const deckName = `Deck-${i}`;
     const deckImageUrl = `/assets/images/decks/${i}.webp`;
     const cardsCount = getRandomNumber(60, 60);
     const cards: i.Card[] = [];

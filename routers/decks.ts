@@ -175,7 +175,7 @@ export default function deckRouter() {
         throw new Error("Je decknaam mag geen van de volgende characters bevatten: ?#@!$%^&*()");
       }
     } catch (e: any) {
-      req.session.message = { type: "error", message: e.message}
+      req.session.message = { type: "error", message: e.message }
       return res.redirect(`/editDeck/${oldName}`)
     }
     const oldDeck = await decksCollection.findOne({ deckName: oldName, userId: res.locals.user._id });
@@ -273,7 +273,7 @@ export default function deckRouter() {
     }
     );
 
-    req.session.message = { type : "success", message : "Kaart verwijderd"};
+    req.session.message = { type: "success", message: "Kaart verwijderd" };
 
     res.redirect(`/editDeck/${req.params.deckName}?&page=${req.params.page}`);
   });
@@ -284,19 +284,18 @@ export default function deckRouter() {
       userId: res.locals.user._id
     });
     if (!selectedDeck) {
-      console.log("Deck not found");
-      
       return res.redirect("/404");
     }
 
-    let cardTooAdd = selectedDeck.cards.find(e=> `${e._id}` === `${req.params._id}`)
+    let cardTooAdd: any = selectedDeck.cards.find(e => `${e._id}` === `${req.params._id}`)
+    if (!cardTooAdd) {
+      cardTooAdd = await cardsCollection.findOne({ _id: new ObjectId(req.params._id) })
+    }
     if (!cardTooAdd) {
       console.log("card not found");
-      req.session.message = {type: "error", message: "Fout bij kaart vinden" + req.params._id}
-      return res.redirect(`/editDeck/${req.params.deckName}?&page=${req.params.page}`);
     }
     if (selectedDeck.cards.length < 60) {
-      if (!cardTooAdd!.types.find((e) => e == "Land")) {
+      if (!cardTooAdd!.types.find((e: any) => e == "Land")) {
         if (
           selectedDeck.cards.filter((e) => e.name == cardTooAdd!.name).length < 4
         ) {

@@ -278,8 +278,6 @@ export default function deckRouter() {
     res.redirect(`/editDeck/${req.params.deckName}?&page=${req.params.page}`);
   });
   router.post("/addCardTooDeck/:deckName/:_id/:page", secureMiddleware, async (req, res) => {
-    console.log(req.params);
-    
     req.session.message = { type: "success", message: "Kaart toegevoegd" }
     const selectedDeck: Deck | null = await decksCollection.findOne({
       deckName: req.params.deckName,
@@ -291,9 +289,7 @@ export default function deckRouter() {
       return res.redirect("/404");
     }
 
-    let cardTooAdd: Card | null = await cardsCollection.findOne({
-      _id: new ObjectId(`${req.params._id}`),
-    });
+    let cardTooAdd = selectedDeck.cards.find(e=> `${e._id}` === `${req.params._id}`)
     if (!cardTooAdd) {
       console.log("card not found");
       req.session.message = {type: "error", message: "Fout bij kaart vinden" + req.params._id}

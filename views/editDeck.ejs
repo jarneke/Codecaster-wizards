@@ -1,38 +1,38 @@
 <%- include("partials/header") %>
-<main>
-  <section class="d-flex justify-content-center align-items-center">
-    <section class="rounded ctext-white col-12 p-5 col-lg-10 col-md-6 my-5 col-sm-8" style="background-color: #00000099">
-      <article class="changeDeckName mb-3">
-        <h5 id="deckName" class="text-center ch1 fs-1">
-          <a class="ctext-white" href="/decks/<%= selectedDeck.deckName %>">
-            <%= selectedDeck.deckName %>
-          </a>
-        </h5>
+  <main>
+    <section class="d-flex justify-content-center align-items-center">
+      <section class="rounded ctext-white col-12 p-5 col-lg-10 col-md-6 my-5 col-sm-8" style="background-color: #00000099">
+        <article class="changeDeckName mb-3">
+          <h5 id="deckName" class="text-center ch1 fs-1">
+            <a class="ctext-white" href="/decks/<%= selectedDeck.deckName %>">
+              <%= selectedDeck.deckName %>
+            </a>
+          </h5>
 
-        <form action="/changeDeckName" method="post" id="deckNameForm" class="deckNameForm d-flex flex-wrap">
-          <label for="deckNameInput" class="col-12 mb-3 ch1 fs-4 form-label">Decknaam wijzigen</label>
+          <form action="/changeDeckName" method="post" id="deckNameForm" class="deckNameForm d-flex flex-wrap">
+            <label for="deckNameInput" class="col-12 mb-3 ch1 fs-4 form-label">Decknaam wijzigen</label>
 
-          <input type="text" name="deckNameInput" id="deckNameInput" placeholder="Mijn deck" class="rounded-start col-10 py-2 ps-2" />
+            <input type="text" name="deckNameInput" id="deckNameInput" placeholder="Mijn deck" class="rounded-start col-10 py-2 ps-2" />
 
-          <input id="oldDeckName" type="hidden" name="oldDeckName" value="<%= selectedDeck.deckName %>" />
+            <input id="oldDeckName" type="hidden" name="oldDeckName" value="<%= selectedDeck.deckName %>" />
 
-          <button type="submit" class="col-2 rounded-end border-0 cbg-white fw-bold ch1">
-            Wijzig
-          </button>
-        </form>
-      </article>
+            <button type="submit" class="col-2 rounded-end border-0 cbg-white fw-bold ch1">
+              Wijzig
+            </button>
+          </form>
+        </article>
 
-      <section class="SelectionCards d-flex flex-wrap mb-3 justify-content-center">
-        <% if (cards.size===0) { %>
-          <p class="ctext-white ch1 fs-1 text-center my-5">
-            Er zitten nog geen kaarten in dit deck.
-          </p>
-          <% } else { %>
-            <div class="col-12"><%- include("partials/pagination") %></div>
-            <section class="col-12 cardsInDeck d-flex flex-wrap justify-content-center">
-              <% for (const [card, amount] of cards) { %>
-                <article class="col-12 col-md-12 col-lg-4 col-xxl-4 mb-5 px-2 px-2">
-                  <article class="card h-100 p-3" style="
+        <section class="SelectionCards d-flex flex-wrap mb-3 justify-content-center">
+          <% if (cards.size===0) { %>
+            <p class="ctext-white ch1 fs-1 text-center my-5">
+              Er zitten nog geen kaarten in dit deck.
+            </p>
+            <% } else { %>
+              <div class="col-12"><%- include("partials/pagination") %></div>
+              <section class="col-12 cardsInDeck d-flex flex-wrap justify-content-center">
+                <% for (const [card, amount] of cards) { %>
+                  <article class="col-12 col-md-12 col-lg-4 col-xxl-4 mb-5 px-2 px-2">
+                    <article class="card h-100 p-3" style="
                 background-image: url(/assets/images/background/MTGTest.jpg);
                 background-size: cover;
               ">

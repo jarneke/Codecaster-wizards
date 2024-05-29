@@ -264,6 +264,7 @@ export default function deckRouter() {
     res.redirect(`/editDeck/${req.params.deckName}?&page=${req.params.page}`);
   });
   router.post("/addCardTooDeck/:deckName/:_id/:page", secureMiddleware, async (req, res) => {
+    req.session.message = { type: "success", message: "Kaart toegevoegd" }
     const selectedDeck: Deck | null = await decksCollection.findOne({
       deckName: req.params.deckName,
       userId: res.locals.user._id
@@ -289,6 +290,7 @@ export default function deckRouter() {
           );
         } else {
           console.log("4 or more cards");
+          req.session.message = { type: "error", message: "Je kan niet meer dan 4 kaarten van dit type toevoegen" }
         }
       } else {
         console.log("Is land card");
@@ -299,7 +301,7 @@ export default function deckRouter() {
       }
     } else {
       console.log("Deck full");
-
+      req.session.message = { type: "error", message: "Je deck zit vol!" }
       // handle alert
     }
 

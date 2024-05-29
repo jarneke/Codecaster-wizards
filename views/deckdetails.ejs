@@ -24,16 +24,13 @@
               <br />
 
               <div class="editOrDelete d-flex gap-3">
-                <a href="/editDeck/<%= selectedDeck.deckName %>"><button type="button" class="btn btn-dark ctext-white">
+                <a href="/editDeck/<%= selectedDeck.deckName %>">
+                  <button type="button" class="btn btn-dark ctext-white">
                     <i class="bi bi-pencil-fill"></i> Wijzig deck
-                  </button></a>
+                  </button>
+                </a>
+                <a href="/drawTest?decks=<%= selectedDeck.deckName %>"><button class="btn btn-dark ctext-white" type="button"><i class="bi bi-copy"></i> Simuleer deck</button></a>
                 <a href="#errorModal" class="btn cbg-danger-l ctext-white" data-bs-toggle="modal"><i class="bi bi-trash-fill"></i></a>
-              </div>
-
-              <br>
-
-              <div>
-                <a href="/drawTest?decks=<%= selectedDeck.deckName %>"><button class="btn btn-dark ctext-white" type="button">Drawtest</button></a>
               </div>
 
               <section class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
